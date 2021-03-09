@@ -1,0 +1,62 @@
+.form{
+    display: flex;
+    justify-content: center;
+    margin: 40px auto;
+}
+@media (min-width: 360px) and (max-width: 640px) {
+.right{
+    right: 0px;
+    width:360px;
+    border-radius: 0px;
+    padding: 104px 20px;
+}
+
+}
+.form input {
+    width: 45px;
+    height: 45px;
+    outline: 0;
+    border-bottom: 2px solid #213d77;
+    text-align: center;
+    margin: auto 15px;
+    background: #213D77 0% 0% no-repeat padding-box;
+    border-radius: 15px;
+    opacity: 1;
+    border: 1px solid #213d77;
+    color: white;
+}
+
+
+.image{
+    height: 103vh;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-image: url('./images/Login_background.svg');
+}
+.button4 {
+    width: 200px;
+    height: 45px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #213D77;
+    border: none;
+    border-radius: 15px;
+    box-shadow: -6px -6px 2px #12141a27;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    }
+
+.resendOTP {
+    text-align: left;
+    font: normal normal bold 18px/22px Montserrat;
+    letter-spacing: 0px;
+    color: #213D77;
+    text-transform: uppercase;
+    opacity: 1;
+}

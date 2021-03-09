@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.main {
+  width: 100%;
+}
+
+.header {
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.title {
+  text-align: left;
+  font: normal normal bold 25px/26px Montserrat;
+  letter-spacing: 0px;
+  color: #213d77;
+  opacity: 1;
+}
+
+
+
+.input_s {
+    border: solid;
+    padding-left: 10px;
+    padding-right: 10px;
+    outline: none;
+    border-color: #c4c4c4;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    border-radius: 3px;
+    color: #213d77;
+    background-image:url("../RevenueReport/date_icon.svg");
+    background-repeat: no-repeat;
+    background-position: 105px;
+    width: 135px;
+    border-width: thin;
+    font-size: small;
+    font-weight: 400;
+    outline: none;
+    height: 39px;
+  }
+
+.dateDiv {
+  width: 395px;
+  justify-content: space-between;
+  display: flex;
+}
+
+.dateLabel {
+  color: #213d77;
+  /* width: 70px; */
+  margin: 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  font: normal normal 600 10px Montserrat;
+}
+
+.date_containers {
+  margin-top: 20px;
+  display: flex;
+  padding-left: 20px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1px;
+  margin-left: 20px;
+  width: 80%;
+  height: max-content;
+  background-color: white;
+  margin-top: 50px;
+  box-shadow: 0px 4px 8px 0px #08080833;
+  border-radius: 15px;
+}
+
+.box1 {
+  transition: height 5s;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1px;
+  margin-left: 20px;
+  width: 80%;
+  height: fit-content;
+  background-color: white;
+  margin-top: 15px;
+  box-shadow: 0px 4px 8px 0px #08080833;
+  border-radius: 15px;
+}
+
+/* .full_box1 {
+  transition: height 5s;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1px;
+  margin-left: 20px;
+  width: 80%;
+  height: fit-content;
+  background-color: white;
+  margin-top: 15px;
+  box-shadow: 0px 4px 8px 0px #08080833;
+  border-radius: 15px;
+} */
+
+.span_title {
+  text-align: left;
+  letter-spacing: 0.32px;
+  opacity: 1;
+}
+
+.box_title {
+  display: flex;
+  justify-content: space-between;
+  color: #213d77;
+  margin-top: 15px;
+  font-weight: 500;
+  margin-left: 15px;
+}
+
+.comments {
+  padding: 15px;
+  text-align: left;
+  letter-spacing: 0.28px;
+  color: #12141A;
+  opacity: 0.5;
+  font: normal normal medium 12px/14px Montserrat;
+}
+
+.read_button {
+  cursor: pointer;
+  color: #213d77;
+  align-self: flex-end;
+  margin-right: 20px;
+  text-align: center;
+  font: normal normal 600 13px/14px Montserrat;
+  letter-spacing: 0.06px;
+  color: #213D77;
+  opacity: 1;
+  margin-bottom: 20px;
+}
+
+.details {
+  display: flex;
+  padding-left: 15px;
+  flex-direction: column;
+  color: #213d77;
+}
+
+.single_row_div {
+  width: 350px;
+  justify-content: flex-start;
+  display: flex;
+  font: normal normal bold 13px/27px Montserrat;
+  letter-spacing: 0px;
+  color: #12141A;
+  opacity: 1;
+}
+
+.single_row1_div {
+  width: 165px;
+}
+
+.single_row2_div {
+  opacity: 0.5;
+  font-weight: normal;
+}
+
+.rating_star {
+  margin-right: 28px;
+}
+
+.image_css {
+  padding-left: 2px;
+  width: 14px;
+}
+
+.close_image {
+  width: 20px;
+  margin-right: 6px;
+}
+
+/* dateLabel */

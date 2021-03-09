@@ -1,0 +1,415 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.main {
+  width: 100%;
+}
+
+.header {
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  font: normal normal bold 25px/26px Montserrat;
+  letter-spacing: 0px;
+  color: #272D3B;
+  opacity: 1;
+}
+.liti{
+  display:flex;
+  padding:inherit;
+  color: #272D3B;
+  margin-left: 6px;
+
+}
+.table {
+  padding-top: 1px;
+  background-color: white;
+  margin-top: 50px;
+  box-shadow: 0px 4px 8px 0px #08080833;
+  /* margin-left: 20px; */
+  /* margin-right: 20px; */
+  width: 100%;
+  /* overflow: hidden; */
+  border-radius: 20px;
+}
+
+.filterContent {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* select css */
+/* select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+   box-shadow: none;
+  border: 5px !important;
+  background: green;
+   background-image: none;
+} */
+/* Remove IE arrow */
+/* select::-ms-expand {
+  display: none;
+} */
+/* Custom Select */
+.select1 {
+  outline: none;
+  padding-left: 0px;
+  text-align: left;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0px;
+  opacity: 1;
+  position: inherit;
+  display: flex;
+  border-width: inherit;
+  width: 126px;
+  height: 41px;
+  line-height: 3;
+  border-bottom: 1px solid #213d77;
+}
+
+.select1 option{
+
+  border-radius: 50px;
+  height: 100px;
+  overflow: hidden;
+}
+/* select {
+  flex: 1;
+  padding: 0 .5em;
+  color: black;
+  cursor: pointer;
+} */
+/* Arrow */
+.select1::after {
+  border-width: thin;
+border-color: #cac7c7;
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #34495e;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
+}
+/* Transition */
+.select1:hover::after {
+  color: #f39c12;
+}
+
+ .select1 > option {
+   font-family: Montserrat;
+   padding-top: 10px !important;
+   /* text-indent: 15px; */
+   font-size: 13px;
+   /* background-color: pink; */
+}
+
+ .select1 > option:hover{
+   background-color:#213D77;
+ }
+
+.select1::selection {
+  background-color: blue;
+  border-width: thin;
+border-color: #cac7c7;
+}
+
+.select1::selection {
+  border-width: thin;
+  border-color: #cac7c7;
+}
+/* select css */
+
+.dropbtn {
+  /* color: #34495e; */
+  display: flex;
+  background-color: white;
+  /* color: rgb(255 255 255); */
+  font-weight: 500;
+  line-height: 1.5rem;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 14px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.dropdown_content {
+  display: none;
+  margin-left: -20px;
+  overflow: visible;
+  /* border-radius: 8px; */
+  position: absolute;
+  background-color: white;
+  min-width: 95px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* dropbtn */
+.dropdown_content a {
+  color: black;
+  font-size: 10px;
+  font-family: Montserrat;
+  cursor: pointer;
+  margin: 8px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+/* .dropdown_content a:hover {  } */
+
+.dropdown_content div:hover { cursor: pointer; }
+
+.dropdown:hover .dropdown_content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: white;}
+
+.arrow {
+  width: 10px;
+  height: 10px;
+  margin-left: 5px;
+  margin-top: 3px;
+}
+
+.pageDiv {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.modalContainer {
+  z-index: 9999;
+  max-width: 1024px;
+}
+
+.deleteFooter {
+  border-top: none;
+  display: flex;
+  padding-top: 20px;
+  padding-left: 26px;
+  padding-right: 26px;
+  /* float: right; */
+  justify-content: space-around;
+}
+.footer {
+  border-top: none;
+  display: flex;
+  padding-top: 20px;
+  padding-left: 26px;
+  padding-right: 26px;
+  float: right;
+  /* justify-content: space-around; */
+}
+
+.modalBox {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 12px;
+  padding-right: 0;
+  /* border-radius: 8px; */
+  /* box-shadow: 0px 4px 8px 0px #08080833; */
+  border-color: #00000069;
+  border-style: groove;
+  border-width: thin;
+}
+
+.customClass {
+  margin-top: 100px;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.box1 {
+  width: -webkit-fill-available;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+/* title */
+
+.textModal {
+  text-align: left;
+  font: normal normal bold 12px Montserrat;
+  letter-spacing: 0px;
+  color: #52575D;
+  opacity: 1;
+}
+
+.modalDiv {
+  /* text-align: left; */
+  font: normal normal normal 12px Montserrat;
+  letter-spacing: 0px;
+  color: #272d3bb5;
+  opacity: 1;
+  font-weight: 540;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.modalButton {
+  font: normal normal normal 12px Montserrat;
+  color: #272d3bb5;
+  background-color: white;
+  border: none;
+  margin: 0px 20px 0px 20px;
+}
+
+.modalImage {
+  filter: invert(57%) sepia(100%) saturate(4052%) hue-rotate(30deg) brightness(88%) contrast(28%);
+}
+
+.customDeleteClass {
+  margin-top: 100px;
+  /* padding-left: 10;
+  padding-right: 0; */
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.modalContainer1 {
+  z-index: 9999;
+  max-width: 465px;
+  /* max-width: 1024px; */
+}
+
+.searchBarDiv {
+  display: flex;
+  width: 435px;
+  justify-content: space-between;
+}
+
+.dateDiv {
+  width: 395px;
+  justify-content: space-between;
+  display: flex;
+}
+
+.dateLabel {
+  color: black;
+  /* width: 70px; */
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  font: normal normal normal 10px Montserrat;
+}
+/* modalContainer select1 */
+
+@media (min-width: 280px) and (max-width: 1192px) {
+  .filterContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .searchBarDiv {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .dateDiv {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .selectDiv1 {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  .select1 {
+    width: 100%;
+  }
+}
+
+@media (min-width: 280px) and (max-width: 680px) {
+  .searchBarDiv {
+    width: 91%;
+  }
+  .dateDiv {
+    width: 91%;
+  }
+}
+
+@media (min-width: 280px) and (max-width: 1026px) {
+  .modalContainer {
+    z-index: 9999;
+    max-width: 900px;
+  }
+}
+ /* .title {
+  margin-left: -36px;
+ } */
+
+@media (min-width: 280px) and (max-width: 930px) {
+  .modalOuterDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .modalContainer {
+    z-index: 9999;
+    max-width: fit-content;
+  }
+}
+
+
+.emptyTable {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-align: center;
+  font: normal normal bold 18px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #715555;
+  opacity: 1;
+}
+.classes.btn {
+    color: rgb(255 255 255 / 100%);
+    font-weight: 500;
+    line-height: 1.5rem;
+    text-align: center;
+    
+}
+.title{
+  color:#213D77
+}
+.checkBoxLabel{
+  
+  text-align: left;
+  font: normal normal bold 12px/20px Montserrat;
+  letter-spacing: 0px;
+  color: #213D77;
+  opacity: 1;
+
+}
+
+/* modalContainer dropdown_content searchBarDiv footer modalOuterDiv*/

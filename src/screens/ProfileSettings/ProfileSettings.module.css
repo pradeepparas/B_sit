@@ -1,0 +1,531 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.main {
+  width: 100%;
+}
+.title1 {
+  text-align: left;
+  font: normal normal bold 25px/26px Montserrat;
+  letter-spacing: 0px;
+  color: #272D3B;
+  opacity: 1;
+}
+
+.arrow {
+    margin-top: -3px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid  #213D77;
+    /* margin-left: 15px; */
+    display: block;
+}
+
+.tabButtons {
+  font-family: Montserrat;
+  border: none;
+  outline: none;
+  color: black;
+  font-weight: 600;
+  height: 35px;
+  font-size: 12px;
+  width: 135px;
+  outline: none;
+  background-color: white;
+  border: none;
+}
+
+.tabButtons_active {
+  font-weight: 600;
+  font-family: Montserrat;
+  border: none;
+  outline: none;
+  color: white;
+  height: 35px;
+  font-size: 12px;
+  width: 135px;
+  outline: none;
+  background-color: #213D77;
+  border: none;
+}
+
+/* .tabButtons:hover + .arrow {
+    display: block;
+} */
+
+.header {
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.title {
+  text-align: left;
+  font: normal normal bold 25px/26px Montserrat;
+  letter-spacing: 0px;
+  color: #272D3B;
+  opacity: 1;
+}
+
+.table {
+  background-color: white;
+  margin-top: 50px;
+  box-shadow: 0px 4px 8px 0px #08080833;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 98%;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.filterContent {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* select css */
+/* select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+   box-shadow: none;
+  border: 5px !important;
+  background: green;
+   background-image: none;
+} */
+/* Remove IE arrow */
+/* select::-ms-expand {
+  display: none;
+} */
+/* Custom Select */
+.select1 {
+    outline: none;
+    padding-left: 4px;
+    text-align: left;
+    font-family: Montserrat;
+    /* font-size: medium; */
+    font-size: inherit;
+    font-weight: bold;
+    /* border-color: #00000069;
+    font-family: Montserrat; */
+    /* font-weight: 500; */
+    letter-spacing: 0px;
+    opacity: 1;
+    position: relative;
+    display: flex;
+    border-width: thin;
+    /* width: 135px; */
+    border-color: #cac7c7;
+    height: 45px;
+    line-height: 3;
+    background: #ffffff;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.select1 option{
+
+  border-radius: 50px;
+  height: 100px;
+  overflow: hidden;
+}
+/* select {
+  flex: 1;
+  padding: 0 .5em;
+  color: black;
+  cursor: pointer;
+} */
+/* Arrow */
+.select1::after {
+  border-width: thin;
+border-color: #cac7c7;
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #34495e;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
+}
+/* Transition */
+.select1:hover::after {
+  color: #f39c12;
+}
+
+ .select1 > option {
+   font-weight: bold;
+   border-color: #00000069;
+   font-family: Montserrat;
+   /* background-color: pink; */
+}
+
+ .select1 > option:hover{
+   background-color: red;
+ }
+
+.select1::selection {
+  background-color: blue;
+  border-width: thin;
+border-color: #cac7c7;
+}
+
+.select1::selection {
+  border-width: thin;
+  border-color: #cac7c7;
+}
+/* select css */
+
+.dropbtn {
+  display: flex;
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 14px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.dropdown_content {
+  display: none;
+  margin-left: -20px;
+  overflow: visible;
+  /* border-radius: 8px; */
+  position: absolute;
+  background-color: white;
+  min-width: 90px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown_content a {
+  color: black;
+  font-size: 10px;
+  font-family: Montserrat;
+  cursor: pointer;
+  margin: 8px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown_content a:hover {  }
+
+.dropdown_content div:hover { cursor: pointer; }
+
+.dropdown:hover .dropdown_content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: white;}
+
+.pageDiv {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.box {
+    /* background-color: blue; */
+    margin-top: 50px;
+    /* box-shadow: 0px 4px 8px 0px #08080833; */
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    /* height: 400px; */
+    overflow: hidden;
+    border-radius: 20px;
+
+  }
+
+  .box2 {
+    width: 46%;
+    padding-top: 20px;
+    /* height: 45%; */
+    background-color: white;
+    box-shadow: 0px 4px 8px 0px #08080833;
+    margin-bottom: 60px;
+  }
+
+  .box1 {
+    width: 80%;
+    padding-top: 20px;
+    /* height: 45%; */
+    background-color: white;
+    box-shadow: 0px 4px 8px 0px #08080833;
+    margin-bottom: 60px;
+  }
+
+  .textfield {
+    width: ;
+    font-family: Montserrat;
+    display: flex;
+    flex-direction: column;
+    margin: 20px 30px 20px 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .textbox {
+    background-color: #e4e4e4;
+    display: flex;
+    font-family: Montserrat;
+    margin: 0px 30px 0px 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .textbox_hide {
+    background-color: #e4e4e4;
+    display: none;
+    font-family: Montserrat;
+    margin: 0px 30px 0px 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .textbox_show {
+    background-color: #e4e4e4;
+    display: flex;
+    font-family: Montserrat;
+    margin: 0px 30px 0px 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .alertmessage {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 14px;
+    display: flex;
+    align-items: center;
+    color: #595d68;
+  }
+
+  .passwordTextfield {
+    width: 50%;
+    font-family: Montserrat;
+    display: flex;
+    flex-direction: column;
+    margin: 20px 30px 20px 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .inputfield {
+    font-weight: bold;
+    border-color: #00000069;
+    font-family: Montserrat;
+    border-radius: 5px;
+    width: -webkit-fill-available;
+    border-width: thin;
+    font-size: inherit;
+    outline: none;
+    height: 45px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .input_s {
+    padding-left: 10px;
+    padding-right: 10px;
+    outline: none;
+    border-color: #00000069;
+    font-family: Montserrat;
+    border-radius: 5px;
+    width: -webkit-fill-available;
+    border-width: thin;
+    font-size: inherit;
+    font-weight: bold;
+    outline: none;
+    height: 45px;
+  }
+
+  .checkBoxLabel{
+    text-align: left;
+    font: normal normal bold 12px/12px Montserrat;
+    letter-spacing: 0px;
+    color: #272D3B;
+    opacity: 1;
+  }
+  .checkBox{
+    display: flex;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .passwordGrid {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+
+  .saveButton {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 50px;
+    margin-right: 10px;
+    /* margin-left: 100px; */
+    margin-bottom: 60px;
+    float: right;
+  }
+
+  .customDeleteClass {
+    margin-top: 100px;
+    /* padding-left: 10;
+    padding-right: 0; */
+    border-radius: 12px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .modalContainer1 {
+    z-index: 9999;
+    max-width: 465px;
+    /* max-width: 1024px; */
+  }
+
+  .footer {
+    border-top: none;
+    display: flex;
+    padding-top: 20px;
+    padding-left: 26px;
+    padding-right: 26px;
+    justify-content: space-around;
+  }
+
+  .error_message {
+    padding-top: 4px;
+    padding-left: 10px;
+    color: #ef0b0bde;
+    font: normal normal normal 10px/10px Montserrat;
+  }
+
+  .passwordIcon {
+    bottom: 39px;
+    left: -20px;
+  }
+
+  /* saveButton */
+  @media (min-width: 750px) and (max-width: 1024px) {
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      /* grid-template-rows: 1fr 1fr 1fr 1fr; */
+    }
+  }
+
+  @media (min-width: 280px) and (max-width: 750px) {
+    .grid {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .textbox_hide {
+      display: flex;
+    }
+
+    .textbox_show {
+      display: none;
+    }
+
+    .detailsBox {
+      display: flex;
+      flex-direction: column;
+    }
+    .box2 {
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 280px) and (max-width: 550px) {
+    .textfield {
+      margin-left: 2px;
+      margin-right: 2px;
+    }
+
+    .passwordTextfield {
+      margin-left: 2px;
+      margin-right: 2px;
+      width: 100%
+    }
+
+    .textbox_hide {
+      margin: 0px;
+    }
+
+    .textbox {
+      margin: 0px;
+    }
+
+    .box {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+    .passwordDiv {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  @media (min-width: 900px) and (max-width: 990px) {
+    .passwordDiv {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  @media (min-width: 180px) and (max-width: 428px) {
+    .header {
+      flex-direction: column;
+    }
+    .title1 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .saveButton {
+      display: flex;
+      flex-direction: column-reverse;
+      margin-right: 0px;
+      margin-top: 40px;
+    }
+  }
+
+  @media (min-width: 180px) and (max-width: 1000px) {
+    .box1 {
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 180px) and (max-width: 380px) {
+    .tabButtons {
+      font-size: 12px;
+      width: 100%;
+    }
+    .tabButtons_active {
+      font-size: 12px;
+      width: 100%;
+    }
+  }
+
+  /* passwordIcon passwordGrid tabButtons */
+/* box1 grid textfield extraDiv*/

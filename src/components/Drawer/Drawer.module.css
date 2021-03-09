@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* #df9b91 white profile */
+.header {
+  min-width: 200px;
+  height: 53px;
+  padding-top: 16px;
+  width: 200px;
+  padding-left: 50px;
+  text-align: left;
+  font: normal normal 610 18px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.active{
+    border-left: 3px solid #213d77 !important;
+    color: white !important;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.inactive{
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.filter{
+  width: 28px;
+  height: 21px;
+  opacity: 0.5;
+}
+
+.filter:hover{
+  opacity: 1;
+}
+
+.list:hover .filter{
+  opacity: 1;
+}
+
+.listText {
+  text-align: left;
+  color: #b5b3b5;
+}
+
+.listText span{
+  text-align: left;
+  /* width: 12px; */
+  font: normal normal 600 12px/15px Montserrat;
+  letter-spacing: 0px;
+  opacity: 1;
+}
+
+.list:hover .listText{
+  color: #213d77;
+}
+
+.selectedText span{
+  color: #213d77;
+  word-break: normal;
+  text-align: left;
+  /* width: 12px; */
+  font: normal normal 600 12px/15px Montserrat;
+  letter-spacing: 0px;
+  opacity: 1;
+}
+
+.selected {
+  width: 28px;
+  height: 21px;
+  opacity: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 180px) and (max-width: 560px) {
+  .header {
+    display: none;
+  }
+}
+
+.profileImg {
+  filter: invert(0%) sepia(3%) saturate(0%) hue-rotate(250deg) brightness(103%) contrast(104%)
+}
+
+.profileDiv:hover .profileImg {
+  filter: none
+}
+
+.profileDiv {
+  float: right;
+}
+
+/* Icon Button */
+.spanClass {
+  border-radius: 200px;
+  background-color: white;
+  position: absolute;
+  top: 10px;
+  width: 4px;
+  left: 8px;
+  height: 20px;
+  transition: 0.25s;
+}
+
+.spanClass1 {
+  border-radius: 200px;
+  background-color: #909ebb;
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  width: 4px;
+  height: 22px;
+  transition: 0.25s;
+}
+
+.div1 {
+  position: inherit;
+  width: 40px;
+  height: 40px;
+  margin-left: 3px;
+  /* background-color: rgb(185, 0, 130); */
+}
+
+.spanClass2 {
+  border-radius: 200px;
+  background-color: white;
+  position: absolute;
+  left: 20px;
+  top: 13px;
+  width: 4px;
+  height: 15px;
+  transition: 0.25s;
+}
+
+.spanClass3 {
+  border-radius: 200px;
+  background-color: #909ebb;
+  position: absolute;
+  top: 7px;
+  left: 26px;
+  width: 4px;
+  height: 21px;
+  transition: 0.25s;
+}
+
+.spanClass4 {
+  border-radius: 200px;
+  background-color: white;
+  position: absolute;
+  top: 12px;
+  left: 32px;
+  width: 4px;
+  height: 20px;
+  transition: 0.25s;
+}
+
+.div1:hover .spanClass {
+  background-color: #909ebb;
+  top: 14px;
+}
+
+.div1:hover .spanClass3 {
+  background-color: white;
+  top: 13px;
+}
+
+.div1:hover .spanClass4 {
+  background-color: #909ebb;
+  top: 9px;
+}
+
+.div1:hover .spanClass2 {
+  background-color: #909ebb;
+  top: 13px;
+}
+
+.div1:hover .spanClass1 {
+  background-color: white;
+  top: 6px;
+}
+
+@media (min-width: 280px) and (max-width: 560px){
+  .div1 {
+    margin-left: -7px;
+    /* background-color: rgb(185, 0, 130); */
+  }
+}
+/* listText For selectedText selected */
+
+  .listProfileText:hover .imageColor {
+    filter: invert(20%) sepia(70%) saturate(862%) hue-rotate(190deg) brightness(93%) contrast(96%);
+  }
