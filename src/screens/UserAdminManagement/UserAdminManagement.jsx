@@ -677,7 +677,7 @@ export function UserManagement(props) {
                 <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow}/></button>
                 <div className={styles.dropdown_content}>
                   <a><div onClick={(e) => toggleModal(e, 'details', index)}>View Details</div></a>
-                  <Link to={`/edit-user/${row._id}`}><div onClick={(e) =>editUser(e, index, row)}>Edit Details</div></Link>
+                  <Link to={`/user-management/${index}`}><div onClick={(e) =>editUser(e, index, row)}>Edit Details</div></Link>
                   <a><div onClick={(e) => toggleModal(e, 'change', index)}>Change Status</div></a>
                 </div>
                 </div></TableCell>

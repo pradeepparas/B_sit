@@ -537,7 +537,7 @@ debugger
 						</div><br/>
             <div className={styles.error_message}>{errors.role}</div>
 
-             {!user_id&&<div className={styles.textfield2}>
+             {user_id == 'add' &&<div className={styles.textfield2}>
               <label className={styles.label} style={{color:'black', marginRight:'41px'}}>Password</label>
               <input style={{position: 'relative'}} autocomplete="off" name="password" value={state.password} onChange={handleInputs} className={styles.inputfield} type={values.showPassword? "text" : "text"} />
               <button style={{display: 'contents'}} onClick={passwordGenerate}>

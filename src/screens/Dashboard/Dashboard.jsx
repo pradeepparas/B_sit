@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
 import styles from "./Dashboard.module.css";
 import jwt_decode from "jwt-decode";
-// import { compose } from 'redux'
-// import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { connect } from 'react-redux'
 // import { withTranslation,useTranslation } from 'react-i18next';
 
 // Material UI
@@ -23,14 +23,32 @@ import total_vendors_arrow from '../../components/Drawer/images/total_vendors_ar
 import total_revenue_arrow from '../../components/Drawer/images/total_revenue_arrow.svg';
 
 import Card from "../../components/Card/Card";
-// import * as acitons from '../../../store/actions/index'
+import * as actions from '../../redux/actions/stationActions';
 
-export default function DashBoard(props) {
+export function Dashboard(props) {
+	const [counts, setCounts] = useState({
+		station: "",
+		user: "",
+		total_service: "",
+		vendor_service: ""
+	})
 	const history = useHistory();
 	// const [t, i18n] = useTranslation('common');
 	// useEffect(()=>{
-	// 	props.getDashboardCount()
+	// 	props.getDashboardCount('2')
 	// },[])
+
+	useEffect(() => {
+		// Get Dashboard Count
+		props.getDashboardCount(2)
+	}, [])
+
+	useEffect(() => {
+		if(props.dashboadCount){
+			setCounts(props.dashboadCount)
+			debugger
+		}
+	}, [props.dashboadCount])
 
 	useEffect(() => {
 		let token = localStorage.getItem('token')
@@ -64,11 +82,11 @@ export default function DashBoard(props) {
 {/* <button onClick={() => i18n.changeLanguage('hi')}>Hindi</button> */}
 
 <div className={styles.grid}>
-{<Card title={'Service Handled'} number="20K"   icon={train1} link="/station-management"  color="#128BE8" />}
-{<Card title={'In Process Services'} number="5K" icon={user_check} link="/station-management" color="#E800C1" />}
+{<Card title={'Service Handled'} number={counts.service_handled? counts.service_handled: "20K"}   icon={train1} link="/station-management"  color="#128BE8" />}
+{<Card title={'In Process Services'} number={counts.total_in_progress_service? counts.total_in_progress_service: "12K"} icon={user_check} link="/station-management" color="#E800C1" />}
 {<Card title={'Stock Inventory'} number="1.4K"  arrow={total_users_arrow} link="/dashboard"  icon={servicestack} color="#06A882" />}
 {/* {<Card title={'Total Users'}  number="1.8K"  arrow={total_users_arrow} link="/vendors"  icon={ metro_users} color="#1373BB" />} */}
-{<Card title={'Total Vendors'} number="500" arrow={total_vendors_arrow} icon={vendor_icon} link="/vendor-management" color="#6F46FF" />}
+{<Card title={'Total Vendors'} number={counts.total_vendor? counts.total_vendor: "0"} arrow={total_vendors_arrow} icon={vendor_icon} link="/vendor-management" color="#6F46FF" />}
   {<Card title={'Total Revenue'} number="246K"  arrow={total_revenue_arrow}  link="/revenue-graph" icon={rupee} color="#037E93" />}
   {<Card title={"Today's Revenue"} number="2500"  icon={rupee} color="#F83F55" />}
 </div>
@@ -77,22 +95,21 @@ export default function DashBoard(props) {
 }
 
 
-// const mapStateToProps =(state)=>{
-//
-// 	return{
-//
-// 		dashboadCount: state.Users.dashboardCount,
-//
-// 	}
-//
-// }
-//
-// const mapDispatchToProps =(dispatch)=>{
-//
-// 	return {
-// 		getDashboardCount: (type) =>
-// 			dispatch(acitons.getDashboardCount(type)),
-//
-// 	}
-// }
-// export default compose(withTranslation('common'), connect(mapStateToProps, mapDispatchToProps))(Dashboard)
+const mapStateToProps =(state)=>{
+
+	return{
+		dashboadCount: state.Users.dashboardCount,
+	}
+
+}
+
+const mapDispatchToProps =(dispatch)=>{
+
+	return {
+		getDashboardCount: (type) =>
+			dispatch(actions.getDashboardCount(type)),
+
+	}
+}
+
+export default compose(connect(mapStateToProps, mapDispatchToProps))(Dashboard)
