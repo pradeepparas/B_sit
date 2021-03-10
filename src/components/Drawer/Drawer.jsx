@@ -213,7 +213,7 @@ export function MiniDrawer(props) {
 
   var revenue_menu = pathList.includes(path);
   console.log(revenue_menu)
-  debugger
+  // debugger
   // Profile
   const [open_Profile, setOpenProfile] = React.useState(false);
   const anchorRef = React.useRef(null);

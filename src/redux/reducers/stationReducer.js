@@ -1,7 +1,3 @@
-// import {
-//   AUTHENTICATE,
-//   AUTHENTICATE_ERROR_AUTH,
-// } from '../actions/authActions';
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {

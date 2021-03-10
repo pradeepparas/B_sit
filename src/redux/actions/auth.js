@@ -68,6 +68,7 @@ export const auth = (username, password) => {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('username', response.data.user_data.name)
                     localStorage.setItem('userId', response.data.user_data._id);
+                    localStorage.setItem('station_id', response.data.user_data.station_id)
                     localStorage.setItem('userDataLS', JSON.stringify(response.data.user_data))
                     console.log(response.data.user_data)
                     debugger

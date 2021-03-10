@@ -4,7 +4,7 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'redux';
-import * as actions from "../../../redux/actions/userActions";
+import * as actions from "../../../redux/actions/SFMISActions";
 import * as API from "../../../constants/APIs";
 import axios from 'axios';
 import { getStationData, setIsSubmitted, setIsLoading } from "../../../redux/actions/stationActions";
@@ -15,10 +15,11 @@ import {
   ModalFooter,
 } from "reactstrap";
 
-// components saveButton APIs
+// components EditUserDetails
 import styles from './AdminAddRole.module.css';
 
 // import logo from './logo.png';
+import delete_logo from '../../StationManagement/delete.svg';
 import background1 from './background1.png';
 import image_icon from './image_icon.png';
 import flag from '../../StationManagement/flag.svg';
@@ -255,26 +256,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function AddUser(props) {
+export function AddServiceCategory(props) {
   const [dropDownDetails, setDropDownDetails] = useState([]);
-  const [isAdd, setIsAdd] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [servicesType, setServicesType] = useState([])
   const [role, setRole] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState({
+    details: false,
+    deletedModal: false,
+    deleteModal: false
+  });
   const classes = useStyles();
   const history = useHistory();
   const { user_id } = useParams();
   const [pageNo, setPageNo] = useState();
   const [rows, setRows] = useState([]);
+  // const [categoryList, setCategoryList] = useState([])
+
   const [state, setState] = useState({
     category_name: "",
-    service_type: "",
     category_icon: "",
+    service_type: "",
+    file_name: "",
+    status: false
   });
   const [search, setSearch] = useState({
-   
-   
+    
   })
+
   const [values, setValues] = useState({
     password: "",
     showPassword: false,
@@ -283,45 +292,47 @@ export function AddUser(props) {
   const [arrayDetails, setArrayDetails] = useState([]);
 
 
-  const toggleModal = (e, data, i) => {
-    // setModal(true);
-    // rows[i].id = i;
-    // setArrayDetails(rows[i]);
-    // if (data == 'delete') {
-    //   setModal({
-    //     deleteModal: true
-    //   })
-    // } else {
+  const toggleModal = (e, data, row) => {
 
-    //   setModal({
-    //     details: true
-    //   })
-    // }
-    // setState({...state, packageName:data.packageName, id: data._id, })
+    setArrayDetails(row);
+    debugger
+    if (data == 'delete') {
+      debugger
+      setModal({
+        deleteModal: true,
+        deletedModal: false
+      })
+    } else {
+      setModal({
+        details: true
+      })
+    }
   }
   // close modal
   const toggleModalClose = () => {
     setModal(false)
-    props.setIsSubmitted(false)
-    history.push('/Services-management')
+    // props.setIsSubmitted(false)
+    // history.push('/Services-management')
   }
+
   const editUser = (e, i, data) => {
     data.id = i
     props.setUserData(data)
   }
 
 
-  // 
+  // for getting category service data
   useEffect(() => {
-    if (props.isEdit) {
-      console.log(props.user)
-      
-      setState(props.user)
-      // set value in startDate
-
-      //funciton
-    }
+    props.getCategoryServices(1, 10)
   }, [])
+
+  useEffect(() => {
+    debugger
+    if(props.categoryDocs){
+      setRows(props.categoryDocs);
+    }
+  }, [props.categoryDocs])
+
   // Changing Date fields
   const handleDateChange = (data, type) => {
     console.log(data)
@@ -343,28 +354,40 @@ export function AddUser(props) {
     props.getUserDataByParams(page, props.limit, search)
   }
 
-  const searchUsers = () => {
-    debugger
-    console.log(search)
-    if(!validateForm()){
-      return
+    // Handle Submit User
+    const handleSubmit = (e) => {
+
+      e.preventDefault();
+      if (!validateForm()) {
+        return
+      }
+        props.manageCategoryServices(state, isEdit);
+        
     }
-    else{
-      // save logic
-    }
-    
-    //props.getUserDataByParams(1, 10, search)
-  }
+
+    useEffect(() => {
+      setIsEdit(false)
+      setState({
+        category_name: "",
+        category_icon: "",
+        service_type: "",
+        file_name: "",
+        status: false
+      })
+    }, [props.categoryDocs])
 
   //  validate form
    const validateForm =()=>{
+     console.log(state)
      debugger
      var isValid=true
      if(state.category_name.trim()==''){
-       errors.category_name="Service category Name is required"; isValid=false;
+       errors.category_name="Service category Name is required"; 
+       isValid=false;
      }
-     else if(state.service_type.trim()==''){
-      errors.service_type="Service type is required";isValid=false;
+     else if(state.service_type.trim()=='' || state.service_type == '0'){
+      errors.service_type="Service type is required";
+      isValid=false;
      }
      else if(state.category_icon.trim()==''){
       errors.service_type="Please upload category icon";isValid=false;
@@ -373,108 +396,76 @@ export function AddUser(props) {
      return isValid
    }
 
-
-  //  Getting dropdown details  
   useEffect(() => {
-    if (props.userDetails) {
-      setDropDownDetails(props.userDetails)
-      console.log(props.userDetails)
-      // 
-    }
-  }, [props.userDetails])
+    // props.setIsLoading(true)
+    // axios({
+    //   url: API.GetRoleAPI,
+    //   headers: {
+    //     "accept": "application/json",
+    //     "Content-Type": "application/json",
+    //     'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    //   }
+    // }).then((response) => {
+    //   setRole(response.data.role)
+    //   props.setIsLoading(false)
+    // })
 
-  useEffect(() => {
-    props.setIsLoading(true)
-    axios({
-      url: API.GetRoleAPI,
-      headers: {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      }
-    }).then((response) => {
-      setRole(response.data.role)
-      props.setIsLoading(false)
-    })
-
-    if (props.isEdit || user_id != 'add') {
-      props.setIsLoading(true)
-      axios({
-        url: `${API.GetUserAPI}/${user_id}`,
-        headers: {
-          //    'Accept-Language': 'hi', 
-          "accept": "application/json",
-          'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        },
-      }).then(response => {
-        if (response.data.success) {
-          console.log(response.data.user)
+    // if (props.isEdit || user_id != 'add') {
+    //   props.setIsLoading(true)
+    //   axios({
+    //     url: `${API.GetUserAPI}/${user_id}`,
+    //     headers: {
+    //       //    'Accept-Language': 'hi', 
+    //       "accept": "application/json",
+    //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    //     },
+    //   }).then(response => {
+    //     if (response.data.success) {
+    //       console.log(response.data.user)
           
-          // setState(data)
-          setState({
-            _id: response.data.user._id,
-            userName: response.data.user.name,
-            userNumber: response.data.user.mobile,
-            userAddress: response.data.user.address,
-            userPassword: response.data.user.password ? response.data.user.password : '',
-            role: response.data.user.role_id,
-            // stationName: response.data.user.station_id,
-            userEmail: response.data.user.email ? response.data.user.email : '',
-            // date: response.data.user,
-          })
-        } else {
-          setState([]);
-        }
-      }).catch(err => {
-        toast.error(err.response.data.message)
-        props.setIsLoading(false)
-      })
-      props.setIsLoading(false)
-      // setState(props.stationData)
-      // setDetails(props.stationData)
-    }
+    //       // setState(data)
+    //       setState({
+    //         _id: response.data.user._id,
+    //         userName: response.data.user.name,
+    //         userNumber: response.data.user.mobile,
+    //         userAddress: response.data.user.address,
+    //         userPassword: response.data.user.password ? response.data.user.password : '',
+    //         role: response.data.user.role_id,
+    //         // stationName: response.data.user.station_id,
+    //         userEmail: response.data.user.email ? response.data.user.email : '',
+    //         // date: response.data.user,
+    //       })
+    //     } else {
+    //       setState([]);
+    //     }
+    //   }).catch(err => {
+    //     toast.error(err.response.data.message)
+    //     props.setIsLoading(false)
+    //   })
+    //   props.setIsLoading(false)
+    //   // setState(props.stationData)
+    //   // setDetails(props.stationData)
+    // }
   }, [])
 
-
-  // Handle Submit User
-  const handleSubmit = (e) => {
-
-    e.preventDefault();
-    if (!validateForm()) {
-      return
-    }
-
-    // Add and Update User
-    if (user_id === 'add') {
-      
-      state.date = moment(new Date()).format("DD-MM-YYYY")
-      console.log(state)
-      
-      props.addUserDetails(state)
-      // 
-    } else {
-      props.EditUserDetails(state)
-    }
-  }
-
   // Open Modal for Add User Successfully and Update User Successfully
-  useEffect(() => {
+  // useEffect(() => {
     
-    if (props.isSubmitted) {
-      setModal(true);
-      if (user_id == 'add') {
-        setIsAdd(true);
-      } else {
-        setIsAdd(false);
-      }
-    } else {
+  //   if (props.isSubmitted) {
+  //     setModal(true);
+  //     if (user_id == 'add') {
+  //       setIsAdd(true);
+  //     } else {
+  //       setIsAdd(false);
+  //     }
+  //   } else {
 
-    }
-  }, [props.isSubmitted])
+  //   }
+  // }, [props.isSubmitted])
 
   // useEffect
   useEffect(() => {
-    props.getUserData()
+    // props.getUserData()
   }, [])
 
   const passwordGenerate = () => {
@@ -490,21 +481,27 @@ export function AddUser(props) {
  
 
   const handleInputs = (event) => {
-    console.log(event.target.name, event.target.value)
-    // 
 
     setState({
       ...state,
-      [event.target.name]: (event.target.name == 'userPassword'
-        || event.target.name == 'userNumber') ?
-        event.target.value.trim() : event.target.value
+      [event.target.name]: event.target.value
     })
     // 
     setErros({ errors, [event.target.name]: "" })
   }
+
+  const handleCheckbox = (event, type) => {
+    console.log(event.target.name)
+    setState({
+        ...state,
+        [event.target.name]: event.target.checked
+    })
+    debugger
+  }
+
   // function for adding user or Setting IsEdit False
   const addRole = () => {
-    props.setIsEditFalse(false)
+    // props.setIsEditFalse(false)
   }
 
   // Password visibility on off
@@ -530,70 +527,124 @@ export function AddUser(props) {
         size='small' />
     )
   }
-  const uploadFile = (e, type)=>{
+
+  // Handle Delete function
+	const handleDeleteSubmit = async(e, categoryData) => {
+		// set delete modal false
+    console.log(categoryData)
+    debugger
+    let a = await props.setIsLoading(true);
+
+    axios({
+      url: `${API.AddServiceCategories}/${categoryData._id}`,
+      method: "DELETE",
+      headers: {
+        //    'Accept-Language': 'hi',
+        "accept": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    }).then((response) => {
+      if(response.data.success){
+        debugger
+        // toast.success(response.data.message)
+        setModal({
+          deleteModal: false,
+          deletedModal: true
+        })
+        props.setIsLoading(false)
+        props.getCategoryServices(1, 10)
+      } else {
+        debugger
+        toast.error(response.data.message)
+      }
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      props.setIsLoading(false)
+    })
+
+		setModal({
+			deleteModal: false,
+			deletedModal: true
+		})
+	}
+
+  const uploadFile = (e, type)=> {
     debugger
     if (e.target.files && e.target.files.length > 0 ) {
         var a = e.target.files[0].size;
         const fsize = Math.round((a / 1024));
-        // this.setState({
-        //   fsize: fsize
-        // })
 
-        // console.log(fsize);
-        // console.log('fsize')
-        var fileName = e.target.files[0].name;
-        console.log(fileName)
-        debugger
-        var validExtensions=['jpg','png','PNG','JPG','jpeg'];
-        
-        var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-       var isValid = true;
-       for(let img of e.target.files){
-           debugger
-        // if($.inArray(img.name.substr(img.name.lastIndexOf('.') + 1), validExtensions) == -1){
-        //     e.target.value = "";
-        //     isValid = false;
-        //     toast.error("Invalid file type")
-        //    }
-        //  break;
-         }
+        var validExtensions=['jpg','png','PNG','JPG','jpeg', 'JPEG'];
+        var isValid = true;
+        let file_name = e.target.files[0].name;
+        let fileExt = file_name.substr(file_name.lastIndexOf('.') + 1);
+         console.log(e.target.files[0])
          if(e.target.files[0]){
            if(e.target.files[0].size > (1048576*2)){
              e.target.value = "";
              isValid = false;
              toast.error(`file size should less than ${2}mb`)
+             return;
            }
          }
-    if(isValid){
-    debugger
-      var fileName = e.target.files[0].name;
-      var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-      let reader = new FileReader();
+
+        let n = validExtensions.includes(fileExt);
+
+        if(!n) {
+          toast.error(`please select image file`)
+          return
+        }
+
+      if(isValid){
       debugger
-       setState({
-            ...state,
-            image: (e.target.files[0]),
-            image_name: true
-          })
-        debugger
-        setErros({errors, image:""})
-       }
+        var fileName = e.target.files[0].name;
+        var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+          debugger
+        }
         let reader = new FileReader();
-        reader.onloadend = () => {
+        reader.onloadend = (e) => {
           debugger
         setState({
           ...state,
-          fileName: reader.result
+          file_name: fileNameExt,
+          category_icon: reader.result
           })
         }
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(e.target.files[0], fileNameExt);
       }
    }
+
+   const searchUsers = () => {
+     console.log('searchUsers')
+   }
+
+  //  Edit Category services
+  const editDetails = (event, data) => {
+
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    
+    console.log(data)
+    let name = `http://13.235.102.214:8000/uploads/category/${data.category_icon}`;
+    debugger
+
+    setIsEdit(true);
+
+    setState({
+      ...state,
+      category_name: data.category_name,
+      category_icon: `http://13.235.102.214:8000/uploads/category/${data.category_icon}`,
+      service_type: data.service_type,
+      file_name: name.substr(name.lastIndexOf('.') + 1),
+      status: data.status,
+      _id: data._id
+  })
+  }
 
   return (
     <div className={styles.main}>
       <div className={styles.header}>
-        <div className={styles.title1}>{user_id == 'add' ? "Add User" : "Add Service Category"}</div>
+        <div className={styles.title1}>{isEdit ? "Edit Service Category" : "Add Service Category"}</div>
         <Button startIcon={<ArrowBackIosIcon color="white" />} onClick={() => history.push('/SFMIS-services/add')} className={classes.button1} variant="contained">
           Back
         </Button>
@@ -605,12 +656,12 @@ export function AddUser(props) {
           <div className={styles.grid}>
             <div className={styles.textfield}>
               <label style={{ color: '#272D3B', width: '100%', marginBlock: 'auto' }}>Service Category Name</label>
-              <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
+              <input autocomplete="off" name="category_name" value={state.category_name} onChange={handleInputs} className={styles.inputfield} type="text" />
               <div className={styles.error_message}>{errors.category_name}</div>
               <br /><br /><br />
 
             </div><br /><br />
-            <div className={styles.error_message}>{errors.roleName}</div>
+            {/* <div className={styles.error_message}>{errors.category_name}</div> */}
 
             <div className={styles.textfield}>
 
@@ -618,15 +669,17 @@ export function AddUser(props) {
               <input autocomplete="off" name="roleDescription" value={state.roleDescription} onChange={handleInputs} className={styles.inputfield} type="text" /> */}
               <div className={styles.textfield}>
                 <label style={{color: 'black',width: 'inherit',padding:'inherit',marginLeft:'-79px'}}>Services Type</label>
-                <select style={{width: '100%',height:'40px',paddingRight:'25px',backgroundColor:'#ffffff',marginRight:'-40px',borderRadius:'7px',border:'1px solid #272D3B'}} name="services_type" value={state.services_type} onChange={handleInputs}>
-                <option value="1">Book</option>
-                <option value="2">Order</option>
-                  
-                  {servicesType.length > 0 ? servicesType.map(data =>
-                  <option key={data._id} value={data.services_type}>{data.services_type}</option>
-                  ) : null}
+                <select style={{width: '100%',
+                              height:'40px',paddingRight:'25px',
+                              backgroundColor:'#ffffff',marginRight:'-40px',
+                              borderRadius:'7px',border:'1px solid #272D3B'
+                            }} 
+                      name="service_type" value={state.service_type} onChange={handleInputs}>
+                  <option value="0">-Select Service Type-</option>
+                  <option value="BOOK">Book</option>
+                  <option value="ORDER">Order</option>
               </select>
-              <div className={styles.error_message}>{errors.services_type}</div>
+              <div className={styles.error_message}>{errors.service_type}</div>
               </div>
 
 
@@ -635,8 +688,8 @@ export function AddUser(props) {
             <div className={styles.textfield}>
             <label style={{color: ' soloid #535763'}}>Upload Service Icon</label>
               <div className={styles.image_upload}>
-              <label className={state.fileName?classes.show_image_true: classes.show_image} for="file-input">
-                  <img style={{ marginTop:'7px' }}src={state.fileName? state.fileName: image_icon} />
+              <label className={state.category_icon?classes.show_image_true: classes.show_image} for="file-input">
+                  <img style={{ marginTop:'7px' }}src={state.category_icon? state.category_icon: image_icon} />
               </label>
               </div>
               <input id="file-input" type="file" style={{display: 'none'}} onChange={uploadFile} className={styles.upload_image} accept="image/*" />
@@ -660,7 +713,10 @@ export function AddUser(props) {
             
               <FormControlLabel
                 className={classes.label}
-                control={<GreenCheckbox checked={true} name="checkedG" />}
+                control={<GreenCheckbox checked={state.status} 
+                onChange={handleCheckbox} 
+                name="status" />}
+
                 label={
                   <span
                     className={styles.checkBoxLabel}
@@ -672,12 +728,10 @@ export function AddUser(props) {
               />
             </div>
             <div className={styles.saveButton}>
-            <Button onClick={searchUsers} className={classes.saveButton1} variant="contained">
-            {user_id == 'add' ? "Save" : "Save"}
-          </Button>
+            <Button onClick={handleSubmit} className={classes.saveButton1} variant="contained">
+              {isEdit ? "Update" : "Save"}
+            </Button>
             </div>
-
-
 
           </div>
 
@@ -731,105 +785,88 @@ export function AddUser(props) {
                     <TableCell style={{ color: '#FFFFFF' }} align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
+
                 <TableBody>
+                  {rows.map((row, index) => (
+            <TableRow className={classes.table} key={row._id}>
+              <TableCell component="th" scope="row">
+                {index+1}
+              </TableCell>
+              <TableCell align="center"><img src={`http://13.235.102.214:8000/uploads/category/${row.category_icon}`} style={{ width: 27}} /></TableCell>
+              <TableCell align="center">{/*row.userNumber*/row.category_name}</TableCell>
+							<TableCell style={{color: row.status? 'green': 'red'}} align="center">{row.status?"active": "In-active"}</TableCell>
+              <TableCell align="center">
+                    <div className={styles.dropdown}>
+                      <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
+                      <div className={styles.dropdown_content}>
+                        <a><div onClick={(e) => editDetails(e, row)}>Edit Details </div></a>
+                        <a><div onClick={(e) => toggleModal(e, 'details', index)}>Change Status</div></a>
+                        <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Remove</div></a>                    
+                      </div>
+                    </div></TableCell>
+            </TableRow>
+          ))}
 
-                  <TableRow className={classes.table} >
-                    <TableCell component="th" scope="row">
-                      1
-              </TableCell>
-              <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                    <TableCell align="center">Food and Beverage</TableCell>
-                    <TableCell style={{ color: '#10AC44' }} align="center">Active</TableCell>
-                    <TableCell align="center">
-                    <div className={styles.dropdown}>
-                      <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                      <div className={styles.dropdown_content}>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details </div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Change Status</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Remove</div></a>                    
-                      </div>
-                    </div></TableCell>
-                  </TableRow>
-                  <TableRow className={classes.table} >
-                    <TableCell component="th" scope="row">
-                      2
-              </TableCell>
-              <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                    <TableCell align="center">Food and Beverage</TableCell>
-                    <TableCell style={{ color: '#10AC44' }} align="center">Active</TableCell>
-                    <TableCell align="center">
-                    <div className={styles.dropdown}>
-                      <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                      <div className={styles.dropdown_content}>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Change Status</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Remove</div></a>
-
-                      </div>
-                    </div></TableCell>
-                  </TableRow>
-                  <TableRow className={classes.table} >
-                    <TableCell component="th" scope="row">
-                      3
-              </TableCell>
-              <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                    <TableCell align="center">Food and Beverage</TableCell>
-                    <TableCell style={{ color: '#B22222' }} align="center">Inctive</TableCell>
-                    <TableCell align="center">
-                    <div className={styles.dropdown}>
-                      <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                      <div className={styles.dropdown_content}>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Change Status</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Remove</div></a>
-                     </div>
-                    </div></TableCell>
-                  </TableRow>
-                  <TableRow className={classes.table} >
-                    <TableCell component="th" scope="row">
-                      4
-              </TableCell>
-              <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                    <TableCell align="center">Food and Beverage</TableCell>
-                    <TableCell style={{ color: '#10AC44' }} align="center">Active</TableCell>
-                    <TableCell align="center">
-                    <div className={styles.dropdown}>
-                      <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                      <div className={styles.dropdown_content}>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Change Status</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Remove</div></a>
-                      </div>
-                    </div></TableCell>
-                  </TableRow>
-                  <TableRow className={classes.table} >
-                    <TableCell component="th" scope="row">
-                      5
-              </TableCell>
-              <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                    <TableCell align="center">Food and Beverage</TableCell>
-                    <TableCell style={{ color: '#B22222' }} align="center">Inactive</TableCell>
-                    <TableCell align="center">
-                    <div className={styles.dropdown}>
-                      <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                      <div className={styles.dropdown_content}>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Change Status</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details',)}>Remove</div></a>
-                      </div>
-                    </div></TableCell>
-                  </TableRow>                
                 </TableBody>
               </Table>
             </TableContainer>
+            {rows.length == 0 && <div className={styles.emptyTable} style={{ display: 'flex', justifyContent: 'center'}}>No Data Found</div>}
           </div>
         </div>
       </div>
+
+      {/* After Delete Category */}
+			{<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deletedModal} toggle={toggleModalClose} centered={true}>
+					<ModalBody modalClassName={styles.modalContainer}>
+          <img style={{width: 60}} src={flag} />
+					<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>Successfully Deleted User</strong>  </p>
+					</ModalBody>
+					<ModalFooter className={styles.footer}>
+						<Button
+              style={{width: 100}}
+							variant="contained"
+              color="black"
+              className={classes.button1}
+							onClick={toggleModalClose}
+						>
+						OK
+						</Button>
+					</ModalFooter>
+				</Modal>}
+
+      {/*Delete Category*/}
+      {<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deleteModal} toggle={toggleModalClose} centered={true}>
+					<ModalBody modalClassName={styles.modalContainer}>
+          <img style={{width: 60}} src={delete_logo} />
+				<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>Are you sure you want to delete {arrayDetails.category_name} Category?</strong>  </p>
+
+					</ModalBody>
+					<ModalFooter className={styles.footer}>
+						<Button
+              style={{width: 100}}
+							variant="contained"
+              color="black"
+              className={classes.button2}
+							onClick={toggleModalClose}
+						>
+						NO
+						</Button>
+						<Button
+              style={{width: 100}}
+							variant="contained"
+							className={classes.button1}
+							onClick={(e) => { handleDeleteSubmit(e, arrayDetails) }}
+						>
+							YES
+						</Button>
+					</ModalFooter>
+				</Modal>}
+
       {/* Modal for Add Update User */}
-      <Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal} toggle={toggleModalClose} centered={true}>
+      <Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.details} toggle={toggleModalClose} centered={true}>
         <ModalBody modalClassName={styles.modalContainer}>
           <img style={{ width: 60 }} src={flag} />
-          <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>{isAdd ? "Successfully Added User" : "Successfully Updated"} </strong>  </p>
+          <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>{isEdit ? "Successfully Updated" : "Successfully Added User"} </strong>  </p>
         </ModalBody>
         <ModalFooter className={styles.footer}>
           <Button
@@ -862,31 +899,33 @@ export function AddUser(props) {
 const mapStateToProps = (state) => {
   
   return {
-    isSubmitted: state.Stations.isSubmitted,
-   
-    user: state.Users.userData,
-    isEdit: state.Users.isEdit,
-    userDetails: state.Stations.stationDetails,
-    
+    categoryDocs: state.SFMIS.docs,
+    // isSubmitted: state.Stations.isSubmitted,
+    // user: state.Users.userData,
+    // isEdit: state.Users.isEdit,
+    // userDetails: state.Stations.stationDetails,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    
-    setIsSubmitted: flag => {
-      dispatch(setIsSubmitted(flag))
-    },
+    manageCategoryServices: (category, edit) => 
+      dispatch(actions.manageCategoryServices(category, edit)),
+    getCategoryServices: (page, limit) => 
+      dispatch(actions.getCategoryServices(page, limit)),
+    // setIsSubmitted: flag => {
+    //   dispatch(setIsSubmitted(flag))
+    // },
     setIsLoading: (value) =>
       dispatch(setIsLoading(value)),
-    addUserDetails: (user) =>
-      dispatch(actions.userActions(user)),
-    getUserData: () => {
-      dispatch(getStationData())
-    },
-    EditUserDetails: (details) =>
-      dispatch(actions.EditUserDetails(details))
+    // addUserDetails: (user) =>
+    //   dispatch(actions.userActions(user)),
+    // getUserData: () => {
+    //   dispatch(getStationData())
+    // },
+    // EditUserDetails: (details) =>
+    //   dispatch(actions.EditUserDetails(details))
   }
 }
 
-export default compose(connect(mapStateToProps, mapDispatchToProps))(AddUser);
+export default compose(connect(mapStateToProps, mapDispatchToProps))(AddServiceCategory);

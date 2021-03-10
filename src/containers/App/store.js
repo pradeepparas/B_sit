@@ -14,7 +14,8 @@ import {
   stationReducer,
   userReducer,
   vendorReducer,
-  auth
+  auth,
+  SFMISReducer
 } from '../../redux/reducers/index';
 import appConfigReducer from '../../redux/reducers/appConfigReducer';
 import covidReducer from '../Maps/VectorMapWithRequestData/redux/covidReducer';
@@ -47,6 +48,7 @@ const reducer = combineReducers({
   Users: userReducer,
   Auth: auth,
   Stations: stationReducer,
+  SFMIS: SFMISReducer,
   form: reduxFormReducer, // mounted under "form",
   theme: themeReducer,
   rtl: rtlReducer,

@@ -44,6 +44,7 @@ export function Dashboard(props) {
 	}, [])
 
 	useEffect(() => {
+		debugger
 		if(props.dashboadCount){
 			setCounts(props.dashboadCount)
 			debugger
@@ -98,7 +99,7 @@ export function Dashboard(props) {
 const mapStateToProps =(state)=>{
 
 	return{
-		dashboadCount: state.Users.dashboardCount,
+		dashboadCount: state.Stations.dashboardCount,
 	}
 
 }
