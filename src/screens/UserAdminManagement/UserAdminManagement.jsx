@@ -113,6 +113,7 @@ const BootstrapInput = withStyles((theme) => ({
     },
   },
 }))(InputBase);
+
 const RedRadio = withStyles({
   root: {
     color: "#b22222",
@@ -797,6 +798,7 @@ export function UserManagement(props) {
 							</Button>
 						</ModalFooter>
 					</Modal>}
+
           {/* Modal for change Status */}
 				{<Modal className={styles.Container2} contentClassName={styles.customClasss}
 				 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>

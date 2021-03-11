@@ -260,6 +260,26 @@ border-color: #cac7c7;
     padding-right: 10px;
   }
 
+input[type="time"]::-webkit-calendar-picker-indicator {
+    background-image:url("./down_arrow.svg");
+    color: transparent;
+    background-repeat: no-repeat;
+}
+
+  .timefield {
+    font-weight: bold;
+    border-color: #00000069;
+    font-family: Montserrat;
+    border-radius: 5px;
+    width: -webkit-fill-available;
+    border-width: thin;
+    font-size: inherit;
+    outline: none;
+    height: 45px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .input_s {
     padding-left: 10px;
     padding-right: 10px;
@@ -464,4 +484,4 @@ border-color: #cac7c7;
     }
 }
 
-/* grid */
+/* grid inputfield*/

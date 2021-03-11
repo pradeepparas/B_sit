@@ -364,6 +364,27 @@ border-color: #cac7c7;
     border-radius: 5px;
   }
 
+  @media (min-width: 1025px) and (max-width: 1270px) {
+    .textfield {
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 11.7px;
+    }
+  }
+  
+@media (min-width: 1025px) and (max-width: 1152px) {
+  .textfield {
+    font-weight: bold;
+    font-size: 9.7px;
+  }
+}
+  
+@media (min-width: 1025px) and (max-width: 1030px) {
+  .textfield {
+    font-size: 9.5px;
+  }
+}
+
 @media (min-width: 900px) and (max-width: 1024px) {
   .dummyDivs {
     display: none;

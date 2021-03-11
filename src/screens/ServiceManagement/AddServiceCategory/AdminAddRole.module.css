@@ -184,8 +184,24 @@
     color: #213D77;
     opacity: 1;
 
-  
   }
+
+  .modalCategoryContainer {
+    z-index: 9999;
+    max-width: 465px;
+    /* max-width: 1024px; */
+  }
+
+  .deleteFooter {
+    border-top: none;
+    display: flex;
+    padding-top: 20px;
+    padding-left: 26px;
+    padding-right: 26px;
+    /* float: right; */
+    justify-content: space-around;
+  }
+
   .dropdown_content {
     display: none;
     margin-left: -20px;
@@ -220,10 +236,41 @@
     margin-top: -17px
 }
 
+.modalBody {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
 
+.changeStatusClass {
+  padding-top: 25px;
+  border-radius: 4px;
+  padding-bottom: 20px;
+  width: 100%;
+  height: 100%;
+}
 
+.Container2 {
+  margin: auto;
+}
 
-  
+.customDeleteClass {
+  min-width: 600px;
+  left: -66px;
+  margin-top: 100px;
+  /* padding-left: 10;
+  padding-right: 0; */
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.footer1 {
+  display: flex;
+  border: none;
+  justify-content: center;
+  align-items: center;
+}
+ 
   .upload_image > input {
     display: none;
   }
@@ -415,5 +462,19 @@
     color: #715555;
     opacity: 1;
 }
+
+@media (min-width: 280px) and (max-width: 650px) {
+  .customDeleteClass {
+    min-width: inherit;
+    left: 0;
+  }
+}
+
+@media (min-width: 280px) and (max-width: 400px){
+  .deleteFooter {
+    display: flex;
+    flex-direction: column;
+  }
+}
   
-/* box3 */
+/* box3 modalCategoryContainer footer1  */

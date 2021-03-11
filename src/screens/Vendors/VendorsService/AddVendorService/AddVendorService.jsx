@@ -155,7 +155,7 @@ const useStyles = makeStyles((theme) => ({
   },
   show_image_true: {
     padding: 0, 
-    width: 92, 
+    width: 92,
     margin: 0
   },
   radio_label: {
@@ -789,7 +789,7 @@ export function AddVendorService(props) {
               <label style={{color: '#535763'}}>Upload Service Icon</label>
               <div className={styles.image_upload}>
               <label className={state.fileName?classes.show_image_true: classes.show_image} for="file-input">
-                  <img src={state.fileName? state.fileName: image_icon} />
+                  <img style={{height: state.fileName? 61: ''}} src={state.fileName? state.fileName: image_icon} />
               </label>
               </div>
               <input id="file-input" type="file" style={{display: 'none'}} onChange={uploadFile} className={styles.upload_image} accept="image/*" />

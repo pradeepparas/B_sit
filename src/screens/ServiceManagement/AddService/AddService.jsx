@@ -23,7 +23,7 @@ import logo from '../../StationManagement/AddStation/logo.png';
 import flag from '../../StationManagement/flag.svg';
 import image_icon from './image_icon.png';
 // import * as API from '../../../constants/APIs';
-// import * as actions from '../../../redux/actions/stationActions';
+import * as actions from '../../../redux/actions/SFMISActions';
 // import Loading from '../../../components/Loading/Loading';
 
 // Material UI
@@ -217,7 +217,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function AddService(props) {
   // const history = useHistory();
-  const [stationType, setStationType] = useState([])
+  const [serviceCategory, setServiceCategory] = useState([])
   const token = localStorage.getItem('token')
 	const [add_details, setAddDetails] = useState([]);
 	const { service_id } = useParams();
@@ -229,6 +229,8 @@ export function AddService(props) {
   const history= useHistory();
   const [managedByList, setManagedByList] = useState([])
   const [state, setState] = useState({
+    from_time_value: "",
+    to_time_value: "",
     fileName: "",
     fileNameExt: "",
     vendor_name: "",
@@ -284,9 +286,17 @@ export function AddService(props) {
   }, [])
 
   useEffect(() => {
-    // setStationType(props.stationType)
+    props.getCategoryServices()
+    // setServiceCategory(props.serviceCategory)
     // setManagedByList(props.contractorsList)
   }, [])
+
+  useEffect(() => {
+    debugger
+    if(props.serviceCategory){
+      setServiceCategory(props.serviceCategory)
+    }
+  }, [props.serviceCategory])
 
 	// if(id == 'add') {
 	// 	setIsAdd(true)
@@ -336,18 +346,14 @@ export function AddService(props) {
       if (!validateForm()) {
           return
       }
+
       if(service_id == 'add'){
-        let merged = state
-        merged.is_assign_as_admin = pchecked;
-			  // setAddDetails(merged)
-        merged.station_code = merged.station_code.toUpperCase();
-		    let response = await props.add_station(merged)
-        console.log(response)
+        props.manageSFMISServices(state);
         // debugger
       } else {
-        console.log(state)
-        debugger
-        props.EditStationDetails(state)
+        // console.log(state)
+        // debugger
+        // props.EditStationDetails(state)
       }
 
       // setModal(true);
@@ -551,48 +557,36 @@ export function AddService(props) {
   }
 
   const handleInputs = (event) => {
-    // console.log(event.target.name)
-    // console.log(event.target.value)
-    // debugger
+    console.log(event.target.name)
+    console.log(event.target.value)
+
+    debugger
     setState({
       ...state,
       [event.target.name]: event.target.value
     })
 
     debugger
-    if(event.target.name == 'managed_by'){
+    if(event.target.name == 'from_time' || event.target.name == 'to_time'){
+      var ts = event.target.value;
+      var H = +ts.substr(0, 2);
+      var h = (H % 12) || 12;
+      h = (h < 10)?("0"+h):h;
+      var ampm = H < 12 ? " AM" : " PM";
+      ts = h + ts.substr(2, 3) + ampm;
+      console.log(ts)
+
+      let name = event.target.name == 'from_time'? 'from_time_value': 'to_time_value';
       debugger
-      let value = managedByList.find(x => x._id == event.target.value)
-      // state.contract_winner = value.name
+      
+      
+
       setState({
         ...state,
         [event.target.name]: event.target.value,
-        contract_winner: value.name
+        [name]: ts
       })
     }
-
-		//  This Code is Worked When Assign as Admin is True.
-		if(pchecked){
-			if(event.target.name == 'contact_name'){
-				setState({
-	        ...state,
-	        [event.target.name]: event.target.value,
-	        name: event.target.value
-	      })
-			} else if(event.target.name == 'contact_mobile') {
-				setState({
-	        ...state,
-	        [event.target.name]: event.target.value,
-	        mobile: event.target.value
-	      })
-			} else if(event.target.name == 'contact_email') {
-				setState({
-	        ...state,
-	        [event.target.name]: event.target.value,
-	        email: event.target.value
-	      })
-			}
-		}
 
     // debugger
     setErros({errors, [event.target.name]:""})
@@ -641,7 +635,7 @@ export function AddService(props) {
           debugger
         }
         let reader = new FileReader();
-        reader.onloadend = (e, fileNameExt) => {
+        reader.onloadend = (e) => {
           debugger
         setState({
           ...state,
@@ -672,25 +666,22 @@ export function AddService(props) {
                 <div className={styles.error_message}>{errors.display_name}</div>
               </div>
 
-              <div className={styles.textfield}>
+              {/*<div className={styles.textfield}>
                 <label style={{color: '#535763'}}>Service Type</label>
                 <select className={styles.select1} name="service_type" value={state.service_type} onChange={handleInputs}>
-                  {/* RURAL, URBAN, SEMI RURAL */}
                   <option value={'0'} >Service Type</option>
-                  {stationType.length > 0 ? stationType.map(data =>
-                  <option key={data._id} value={data.service_type}>{data.service_type}</option>
-                  ) : null}
+                  <option value={'BOOK'} >Book</option>
+                  <option value={'ORDER'} >Order</option>
               </select>
               <div className={styles.error_message}>{errors.service_type}</div>
-              </div>
+              </div>*/}
 
               <div className={styles.textfield}>
                 <label style={{color: '#535763'}}>Service Category</label>
                 <select className={styles.select1} name="service_category" value={state.service_category} onChange={handleInputs}>
                   <option value={'0'} >Service Category</option>
-                  <option value={'1'} >Wheelchair</option>
-                  {stationType.length > 0 ? stationType.map(data =>
-                  <option key={data._id} value={data.service_category}>{data.service_category}</option>
+                  {serviceCategory.length > 0 ? serviceCategory.map(data =>
+                  <option key={data._id} value={data._id}>{data.category_name}</option>
                   ) : null}
               </select>
               <div className={styles.error_message}>{errors.service_category}</div>
@@ -703,6 +694,9 @@ export function AddService(props) {
                 + Add Service Category
               </Button>
               </div>
+
+              {/* Empty Div */}
+              <div></div>
 
               <div className={styles.textfield}>
                 <label style={{color: '#535763'}}>Chargeable</label>
@@ -754,25 +748,13 @@ export function AddService(props) {
               
               <div className={styles.textfield}>
                 <label style={{color: '#535763'}}>From</label>
-                <select className={styles.select1} name="from_time" value={state.from_time} onChange={handleInputs}>
-                  <option value={'0'} >From</option>
-                  <option value={'1'} >10:00</option>
-                  {stationType.length > 0 ? stationType.map(data =>
-                  <option key={data._id} value={data.from_time}>{data.from_time}</option>
-                  ) : null}
-                </select>
+                <input type='time' placeholder='' className={styles.timefield} name="from_time" value={state.from_time} onChange={handleInputs} />
                 <div className={styles.error_message}>{errors.from_time}</div>
               </div>
 
               <div className={styles.textfield}>
                 <label style={{color: '#535763'}}>To</label>
-                <select className={styles.select1} name="to_time" value={state.to_time} onChange={handleInputs}>
-                  <option value={'0'} >To</option>
-                  <option value={'1'} >20:00</option>
-                  {stationType.length > 0 ? stationType.map(data =>
-                  <option key={data._id} value={data.to_time}>{data.to_time}</option>
-                  ) : null}
-                </select>
+                <input type='time' placeholder='' className={styles.timefield} name="to_time" value={state.to_time} onChange={handleInputs} />
                 <div className={styles.error_message}>{errors.to_time}</div>
               </div>
 
@@ -859,22 +841,22 @@ const mapStateToProps = (state) => {
     // contractorsList: state.Stations.contractorsList,
     // isSubmitted: state.Stations.isSubmitted,
     // isLoading: state.Stations.isLoading,
-    // stationType: state.Stations.stationType
+    serviceCategory: state.SFMIS.serviceCategory
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+    getCategoryServices: () => {
+      dispatch(actions.getCategoryServices())
+    },
+    manageSFMISServices: (data) => 
+      dispatch(actions.manageSFMISServices(data))
     // setIsSubmitted: flag => {
     //   dispatch(actions.setIsSubmitted(flag))
     // },
     // EditStationDetails: data => {
     //   dispatch(actions.EditStationDetails(data))
-    // },
-	// 	add_station: (details) =>
-	// 		dispatch(actions.stationActions(details)),
-    // GetContractors: () => {
-    //   dispatch(actions.GetContractors())
     // },
     // getStationData: () => {
     //   dispatch(actions.getStationData())

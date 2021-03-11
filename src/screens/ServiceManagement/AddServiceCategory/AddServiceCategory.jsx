@@ -35,13 +35,15 @@ import {
   Button,
   Icon
 } from '@material-ui/core';
-import InputBase from '@material-ui/core/InputBase';
+// import InputBase from '@material-ui/core/InputBase';
+import CancelIcon from "@material-ui/icons/Cancel";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+// import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// import IconButton from "@material-ui/core/IconButton";
+import Radio from "@material-ui/core/Radio";
+// import Visibility from "@material-ui/icons/Visibility";
+// import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { toast } from 'react-toastify';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -49,7 +51,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -65,6 +67,26 @@ const GreenCheckbox = withStyles({
   },
   checked: {},
 })((props) => <Checkbox color="#213D77" {...props} />);
+
+const RedRadio = withStyles({
+  root: {
+    color: "#b22222",
+    '&$checked': {
+      color: "#b22222",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
+const GreenRadio = withStyles({
+  root: {
+    color: "#10AC44",
+    '&$checked': {
+      color: "#10AC44",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 
 
 const useStyles = makeStyles((theme) => ({
@@ -160,6 +182,21 @@ const useStyles = makeStyles((theme) => ({
     margintop: 10,
 
   },
+  deletebutton1: {
+		width: 100,
+    ["@media (min-width: 280px) and (max-width: 1192px)"]: {
+      width: '100%',
+      marginBottom: 5
+    },
+    borderRadius: 80,
+    color: 'white',
+    backgroundColor: '#213D77',
+    textTransform: 'capitalize',
+    '&:hover': {
+      backgroundColor: '#213D77',
+      color: '#FFF'
+    }
+  },
   button2: {
     ["@media (max-width:428px)"]: {
       marginRight: 0,
@@ -168,16 +205,14 @@ const useStyles = makeStyles((theme) => ({
     },
     marginRight: 30,
     width: 90,
-    height: 30,
     borderRadius: 16,
     color: 'white',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'transparent',
     color: '#213D77',
     border: '1px solid #213D77',
     textTransform: 'capitalize',
     '&:hover': {
-      backgroundColor: '#FFFFFF',
-
+      backgroundColor: 'transparent',
     }
   },
   container1: {
@@ -262,6 +297,7 @@ export function AddServiceCategory(props) {
   const [servicesType, setServicesType] = useState([])
   const [role, setRole] = useState([]);
   const [modal, setModal] = useState({
+    changeModel: false,
     details: false,
     deletedModal: false,
     deleteModal: false
@@ -271,9 +307,11 @@ export function AddServiceCategory(props) {
   const { user_id } = useParams();
   const [pageNo, setPageNo] = useState();
   const [rows, setRows] = useState([]);
+  const [changeStatus, setChangeStatus] = useState(false)
   // const [categoryList, setCategoryList] = useState([])
 
   const [state, setState] = useState({
+    image_icon: "",
     category_name: "",
     category_icon: "",
     service_type: "",
@@ -295,6 +333,9 @@ export function AddServiceCategory(props) {
   const toggleModal = (e, data, row) => {
 
     setArrayDetails(row);
+
+    // for status value
+    setChangeStatus(row.status);
     debugger
     if (data == 'delete') {
       debugger
@@ -304,13 +345,28 @@ export function AddServiceCategory(props) {
       })
     } else {
       setModal({
-        details: true
+        changeModel: true
       })
     }
   }
+
+  // Change Service Category Status
+  const handleChangeChargeable = (event, type) => {
+    if (type == 'Yes') {
+      setChangeStatus(true)
+    } else {
+      setChangeStatus(false)
+    }
+  };
+
   // close modal
   const toggleModalClose = () => {
-    setModal(false)
+    setModal({
+      deleteModal: false,
+      deletedModal: false,
+      changeModel: false,
+      details: false
+    })
     // props.setIsSubmitted(false)
     // history.push('/Services-management')
   }
@@ -323,7 +379,7 @@ export function AddServiceCategory(props) {
 
   // for getting category service data
   useEffect(() => {
-    props.getCategoryServices(1, 10)
+    props.getCategoryServicesByParams(1, 10)
   }, [])
 
   useEffect(() => {
@@ -356,18 +412,18 @@ export function AddServiceCategory(props) {
 
     // Handle Submit User
     const handleSubmit = (e) => {
-
       e.preventDefault();
       if (!validateForm()) {
         return
-      }
-        props.manageCategoryServices(state, isEdit);
-        
+      } 
+        state.category_icon = state.image_icon ? state.image_icon: "";
+        props.manageCategoryServices(state, isEdit);   
     }
 
     useEffect(() => {
       setIsEdit(false)
       setState({
+        image_icon: "", 
         category_name: "",
         category_icon: "",
         service_type: "",
@@ -389,8 +445,14 @@ export function AddServiceCategory(props) {
       errors.service_type="Service type is required";
       isValid=false;
      }
-     else if(state.category_icon.trim()==''){
-      errors.service_type="Please upload category icon";isValid=false;
+     else if(isEdit){
+      if(state.category_icon.trim()==''){
+        errors.image="Please upload category icon";
+        isValid=false;
+      }
+     } else if(state.image_icon.trim()=='') {
+        errors.image="Please upload category icon";
+        isValid=false;
      }
      setErros({...errors, errors })
      return isValid
@@ -528,31 +590,53 @@ export function AddServiceCategory(props) {
     )
   }
 
-  // Handle Delete function
-	const handleDeleteSubmit = async(e, categoryData) => {
+  // Handle Delete and Change Status function or Calling APIs for Changing Status
+	const handleDeleteAndChangeStatus = async(e, categoryData, type) => {
 		// set delete modal false
     console.log(categoryData)
     debugger
     let a = await props.setIsLoading(true);
 
-    axios({
-      url: `${API.AddServiceCategories}/${categoryData._id}`,
-      method: "DELETE",
+    let config = {
+      url: type == 'delete'? `${API.AddServiceCategories}/${categoryData._id}`: `${API.AddServiceCategories}/change_status`,
+      method: type == 'delete'? "DELETE": 'PUT',
       headers: {
-        //    'Accept-Language': 'hi',
+        // 'Accept-Language': 'hi',
         "accept": "application/json",
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      } 
+    }
+
+    if(type == 'status'){
+      let value = {
+          "status": changeStatus,
+          "id": categoryData._id
       }
-    }).then((response) => {
+      config.data = value
+    }
+
+    console.log(config)
+    debugger
+
+    axios(config).then((response) => {
       if(response.data.success){
         debugger
         // toast.success(response.data.message)
-        setModal({
-          deleteModal: false,
-          deletedModal: true
-        })
+        if(type == 'delete'){
+          setModal({
+            deleteModal: false,
+            deletedModal: true
+          })
+        } else {
+          toast.success(response.data.message)
+          setModal({
+            ...modal,
+            changeModel: false
+          })
+        }
+
         props.setIsLoading(false)
-        props.getCategoryServices(1, 10)
+        props.getCategoryServicesByParams(1, 10)
       } else {
         debugger
         toast.error(response.data.message)
@@ -562,10 +646,10 @@ export function AddServiceCategory(props) {
       props.setIsLoading(false)
     })
 
-		setModal({
-			deleteModal: false,
-			deletedModal: true
-		})
+		// setModal({
+		// 	deleteModal: false,
+		// 	deletedModal: true
+		// })
 	}
 
   const uploadFile = (e, type)=> {
@@ -580,10 +664,10 @@ export function AddServiceCategory(props) {
         let fileExt = file_name.substr(file_name.lastIndexOf('.') + 1);
          console.log(e.target.files[0])
          if(e.target.files[0]){
-           if(e.target.files[0].size > (1048576*2)){
+           if(e.target.files[0].size > (1048576*0.5)){
              e.target.value = "";
              isValid = false;
-             toast.error(`file size should less than ${2}mb`)
+             toast.error(`file size should less than 500KB`)
              return;
            }
          }
@@ -607,11 +691,12 @@ export function AddServiceCategory(props) {
         setState({
           ...state,
           file_name: fileNameExt,
-          category_icon: reader.result
+          image_icon: reader.result
           })
         }
       reader.readAsDataURL(e.target.files[0], fileNameExt);
       }
+      setErros({ errors, image: "" })
    }
 
    const searchUsers = () => {
@@ -623,13 +708,12 @@ export function AddServiceCategory(props) {
 
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    
-    console.log(data)
+
     let name = `http://13.235.102.214:8000/uploads/category/${data.category_icon}`;
-    debugger
 
     setIsEdit(true);
-
+    
+    debugger
     setState({
       ...state,
       category_name: data.category_name,
@@ -639,6 +723,7 @@ export function AddServiceCategory(props) {
       status: data.status,
       _id: data._id
   })
+
   }
 
   return (
@@ -688,8 +773,8 @@ export function AddServiceCategory(props) {
             <div className={styles.textfield}>
             <label style={{color: ' soloid #535763'}}>Upload Service Icon</label>
               <div className={styles.image_upload}>
-              <label className={state.category_icon?classes.show_image_true: classes.show_image} for="file-input">
-                  <img style={{ marginTop:'7px' }}src={state.category_icon? state.category_icon: image_icon} />
+              <label className={state.image_icon? classes.show_image_true : (state.category_icon ? classes.show_image_true: classes.show_image)} for="file-input">
+                  <img style={{ marginTop:'7px',height: state.image_icon||state.category_icon? 61: '', width: state.image_icon||state.category_icon? 92: '' }} src={state.image_icon? state.image_icon: (state.category_icon? state.category_icon: image_icon)} />
               </label>
               </div>
               <input id="file-input" type="file" style={{display: 'none'}} onChange={uploadFile} className={styles.upload_image} accept="image/*" />
@@ -800,7 +885,7 @@ export function AddServiceCategory(props) {
                       <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
                       <div className={styles.dropdown_content}>
                         <a><div onClick={(e) => editDetails(e, row)}>Edit Details </div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details', index)}>Change Status</div></a>
+                        <a><div onClick={(e) => toggleModal(e, 'change', row)}>Change Status</div></a>
                         <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Remove</div></a>                    
                       </div>
                     </div></TableCell>
@@ -815,18 +900,18 @@ export function AddServiceCategory(props) {
         </div>
       </div>
 
-      {/* After Delete Category */}
-			{<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deletedModal} toggle={toggleModalClose} centered={true}>
+      {/* After Deleted Service Category */}
+			{<Modal className={styles.modalCategoryContainer} contentClassName={styles.customDeleteClass} isOpen={modal.deletedModal} toggle={toggleModalClose} centered={true}>
 					<ModalBody modalClassName={styles.modalContainer}>
           <img style={{width: 60}} src={flag} />
-					<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>Successfully Deleted User</strong>  </p>
+					<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>Successfully Deleted Service Category</strong>  </p>
 					</ModalBody>
-					<ModalFooter className={styles.footer}>
+					<ModalFooter className={styles.deleteFooter}>
 						<Button
               style={{width: 100}}
 							variant="contained"
               color="black"
-              className={classes.button1}
+              className={classes.deletebutton1}
 							onClick={toggleModalClose}
 						>
 						OK
@@ -835,13 +920,13 @@ export function AddServiceCategory(props) {
 				</Modal>}
 
       {/*Delete Category*/}
-      {<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deleteModal} toggle={toggleModalClose} centered={true}>
+      {<Modal className={styles.modalCategoryContainer} contentClassName={styles.customDeleteClass} isOpen={modal.deleteModal} toggle={toggleModalClose} centered={true}>
 					<ModalBody modalClassName={styles.modalContainer}>
           <img style={{width: 60}} src={delete_logo} />
 				<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>Are you sure you want to delete {arrayDetails.category_name} Category?</strong>  </p>
 
 					</ModalBody>
-					<ModalFooter className={styles.footer}>
+					<ModalFooter className={styles.deleteFooter}>
 						<Button
               style={{width: 100}}
 							variant="contained"
@@ -854,8 +939,8 @@ export function AddServiceCategory(props) {
 						<Button
               style={{width: 100}}
 							variant="contained"
-							className={classes.button1}
-							onClick={(e) => { handleDeleteSubmit(e, arrayDetails) }}
+							className={classes.deletebutton1}
+							onClick={(e) => { handleDeleteAndChangeStatus(e, arrayDetails, 'delete') }}
 						>
 							YES
 						</Button>
@@ -881,6 +966,69 @@ export function AddServiceCategory(props) {
         </ModalFooter>
       </Modal>
 
+      {/* Modal for change Status */}
+				{<Modal className={styles.Container2} contentClassName={styles.changeStatusClass}
+				 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
+            <CancelIcon
+					 style={{
+						 width: 40,
+						 height: 40,
+						 backgroundColor: 'white',
+						 color: "#213D77",
+						 borderRadius: 55,
+						 position: "absolute",
+						 top: "-14",
+						 right: "-16",
+						 cursor: "pointer",
+					 }}
+					 onClick={toggleModalClose}
+				 />
+         <div className={styles.modalBody}>
+                <label style={{
+                    color: '#213D77', 
+                    fontWeight:"bold", 
+                    marginBottom: 20, 
+                    fontSize: 17, 
+                    display: 'flex', 
+                    justifyContent: 'center'
+                  }}>
+                    Change Status</label>
+                  <div style={{display: 'flex', justifyContent: 'space-evenly'  }}>
+                  <div>
+                  <GreenRadio
+                    checked={changeStatus}
+                    onChange={(e) => handleChangeChargeable(e,"Yes")}
+                    // value="c"
+                    name="radio-button-demo"
+                    inputProps={{ 'aria-label': 'C' }}
+                  />
+                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+                  </div>
+
+                <div>
+                <RedRadio
+                    checked={!changeStatus}
+                    onChange={(e) => handleChangeChargeable(e, "No")}
+                    // value="c"
+                    name="radio-button-demo"
+                    inputProps={{ 'aria-label': 'C' }}
+                  />
+                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
+                  </div>
+                </div>
+              </div>
+						<ModalFooter className={styles.footer1}>
+							<Button
+	              style={{width: 100}}
+								variant="contained"
+	              color="black"
+	              className={classes.deletebutton1}
+								onClick={(e) => handleDeleteAndChangeStatus(e, arrayDetails, 'status')}
+							>
+							OK
+							</Button>
+						</ModalFooter>
+					</Modal>}
 
       {rows.length == 0 && <div className={styles.pageDiv}>
         <div style={{ marginTop: 40 }}>
@@ -911,8 +1059,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     manageCategoryServices: (category, edit) => 
       dispatch(actions.manageCategoryServices(category, edit)),
-    getCategoryServices: (page, limit) => 
-      dispatch(actions.getCategoryServices(page, limit)),
+    getCategoryServicesByParams: (page, limit) => 
+      dispatch(actions.getCategoryServicesByParams(page, limit)),
     // setIsSubmitted: flag => {
     //   dispatch(setIsSubmitted(flag))
     // },

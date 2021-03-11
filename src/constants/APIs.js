@@ -29,3 +29,4 @@ export const UpdateProfileAPI = `${url}/users/profile_update`;
 
 // SFMIS Service Management
 export const AddServiceCategories = `${url}/servicecategories`;
+export const SFMISAPI = `${url}/services`;
