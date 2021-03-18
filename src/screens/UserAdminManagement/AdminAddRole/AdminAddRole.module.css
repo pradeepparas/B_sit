@@ -58,10 +58,11 @@
     /* height: 45%; */
     background-color: white;
     box-shadow: 0px 4px 8px 0px #08080833;
-    margin-bottom: 60px;
+    margin-bottom: 66px;
     display: block;
     height: 235px;
     color: #272D3B;
+    margin-left: -2px;
   }
   
   .grid {
@@ -165,9 +166,11 @@
   .filterContent {
     margin-bottom: 15px;
     margin-top: 15px;
+    margin-left: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 30%;
   }
   .searchBarDiv {
     display: flex;
@@ -259,13 +262,11 @@
   /* max-width: 1024px; */
 }
 .textfield2{
-  display: block;
-    flex-direction: column;
-    margin: 32px 16px 19px 23px;
-    padding-left: 2px;
-    /* padding-right: -5px; */
-    width: 100%;
-    margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  margin: 32px 16px 19px 20px;
+  padding-left: 30px;
+  width: 78%;
 }
 .footer1 {
   border-top: none;
@@ -277,17 +278,18 @@
   margin-bottom: -23px;
 }
 .main1{
-  justify-content: center;
-  width: 100%;
   display: flex;
+  justify-content: space-between;
+  width: 31%;
+  margin-left: 160px;
+
   /* margin-left: 185px; */
 }
-.bex{
+/* .bex{
   display: flex;
     justify-content: center;
-  /* margin-left: 20px; */
-  /* margin-left: -33px; */
-}
+ 
+} */
 .saveButton{
   align-items: center;
   display: flex;
@@ -296,6 +298,10 @@
     /* display: inline-block; */
     /* margin-right: 138px; */
 }
+.modalContainer1{
+  margin: auto;
+}
+
  /* saveButton */
  @media (min-width: 900px) and (max-width: 1024px) {
     .grid {
@@ -373,7 +379,8 @@
       grid-template-rows: 1fr;
     }
     .main1{
-      width: 68%;
+      width: 70%;
+      margin-left: 155px;
     }
   }
   @media (min-width: 180px) and (max-width: 428px) {
@@ -409,6 +416,9 @@
     flex-direction: column;
     display: flex;
     justify-content: center;
+    width: 96%;
+    margin-left: 5px;
+   
   }
   .saveButton{
     display: block;
@@ -421,6 +431,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      margin-left: 0px;
     }
     .searchBarDiv {
       width: 91%;
@@ -455,13 +467,79 @@
         height: 40px;
         width: 68%;
       }
-      .main1{
+      /* .main1{
         justify-content: center;
         width: 65%;
         display: flex;
+      } */
+    }
+    @media (min-width: 540px) and (max-width: 680px) {
+      .modalContainer1{
+        margin: auto;
       }
     }
+    @media (min-width: 280px) and (max-width: 460px) {
+      .modalContainer1{
+        display: flex;
+        margin-top: 75px;
+        width: 89%;
+        margin-left: 15px;
+      }
+      .customClasss{
+        width: 100%;
+        margin-left: -4px;
+      }
+      .textfield2{
+        display:contents;
+        /* width: 76%; */
 
+      }
+    }
+    @media (min-width: 470px) and (max-width: 1024px) {
+      .modalContainer1{
+        margin-top: 75px;
+      }
+      .textfield2{
+        width: 76%;
+      }
+    }
+   
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .customClasss{ 
+        width: 95%;
+        margin-left: 20px;
+        display: flex;
+        /* margin-top: auto; */
+      }
+    }
+    @media (min-width: 450px) and (max-width: 575px) {
+      .main1{
+        width: 88%;
+    /* display: flex; */
+    margin-left: 30px;
+      }
+    }
+    @media (min-width: 580px) and (max-width: 730px) {
+      .main1{
+        width: 61%;
+        margin-left: 26px;
+      }
+    }
+    @media (min-width:735px) and (max-width: 774px) {
+      .main1{
+        width: 61%;
+        margin-left: 27px;
+      }
+    }
+    @media (min-width:775px) and (max-width: 899px) {
+      .main1{
+        width: 63%;
+        margin-left: 213px;
+      }
+    }
+    
+    
+ 
 
 
   /* @media (min-width: 768px) {

@@ -130,21 +130,21 @@ const useStyles = makeStyles((theme) => ({
     color: "red",
     ["@media (max-width:320px)"]: {},
   },
-  button1: {
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
-      width: '100%',
-      marginBottom: 5
-    },
-    borderRadius: 80,
-    color: 'white',
-    backgroundColor: '#213D77',
-    textTransform: 'capitalize',
-    '&:hover': {
-      backgroundColor: '#213D77',
-      color: '#FFF'
-    },
-    width: 114
-  },
+  // button1: {
+  //   ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+  //     width: '100%',
+  //     marginBottom: 5
+  //   },
+  //   borderRadius: 16,
+  //   color: 'white',
+  //   backgroundColor: '#213D77',
+  //   textTransform: 'capitalize',
+  //   '&:hover': {
+  //     backgroundColor: '#213D77',
+  //     color: '#FFF'
+  //   },
+  //   width: 114
+  // },
   textField1: {
     outline: 'none',
     width: 250,
@@ -166,14 +166,21 @@ const useStyles = makeStyles((theme) => ({
     // borderRadius: 8
   },
   button1: {
+    ["@media (max-width:428px)"]: {
+      marginRight: 0,
+      width: '100%',
+      marginBottom: 5
+    },
     borderRadius: 16,
-    border: '1px solid #213D77',
-    backgroundColor: '#EFEFEF',
     color: '#213D77',
+    backgroundColor: 'transparent',
     textTransform: 'capitalize',
+    border:'1px solid #213D77',
     '&:hover': {
-      backgroundColor: '#EFEFEF',
-    }
+      backgroundColor: 'transparent',
+      color: '#213D77'
+    },
+    width: 114
   },
   // button3:{
   //   borderRadius: 16,
@@ -685,7 +692,7 @@ export function ManageRole(props) {
   return (
     <div className={styles.main}>
       <div className={styles.header}>
-        <div className={styles.title1}>{user_id == 'add' ? "Add User" : "Manage Role"}</div>
+        <div className={styles.title1}>{user_id == 'add' ?"Manage Role" :"Add Role"}</div>
         <Button startIcon={<ArrowBackIosIcon color="white" />} onClick={() => history.push(`/user-management/${user_id}/add-role`)} className={classes.button1} variant="contained">
           Back
         </Button>
@@ -694,15 +701,14 @@ export function ManageRole(props) {
         <div className={styles.box1}>
           <div className={styles.grid}>
             <div className={styles.textfield}>
-              <label style={{ color: 'black' }}>Role Name</label>
-              <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
-              <br /><br />
-            </div><br /><br />
+              <label className={styles.label} style={{ color: 'black' }}>Role Name</label>
+              <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />             
+            </div><br/>
             <div className={styles.error_message}>{errors.roleName}</div>
             <div className={styles.textfield}>
-              <label style={{ color: 'black' }}>Role Description</label>
+              <label className={styles.label}  style={{ color: 'black' }}>Role Description</label>
               <input autocomplete="off" name="roleDescription" value={state.roleDescription} onChange={handleInputs} className={styles.inputfield} type="text" />
-            </div><br />
+            </div><br/>
             <div className={styles.error_message}>{errors.roleDescription}</div>
             <div className={styles.main1}>
               <div className={styles.bex}>

@@ -125,15 +125,32 @@ const useStyles = makeStyles((theme) => ({
     // color: '#b22222',
     // borderRadius: 8
   },
+  // button1: {
+  //   borderRadius: 16,
+  //   border:'1px solid #213D77',
+  //   backgroundColor: '#EFEFEF',
+  //   color: '#213D77',
+  //   textTransform: 'capitalize',
+  //   '&:hover': {
+  //     backgroundColor: '#EFEFEF',
+  //   }
+  // },
   button1: {
+    ["@media (max-width:428px)"]: {
+      marginRight: 0,
+      width: '100%',
+      marginBottom: 5
+    },
     borderRadius: 16,
-    border:'1px solid #213D77',
-    backgroundColor: '#EFEFEF',
     color: '#213D77',
+    backgroundColor: 'transparent',
     textTransform: 'capitalize',
+    border:'1px solid #213D77',
     '&:hover': {
-      backgroundColor: '#EFEFEF',
-    }
+      backgroundColor: 'transparent',
+      color: '#213D77'
+    },
+    width: 114
   },
   button3:{
     borderRadius: 16,
@@ -144,8 +161,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#213D77',  
     },
     ["@media (max-width:368px)"]: {
-      width: '100%',
-      marginRight:5,
+      width: '90%',
+      marginRight:6,
     }
 
   },
@@ -407,10 +424,7 @@ debugger
         errors.userAddress="Address is required ";
         isValid =false;
     }
-    // else  if(state.stationName.trim()=='' || state.stationName == '0'){
-    //       errors.stationName="station name is required";
-    //       isValid =false;
-    //   }
+   
       else if(state.role.trim()=='' || state.role == '0'){
           errors.role="role field is required";
           isValid =false;
@@ -478,7 +492,7 @@ debugger
                 <div className={styles.box3}>
           <div style={{ fontSize: 14, marginLeft: 12 }} className={styles.title}>User Details
           <Link to={`/user-management/${user_id}/add-role`} >
-              <Button style={{ float: 'right', marginTop: '-5px' }} className={classes.button3} onClick={addRole} variant="contained">
+              <Button style={{ float: 'right', marginTop: '-5px',marginRight:'15px'}} className={classes.button3} onClick={addRole} variant="contained">
                 +Add Role
         </Button>
             </Link>
@@ -533,20 +547,18 @@ debugger
                   <option key={data._id} value={data._id}>{data.role.replace('_', ' ')}</option>
                   )}
 						</select>
-					
 						</div><br/>
             <div className={styles.error_message}>{errors.role}</div>
-
-             {user_id == 'add' &&<div className={styles.textfield2}>
-              <label className={styles.label} style={{color:'black', marginRight:'41px'}}>Password</label>
-              <input style={{position: 'relative'}} autocomplete="off" name="password" value={state.password} onChange={handleInputs} className={styles.inputfield} type={values.showPassword? "text" : "text"} />
+             {user_id=='add'&&<div className={styles.textfield2}>
+              <label className={styles.label} style={{color:'black'}}>Password</label>
+              <input style={{position: 'relative'}} autocomplete="off" name="password" value={state.password} onChange={handleInputs} className={styles.inputfield1} type={values.showPassword? "text" : "text"} />
               <button style={{display: 'contents'}} onClick={passwordGenerate}>
             <img style={{width: 30,height: 30, marginTop: 10, marginLeft: 10, marginRight: 10}} src={AutoPassword} />
             <small style={{display: 'flex', alignItems: 'center',color: 'black'}}>Autogenerate</small>
             </button>
             </div>}
-            {!user_id&&<div style={{marginTop: -31}} className={styles.error_message}>{errors.userPassword}</div>}
-            <div style={{paddingTop:user_id?"0px":"55px"}} className={styles.bex}>
+            {user_id=='add'&&<div style={{marginTop: -31}} className={styles.error_message}>{errors.userPassword}</div>}
+            <div style={{paddingTop:user_id?"40px":"0px"}} className={styles.bex}>
               <FormControlLabel
                 className={classes.label}
                 control={<GreenCheckbox checked={checked} onChange={handleCheckBox}  name="checkedG" />}
@@ -560,11 +572,12 @@ debugger
                 }
               />
             </div>             					   
-            </div> 
-            
-            <div className ={styles.modalFooter}>
-              <button type="button" className={styles.btnPrimary1}>Cancel</button>
-              <button bsstyle="primary" type="submit" className={styles.btnPrimary}>Save</button>
+            </div>             
+            <div className ={styles.saveButton}>
+              <button onClick={() => history.push('/user-management')}  type="button" className={styles.btnPrimary1} variant="contained">Cancel</button>
+              <button onClick={handleSubmit} bsstyle="primary" type="submit" className={styles.btnPrimary} variant="contained">
+              {user_id ? "Save" : "Update"}
+                </button>
               </div>
             {/* <div className={styles.saveButton}>
 			      <Button style={{}} onClick={() => history.push('/user-list')}  className={classes.button2} variant="contained">

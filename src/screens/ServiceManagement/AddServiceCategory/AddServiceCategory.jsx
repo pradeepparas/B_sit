@@ -111,10 +111,8 @@ const useStyles = makeStyles((theme) => ({
     color: "red",
     display: "flex",
     marginRight: "60px",
-    ["@media (min-width: 540px) and (max-width: 720px)"]: {
-      marginTop:'-28px',
-      marginRight: '296px'
-
+    ["@media (min-width: 280px) and (max-width: 750px)"]: {
+      marginRight: 0
     },
   },
   textField1: {
@@ -124,6 +122,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 30,
     ["@media (min-width: 360px) and (max-width: 640px)"]: {
       width: '40%'
+    },
+    ["@media (min-width: 280px) and (max-width: 700px)"]: {
+      width: '100%'
     },
     '&:focus': {
       borderColor: '#6c757d'
@@ -166,8 +167,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#213D77',
       color: '#FFF'
     },
-    ["@media (min-width: 540px) and (max-width: 720px)"]: {
-      marginLeft: '271px',
+    ["@media (min-width: 280px) and (max-width: 750px)"]: {
+      width: '100%'
     },
   },
   title1: {
@@ -245,29 +246,29 @@ const useStyles = makeStyles((theme) => ({
     overflowX: 'scroll',
   },
   textField: {
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 700px)"]: {
       width: '100%'
     }
   },
   div1: {
-    marginRight: 100,
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 700px)"]: {
       width: '91%',
       marginRight: 0,
+      marginTop: 5
     }
   },
   button3: {
     ["@media (min-width: 360px) and (max-width: 640px)"]: {
       width: '120px',
-     marginLeft: '145px',
-     marginTop: '-57px',
+    },
+    ["@media (min-width: 280px) and (max-width: 700px)"]: {
+      width: '100%',
     },
     borderRadius: 80,
     color: 'white',
     backgroundColor: '#213D77',
     textTransform: 'capitalize',
     height: 40,
-    marginRight: 611,
     '&:hover': {
       backgroundColor: '#213D77',
       color: '#FFF',
@@ -305,6 +306,7 @@ export function AddServiceCategory(props) {
   // const [categoryList, setCategoryList] = useState([])
 
   const [state, setState] = useState({
+    image_change: false,
     image_icon: "",
     category_name: "",
     category_icon: "",
@@ -680,6 +682,7 @@ export function AddServiceCategory(props) {
           debugger
         setState({
           ...state,
+          image_change: true,
           file_name: fileNameExt,
           image_icon: reader.result
           })
@@ -730,7 +733,7 @@ export function AddServiceCategory(props) {
 
           <div className={styles.grid}>
             <div className={styles.textfield}>
-              <label style={{ color: '#272D3B', width: '100%', marginBlock: 'auto' }}>Service Category Name</label>
+              <label style={{ color: '#272D3B', width: '100%' }}>Service Category Name</label>
               <input autocomplete="off" className={styles.inputfield} name="category_name" value={state.category_name} onChange={handleInputs} type="text" />
               <div className={styles.error_message}>{errors.category_name}</div>
 
@@ -739,7 +742,7 @@ export function AddServiceCategory(props) {
             {/* <div className={styles.error_message}>{errors.category_name}</div> */}
 
               <div className={styles.textfield}>
-                <label style={{color: '#272D3B', width: '100%', marginBlock: 'auto'}}>Services Type</label>
+                <label style={{color: '#272D3B', width: '100%'}}>Services Type</label>
                 <select
                             className={styles.inputfield}
                       name="service_type" value={state.service_type} onChange={handleInputs}>
@@ -750,7 +753,7 @@ export function AddServiceCategory(props) {
               <div className={styles.error_message}>{errors.service_type}</div>
               </div>
 
-            <div className={styles.textfield}>
+            <div className={styles.textfield + " " + styles.imageStyle}>
             <label style={{color: ' soloid #535763'}}>Upload Service Icon</label>
               <div className={styles.image_upload}>
               <label className={state.image_icon? classes.show_image_true : (state.category_icon ? classes.show_image_true: classes.show_image)} for="file-input">

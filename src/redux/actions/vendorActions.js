@@ -150,7 +150,7 @@ export function getVendorManagementByParams(page, limit, params) {
         let a = await dispatch(setIsLoading(true));
 
         let station_id = localStorage.getItem('station_id');
-        let url = `${API.VendorAPI}/${page}/${limit}?station_id=${station_id}`;
+        let url = `${API.VendorAPI}/${page}/${limit}?station_id=${station_id}&search=${params.name}&vendor_id=${params.vendor_name}&start_date=${params.start_date}&end_date=${params.end_date}`;
         debugger
         axios({
             url: url,

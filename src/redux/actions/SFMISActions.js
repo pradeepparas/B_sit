@@ -17,14 +17,16 @@ export function manageCategoryServices(category, is_edit) {
             "category_name": category.category_name,
             // "category_icon": category.category_icon,
             "service_type": category.service_type,
-            "file_name": category.file_name,
+            // "file_name": category.file_name,
             "status": category.status,
             "station_id": localStorage.getItem('station_id')
           }
 
-        if(category.category_icon){
+        if(category.image_change){
             data.category_icon = category.category_icon;
+            data.file_name = category.file_name;
         }
+
         debugger
 
         var detail = JSON.stringify(data);
@@ -136,14 +138,14 @@ export function fetchCategoryServices(serviceCategory) {
 }
 
 // Creating SFMIS services Details
-export function manageSFMISServices(SFMIS, is_edit) {
+export function manageSFMISServices(SFMIS, is_edit, type) {
     return async dispatch => {
 
         let station_id = localStorage.getItem('station_id');
 
         let data = {
             "station_id": station_id,
-            "provided_by": "STATION",
+            // "provided_by": "STATION",
             "display_name": SFMIS.display_name,
             // "service_type": 602fa0734c7ed637d03eb735,
             "is_chargeable": SFMIS.chargeable,
@@ -160,6 +162,14 @@ export function manageSFMISServices(SFMIS, is_edit) {
             // "file_name": SFMIS.fileNameExt
           }
 
+        if(type == "STATION"){
+            data.provided_by = "STATION"
+        } else {
+            data.provided_by = "VENDOR"
+            data.vendor_id = SFMIS.vendor_name
+            data.auto_approved_item = SFMIS.approve_items
+        }
+
         if(SFMIS.image_change){
           data.file_name = SFMIS.fileNameExt;
           data.service_icon = SFMIS.fileName;
@@ -170,8 +180,8 @@ export function manageSFMISServices(SFMIS, is_edit) {
 
 
         let a = await dispatch(setIsLoading(true));
-        let url = is_edit ? `${API.SFMISAPI}/${SFMIS.SFMIS_id}?station_id=${station_id}&provided_by=STATION`:
-                  `${API.SFMISAPI}?station_id=${station_id}&provided_by=STATION`
+        let url = is_edit ? `${API.SFMISAPI}/${SFMIS.SFMIS_id}?station_id=${station_id}&provided_by=${type}`:
+                  `${API.SFMISAPI}?station_id=${station_id}&provided_by=${type}`
 
         let method = is_edit? "PUT": "POST";
 
@@ -200,12 +210,12 @@ export function manageSFMISServices(SFMIS, is_edit) {
 }
 
 // Getting SFMIS services for details
-export function getSFMISServicesByParams(page, limit) {
+export function getSFMISServicesByParams(page, limit, params, type) {
     return async dispatch => {
         let a = await dispatch(setIsLoading(true));
 
         let station_id = localStorage.getItem('station_id');
-        let url = `${API.SFMISAPI}/${page}/${limit}?station_id=${station_id}&provided_by=STATION`;
+        let url = `${API.SFMISAPI}/${page}/${limit}?station_id=${station_id}&provided_by=${type}`;
         debugger
         axios({
             url: url,

@@ -554,27 +554,6 @@ export function RevenueReport(props) {
 
         <div className={classes.container1}>
           <label style={{width: 45}} className={styles.dateLabel}>To Date</label>
-    			{/*<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-    				// defaultValue={new Date()}
-						
-    				className={classes.date1}
-    				// InputLabelProps={{
-            //   label: 'To Date',
-    				// 	shrink: true,
-            //   classes: { input: classes.input1 },
-            //   focused: classes.focused1,
-    				// }}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    			/>*/}
                 <DatePicker
                   autoComplete="off"
                   name="end_date"

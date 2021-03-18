@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'redux';
@@ -23,6 +23,8 @@ import downArrow from '../StationManagement/downArrow.png';
 import delete_logo from '../StationManagement/delete.svg';
 import edit from '../StationManagement/edit.png';
 import flag from '../VendorManagement/flag.svg';
+import printing from '../VendorManagement/printing.svg'
+
 
 // Material UI
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -339,12 +341,12 @@ export function UserManagement(props) {
   });
   const classes = useStyles();
   const [search, setSearch] = useState({
-    station_name: "",
+    vendor_name: "",
     name: "",
-    role: "",
     start_date: "",
     end_date: "",
   })
+
   const [dropDownDetails, setDropDownDetails] = useState([]);
   const [values, setValues] = React.useState({
     amount: '',
@@ -362,7 +364,7 @@ export function UserManagement(props) {
   // Getting Vendors By Parameters
     useEffect(() => {
 			props.getVendorManagement()
-      props.getVendorManagementByParams(1, 10)
+      props.getVendorManagementByParams(1, 10, search)
       debugger
     }, [])
 
@@ -370,6 +372,7 @@ export function UserManagement(props) {
 			if(props.vendorData){
 				setDropDownDetails(props.vendorData)
 			}
+      debugger
 		}, [props.vendorData])
 
 		// Change Service Category Status
@@ -390,25 +393,25 @@ export function UserManagement(props) {
 		}, [props.vendorDocs])
 
    // Changing Date fields
-   const handleDateChange = (data, type) => {
-    console.log(data)
-    // debugger
-    if(type == 'start') {
-      setSearch({
-        ...search,
-        start_date: data.target.value
-      })
-    } else {
-      setSearch({
-        ...search,
-        end_date: data.target.value
-      })
+		const handleDateChange = (date, type) => {
+      console.log(date)
+      // debugger
+      if(type == 'start') {
+        setSearch({
+          ...search,
+          start_date: moment(date).format("DD-MM-YYYY")
+        })
+      } else {
+        setSearch({
+          ...search,
+          end_date: moment(date).format("DD-MM-YYYY")
+        })
+      }
     }
-  }
 
   const handleChangePage = (event, page) => {
     setPageNo(page)
-    props.getUserDataByParams(page, props.limit, search)
+    props.getVendorManagementByParams(page, props.limit, search)
 	}
 
   // Used for Pagination
@@ -511,7 +514,7 @@ export function UserManagement(props) {
 					}
 
 					props.setIsLoading(false)
-					props.getVendorManagementByParams(pageNo, props.limit)
+					props.getVendorManagementByParams(pageNo, props.limit, search)
 				} else {
 					debugger
 					toast.error(response.data.message)
@@ -531,7 +534,7 @@ export function UserManagement(props) {
     const searchUsers = () => {
       console.log(search)
       debugger
-      props.getUserDataByParams(1, 10, search)
+      props.getVendorManagementByParams(1, 10, search)
     }
 
     const handleInputs = (event) => {
@@ -585,7 +588,7 @@ export function UserManagement(props) {
          </div> */}
 
 				 <div className={styles.selectDiv1}>
-					<select className={styles.select1} name="vendor_id" /*value={search.station_id}*/ onChange={handleInputs}>
+					<select className={styles.select1} name="vendor_name" /*value={search.station_id}*/ onChange={handleInputs}>
 						<option selected disabled>Vendor Name</option>
 						{dropDownDetails.length > 0 && dropDownDetails.map(data =>
 							<option key={data._id} value={data._id}>{data.name}</option>
@@ -594,67 +597,38 @@ export function UserManagement(props) {
 				</div>
 
         {/* <div className={styles.dateDiv}> */}
+        
+        {/* Date fields */}
         <div className={classes.container1}>
-        <label style={{width: 70,height:35}} className={styles.dateLabel}><b>From Date</b></label>
-    			<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-            placeholder="From Date"
-            name="start_date"
-            value={search.start_date}
-            onChange={(e) => handleDateChange(e, 'start')}
-    				// defaultValue={new Date()}
-    				className={classes.date1}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    				// InputLabelProps={{
-            //   placeholder: 'From Date',
-    				// 	shrink: true,
-    				// }}
-    			/>
-          {/*<DatePicker
-            className={styles.input_s}
-            peekNextMonth showMonthDropdown showYearDropdown
-            dropdownMode="select"
-            selected={new Date()}
-            value={new Date()}
-            onChange={(e) => handleChange(e,'end')} placeholderText='Start Date' />
-            <img style={{width: 15, height: 15}} src={downArrow} />*/}
+        <label style={{width: 70}} className={styles.dateLabel}>From Date</label>
+                <DatePicker
+                    autoComplete="off"
+                    name="start_date"
+                    value={search.start_date}
+                    onChange={(e) => handleDateChange(e, 'start')}
+                    maxDate={search.end_date?new Date(search.end_date): ''}
+                    className={styles.input_s}
+                    peekNextMonth showMonthDropdown showYearDropdown
+                    dropdownMode="select"
+                //   value={state.contract_start_date?moment(state.contract_start_date).format("DD-MM-YYYY"): ''}
+                   placeholderText='dd/mm/yyyy' />
     		</div>
 
         <div className={classes.container1}>
-          <label style={{width: 45,height:35}} className={styles.dateLabel}><b>To Date</b></label>
-    			<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-    				// defaultValue={new Date()}
-            name="end_date"
-            value={search.end_date}
-            onChange={(e) => handleDateChange(e, 'end')}
-    				className={classes.date1}
-    				// InputLabelProps={{
-            //   label: 'To Date',
-    				// 	shrink: true,
-            //   classes: { input: classes.input1 },
-            //   focused: classes.focused1,
-    				// }}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    			/>
+          <label style={{width: 45}} className={styles.dateLabel}>To Date</label>
+                <DatePicker
+                  autoComplete="off"
+                  name="end_date"
+                  value={search.end_date}
+                  minDate={search.start_date? new Date(search.start_date) : ''}
+                  className={styles.input_s}
+                  peekNextMonth showMonthDropdown showYearDropdown
+                  dropdownMode="select"
+                  onChange={(e) => handleDateChange(e, 'end')}
+                  placeholderText='dd/mm/yyyy' />
     		</div>
-        {/* </div> */}
+        
+        
       </div>
       <div className={classes.div1}>
           {/*Search Button*/}
@@ -760,8 +734,8 @@ export function UserManagement(props) {
 					</ModalFooter>
 				</Modal>}
 
-				{/* Modal for view Details */}
-				{<Modal className={styles.modalContainer} contentClassName={styles.customClass}
+          {/* Modal for view Details */}
+				{<Modal className={styles.modalContainer3} contentClassName={styles.customClass}
 				 isOpen={modal.details} toggle={toggleModalClose} centered={true}>
 				 <CancelIcon
 					 style={{
@@ -778,34 +752,77 @@ export function UserManagement(props) {
 					 onClick={toggleModalClose}
 				 />
 				 <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-				 <Link to={`user-management/${arrayDetails._id}`}><button onClick={(e) =>editUser(e, arrayDetails._id, arrayDetails)} className={styles.modalButton}>
-				 <img className={styles.modalImage} style={{width: 21,height: 21, marginTop: 10, marginLeft: 10, marginRight: 10}} src={edit} />
+         {('Vendor', 'update') &&<Link to={`vendor-management/${arrayDetails._id}`}><button onClick={(e) =>editUser(e, arrayDetails._id, arrayDetails)} className={styles.modalButton}>
+				 <img className={styles.modalImage} style={{width: 21,height: 21, marginTop:-36, marginRight:-47}} src={edit} />
 				 <small style={{display: 'flex', alignItems: 'center'}}>Edit Details</small>
-				 </button></Link>
+				 </button></Link>}
+         <button className={styles.modalButton} /*style={{display: 'contents'}}*/ /*onClick={passwordGenerate}*/>
+				 <img className={styles.modalImage} style={{width: 25,height: 30, marginTop: -36, marginRight:-47}} src={printing} />
+				 <small style={{display: 'flex', alignItems: 'center'}}>Download Details</small>
+				 </button>
 				 </div>
-						<div style={{display: 'flex', marginTop: 15}}>
-
-						<div className={styles.box1}>
-							{/*<div style={{fontSize: 14, marginLeft: 12}} className={styles.title}>Station Details</div>*/}
-								<div className={styles.modalBox}>
+         <div className={styles.modalOuterDiv} style={{display: 'flex'}}>
+         <div className={styles.box1}>
+							<div style={{fontSize: 14, marginLeft: 12}} className={styles.title}>View Details</div>
+								<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 								<div className={styles.modalDiv}  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Role</span><span style={{marginLeft: 130,marginRight: 25}}> - </span>{arrayDetails.role_id?arrayDetails.role_id.role/*.role.replace('_', ' ')*/: '-'}
+								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 70,marginRight: 25}}> -  Rahul </span>{arrayDetails.vendor_name}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Name</span><span style={{marginLeft:  121,marginRight: 25}}> - </span>{arrayDetails.name}
+								<span className={styles.textModal}>Mobile Number</span><span style={{marginLeft: 59,marginRight: 25}}> - 9087879763 </span>{arrayDetails.mobile_number}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>User Phone Number</span><span style={{marginLeft: 32,marginRight: 25}}> - </span>{arrayDetails.mobile}
+								<span className={styles.textModal}>Email</span><span style={{marginLeft: 122,marginRight:25}}> - rahuldey@gmai.com </span>{arrayDetails.email}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>User Email</span><span style={{marginLeft: 94,marginRight: 25}}> - </span>{arrayDetails.email}
+								<span className={styles.textModal}>Warehouse Address</span><span style={{marginLeft: 33,marginRight: 25}}>  -Neeti colony Indore </span>{arrayDetails.warehouse_address}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Station Name</span><span style={{marginLeft: 75,marginRight: 25}}> - </span>{arrayDetails.station_id?arrayDetails.station_id.station_name: '-'}
+								<span className={styles.textModal}>Delivery Station</span><span style={{marginLeft: 59,marginRight: 25}}> - Bhopal</span>{arrayDetails.delivery_station}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Registration Date</span><span style={{marginLeft: 50,marginRight: 25}}> - </span>{moment(arrayDetails.created_at).format("DD-MM-YYYY")}
+								<span className={styles.textModal}>Is Active</span><span style={{marginLeft: 106,marginRight: 25}}> - Active</span>{arrayDetails.is_active}
 								</div>
 								</div>
 						</div>
+            <div className={styles.box2} style={{}}    >
+						<div style={{fontSize: 14, marginLeft: 12, }} className={styles.title}>Commission Details</div>
+							<div className={styles.modalBox} style={{height:'90%'}}   /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
+							<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+							<span className={styles.textModal}>Minimum Commission(₹)</span><span style={{marginLeft: 40,marginRight: 25}}> - 200₹</span>{arrayDetails.minimum_commission}
+							</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+							<span className={styles.textModal}>Commission in Percent(%)</span><span style={{marginLeft: 37,marginRight: 25}}> -18% </span>{arrayDetails.commission_in_percent}
+							</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+							<span className={styles.textModal}>Maximum Commission(₹)</span><span style={{marginLeft: 39,marginRight: 25}}> - 450₹</span>{arrayDetails.maximum_commission}
+							</div>
+            
+              <div>
+							</div>
+							<div></div>
+              <div></div>
+              <div></div>
+
+					
+							</div>
+							</div>
 						</div>
+            <div className={styles.modalOuterDiv1}>
+            <div className={styles.box3}>
+							<div style={{fontSize: 14, marginLeft: 12}} className={styles.title}>Bank Address</div>
+								<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
+								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+								<span className={styles.textModal}>Account Holder Name</span><span style={{marginLeft: 38,marginRight: 25}}> - ayesha </span>{arrayDetails.account_holder_name}
+								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+								<span className={styles.textModal}>Account Number</span><span style={{marginLeft: 71,marginRight: 25}}> - 102365478965</span>{arrayDetails.account_number}
+								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+								<span className={styles.textModal}>IFSC Code</span><span style={{marginLeft: 116,marginRight: 25}}> - SBI0245632</span>{arrayDetails.ifsc_code}
+								</div>
+                <div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+								<span className={styles.textModal}>Bank Name</span><span style={{marginLeft: 106,marginRight: 25}}> - SBI</span>{arrayDetails.bank_name}
+								</div>
+                <div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
+								<span className={styles.textModal}>Branch Address</span><span style={{marginLeft: 80,marginRight: 25}}> - Indore </span>{arrayDetails.branch_address}
+								</div>
+								</div>
+						</div>
+            </div>
 						<ModalFooter className={styles.footer}>
 							<Button
 	              style={{width: 100}}

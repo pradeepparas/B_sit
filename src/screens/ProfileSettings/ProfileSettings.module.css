@@ -7,7 +7,7 @@
   text-align: left;
   font: normal normal bold 25px/26px Montserrat;
   letter-spacing: 0px;
-  color: #272D3B;
+  color: #213D77;
   opacity: 1;
 }
 
@@ -26,13 +26,13 @@
   font-family: Montserrat;
   border: none;
   outline: none;
-  color: black;
+  color: #213D77;
   font-weight: 600;
   height: 35px;
   font-size: 12px;
   width: 135px;
   outline: none;
-  background-color: white;
+  /* background-color: white; */
   border: none;
 }
 
@@ -67,7 +67,7 @@
   text-align: left;
   font: normal normal bold 25px/26px Montserrat;
   letter-spacing: 0px;
-  color: #272D3B;
+  color: #213D77;
   opacity: 1;
 }
 
@@ -266,8 +266,8 @@ border-color: #cac7c7;
     width: 80%;
     padding-top: 20px;
     /* height: 45%; */
-    background-color: white;
-    box-shadow: 0px 4px 8px 0px #08080833;
+    /* background-color: white;
+    box-shadow: 0px 4px 8px 0px #08080833; */
     margin-bottom: 60px;
   }
 

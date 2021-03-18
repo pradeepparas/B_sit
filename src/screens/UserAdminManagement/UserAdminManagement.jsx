@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'redux';
@@ -113,7 +114,6 @@ const BootstrapInput = withStyles((theme) => ({
     },
   },
 }))(InputBase);
-
 const RedRadio = withStyles({
   root: {
     color: "#b22222",
@@ -228,8 +228,19 @@ const useStyles = makeStyles((theme) => ({
       color: '#FFF'
     }
   },
+  // container1: {
+	// 	["@media (min-width: 280px) and (max-width: 1040px)"]: {
+  //     width: '100%',
+	// 		display: 'flex',
+	// 		flexDirection: 'column',
+  //     marginBottom: 5
+  //   },
+	// 	display: "flex",
+		
+  //   width: 192,
+	// },
   container1: {
-		["@media (min-width: 280px) and (max-width: 1040px)"]: {
+		["@media (min-width: 280px) and (max-width: 1114px)"]: {
       width: '100%',
 			display: 'flex',
 			flexDirection: 'column',
@@ -237,7 +248,7 @@ const useStyles = makeStyles((theme) => ({
     },
 		display: "flex",
 		// flexWrap: "wrap",
-    width: 192,
+    width: 195,
 	},
 	table: {
     "&:last-child td": {
@@ -340,10 +351,6 @@ export function UserManagement(props) {
       "user_id": userData._id
     }
     props.setIsLoading(true)
-
-  
-   
-
     axios({
       url: `${API.BlockUserAPI}/${userData._id}`,
       method: "DELETE",
@@ -419,21 +426,36 @@ export function UserManagement(props) {
     }, [props.userDocs, props.userDetails])
 
    // Changing Date fields
-   const handleDateChange = (data, type) => {
-    console.log(data)
-    // 
-    if(type == 'start') {
-      setSearch({
-        ...search,
-        start_date: data.target.value
-      })
-    } else {
-      setSearch({
-        ...search,
-        end_date: data.target.value
-      })
+  //  const handleDateChange = (data, type) => {
+  //   console.log(data)
+  //   // 
+  //   if(type == 'start') {
+  //     setSearch({
+  //       ...search,
+  //       start_date: data.target.value
+  //     })
+  //   } else {
+  //     setSearch({
+  //       ...search,
+  //       end_date: data.target.value
+  //     })
+  //   }
+  // }
+		const handleDateChange = (date, type) => {
+      console.log(date)
+      // debugger
+      if(type == 'start') {
+        setSearch({
+          ...search,
+          start_date: moment(date).format("DD-MM-YYYY")
+        })
+      } else {
+        setSearch({
+          ...search,
+          end_date: moment(date).format("DD-MM-YYYY")
+        })
+      }
     }
-  }
 
   const handleChangePage = (event, page) => {
     setPageNo(page)
@@ -564,58 +586,39 @@ export function UserManagement(props) {
           <div className={styles.selectDiv1}>
             <select className={styles.select1} name="role" /*value={this.state.courseId}*/ onChange={handleInputs}>
               <option selected disabled>Role</option>
-              {role.length > 0 && role.map(data =>
+              {role.length > 1 && role.map(data =>
                   <option key={data._id} value={data._id}>{data.role.replace('_', '_',' ')}</option>
+                  
+                  
                   )}
           </select>
           </div>
 
         {/* <div className={styles.dateDiv}> */}
         <div className={classes.container1}>
-        <label style={{width: 70,height:35}} className={styles.dateLabel}><b>From Date</b></label>
-    			<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-            placeholder="From Date"
-            name="start_date"
-            value={search.start_date}
-            onChange={(e) => handleDateChange(e, 'start')}
-    				// defaultValue={new Date()}
-    				className={classes.date1}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    				// InputLabelProps={{
-            //   placeholder: 'From Date',
-    				// 	shrink: true,
-    				// }}
-    			/>
-          {/*<DatePicker
-            className={styles.input_s}
-            peekNextMonth showMonthDropdown showYearDropdown
-            dropdownMode="select"
-            selected={new Date()}
-            value={new Date()}
-            onChange={(e) => handleChange(e,'end')} placeholderText='Start Date' />
-            <img style={{width: 15, height: 15}} src={downArrow} />*/}
+        <label style={{width: 70}} className={styles.dateLabel}>From Date</label>
+                <DatePicker
+                    autoComplete="off"
+                    name="start_date"
+                    value={search.start_date}
+                    onChange={(e) => handleDateChange(e, 'start')}
+                    maxDate={search.end_date?new Date(search.end_date): ''}
+                    className={styles.input_s}
+                    peekNextMonth showMonthDropdown showYearDropdown
+                    dropdownMode="select"
+                //   value={state.contract_start_date?moment(state.contract_start_date).format("DD-MM-YYYY"): ''}
+                   placeholderText='dd/mm/yyyy' />
     		</div>
 
         <div className={classes.container1}>
-          <label style={{width: 45,height:35}} className={styles.dateLabel}><b>To Date</b></label>
-    			<TextField
+          <label style={{width: 45}} className={styles.dateLabel}>To Date</label>
+    			{/*<TextField
     				id="date"
     				variant="outlined"
     				type="date"
     				size="small"
     				// defaultValue={new Date()}
-            name="end_date"
-            value={search.end_date}
-            onChange={(e) => handleDateChange(e, 'end')}
+						
     				className={classes.date1}
     				// InputLabelProps={{
             //   label: 'To Date',
@@ -629,7 +632,17 @@ export function UserManagement(props) {
               classes: { input: classes.input1 },
               focused: classes.focused1,
             }}
-    			/>
+    			/>*/}
+                <DatePicker
+                  autoComplete="off"
+                  name="end_date"
+                  value={search.end_date}
+                  minDate={search.start_date? new Date(search.start_date) : ''}
+                  className={styles.input_s}
+                  peekNextMonth showMonthDropdown showYearDropdown
+                  dropdownMode="select"
+                  onChange={(e) => handleDateChange(e, 'end')}
+                  placeholderText='dd/mm/yyyy' />
     		</div>
         {/* </div> */}
       </div>
@@ -678,7 +691,7 @@ export function UserManagement(props) {
                 <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow}/></button>
                 <div className={styles.dropdown_content}>
                   <a><div onClick={(e) => toggleModal(e, 'details', index)}>View Details</div></a>
-                  <Link to={`/user-management/${index}`}><div onClick={(e) =>editUser(e, index, row)}>Edit Details</div></Link>
+                  <Link to={`user-management/${row._id}`}><div onClick={(e) =>editUser(e, index, row)}>Edit Details</div></Link>
                   <a><div onClick={(e) => toggleModal(e, 'change', index)}>Change Status</div></a>
                 </div>
                 </div></TableCell>
@@ -755,10 +768,14 @@ export function UserManagement(props) {
 					 onClick={toggleModalClose}
 				 />
 				 <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-				 <Link to={`/edit-user/${arrayDetails._id}`}><button onClick={(e) =>editUser(e, arrayDetails._id, arrayDetails)} className={styles.modalButton}>
+         <Link to={`user-management/${arrayDetails._id}`}><button onClick={(e) =>editUser(e, arrayDetails._id, arrayDetails)} className={styles.modalButton}>
+         <img className={styles.modalImage} style={{width: 21,height: 21, marginTop: 10, marginLeft: 10, marginRight: 10}} src={edit} />
+         <small style={{display: 'flex', alignItems: 'center'}}>Edit Details</small>
+         </button></Link>
+				 {/* <Link to={`/edit-user/${arrayDetails._id}`}><button onClick={(e) =>editUser(e, arrayDetails._id, arrayDetails)} className={styles.modalButton}>
 				 <img className={styles.modalImage} style={{width: 21,height: 21, marginTop: 10, marginLeft: 10, marginRight: 10}} src={edit} />
 				 <small style={{display: 'flex', alignItems: 'center'}}>Edit  Details</small>
-				 </button></Link>
+				 </button></Link> */}
 				 </div>
 						<div style={{ marginTop: 15}}>
 
@@ -798,7 +815,6 @@ export function UserManagement(props) {
 							</Button>
 						</ModalFooter>
 					</Modal>}
-
           {/* Modal for change Status */}
 				{<Modal className={styles.Container2} contentClassName={styles.customClasss}
 				 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
@@ -817,7 +833,7 @@ export function UserManagement(props) {
 					 onClick={toggleModalClose}
 				 />
          <div className={styles.textfield2}>
-                <label style={{color: '#213D77', fontWeight:"700", marginRight:"-84",marginBottom:"45",width:'145px'}}>Change Status</label>
+                <label style={{color: '#213D77', fontWeight:"700",paddingBottom:'30',width:"185"}}>Change Status</label>
                   <div style={{display: 'flex', alignItems: 'center', marginLeft:'41'  }}>
                   <GreenRadio
                     checked={state.chargeable}

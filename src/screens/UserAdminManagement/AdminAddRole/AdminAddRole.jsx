@@ -254,14 +254,14 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
       marginBottom: 5
     },
-    borderRadius: 80,
+    borderRadius: 16,
     color: '#213D77',
-    backgroundColor: '#white',
+    backgroundColor: 'transparent',
     textTransform: 'capitalize',
     border:'1px solid #213D77',
     '&:hover': {
-      backgroundColor: '#white',
-      color: '#FFF'
+      backgroundColor: 'transparent',
+      color: '#213D77'
     },
     width: 114
   },

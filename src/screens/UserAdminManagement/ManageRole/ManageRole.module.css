@@ -55,10 +55,11 @@
   .box1 {
     width: 100%;
     padding-top: 6px;
+    /* margin-left: -20px; */
     /* height: 45%; */
     background-color: white;
     box-shadow: 0px 4px 8px 0px #08080833;
-    margin-bottom: 60px;
+    margin-bottom: 55px;
     display: block;
     height: 235px;
     color: #272D3B;
@@ -142,6 +143,17 @@
     border-radius: 7px;
     opacity: 1;
 }
+.label{
+  display: inline-block;
+  text-align: left;
+  width: 185px;
+  margin: auto;
+  font:normal normal normal 14px/16px Montserrat;
+  letter-spacing:0px;
+  color:#272D3B;
+  opacity:1;
+}
+
 .box2 {
     /* background-color: blue; */
     margin-top: -58px;
@@ -173,7 +185,7 @@
   .table {
     padding-top: 1px;
     background-color: white;
-    margin-top: -60px;
+    margin-top: -50px;
     box-shadow: 0px 4px 8px 0px #08080833;
     /* margin-left: 16px; */
     /* margin-right: 20px; */
@@ -292,10 +304,11 @@
   color: #213D77;
   opacity: 1;
 }
-.main1{
-  justify-content: center;
-  width: 100%;
-  display: flex;
+  .main1{
+    display: flex;
+    justify-content: space-between;
+    width: 69%;
+    margin-left: 192px;
   /* margin-left: 185px; */
 }
 /* .main1{
@@ -304,10 +317,10 @@
   display: flex;
   justify-content: center;
 } */
-.bex{
+/* .bex{
   display: flex;
     justify-content: center;
-}
+} */
 .saveButton{
   align-items: center;
   display: flex;
@@ -320,8 +333,8 @@
  /* saveButton */
  @media (min-width: 900px) and (max-width: 1024px) {
     .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: table;
+      grid-template-columns: 1fr;
       /* grid-template-rows: 1fr 1fr 1fr 1fr; */
     }
     .extraDiv {
@@ -331,6 +344,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr;
+    }
+    .main1{
+      width: 64%;
     }
   }
   
@@ -348,11 +364,11 @@
       width: 100%;
     }
   }
-  @media (min-width: 900px) and (max-width: 1024px) {
+  /* @media (min-width: 900px) and (max-width: 1024px) {
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      /* grid-template-rows: 1fr 1fr 1fr 1fr; */
+     
     }
     .extraDiv {
       display: none;
@@ -362,7 +378,7 @@
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr;
     }
-  }
+  } */
   @media (min-width: 180px) and (max-width: 428px) {
     .header {
       flex-direction: column;
@@ -384,6 +400,22 @@
     }
     .textfield{
       display: block;
+    }
+    .main1{
+      text-align: center;
+      flex-direction: column;
+      display: flex;
+      justify-content: center;
+      width: 90%;
+      margin-left: 51px;
+      margin-top: -9px;    
+    }
+    .box1{
+      height: 257px;
+    }
+    .saveButton2{
+      width: 95%;
+      margin-right: 3px;
     }
   }
   @media (min-width: 280px) and (max-width: 1040px) {
@@ -418,35 +450,65 @@
   @media (min-width: 430px) and (max-width:899px) {
        .grid{
          display: block;
-         width: 60%;
+         width: 100%;
        }
 .textfield{
   display: block;
 }
   }
-  @media (min-width: 580px) and (max-width: 899px) {
+  /* @media (min-width: 580px) and (max-width: 899px) {
     .main1{
       justify-content: center;
       width: 65%;
       display: flex;
     }
-  }
-  @media (min-width: 900px) and (max-width: 1024px) {
+  } */
+  /* @media (min-width: 900px) and (max-width: 1024px) {
     .main1{
       width: 68%;
     }
-  }
+  } */
   @media (min-width: 180px) and (max-width: 428px) {
     .saveButton{
       display: block;
       width: 100%;
     }
+    }
+    @media (min-width: 450px) and (max-width: 575px) {
+      .main1{
+        width: 89%;
+    /* display: flex; */
+    margin-left: 57px;
+      }
+    }
+    @media (min-width: 580px) and (max-width: 750px) {
+      .main1{
+        width: 61%;
+        margin-left: 56px;
+      }
+    }
+    @media (min-width: 755px) and (max-width: 774px) {
+      .main1{
+        width: 62%;
+        margin-left: 57px;
+    }
+  }
+  @media (min-width: 775px) and (max-width: 899px) {
     .main1{
-      text-align: center;
-      flex-direction: column;
-      display: flex;
-      justify-content: center;
-    }    
+      width: 64%;
+      margin-left: 241px;
+  }
+}
+    @media (min-width: 580px) and (max-width: 899px) {
+      .inputfield{
+        height: 40px;
+        width: 68%;
+      }
+      /* .main1{
+        justify-content: center;
+        width: 65%;
+        display: flex;
+      } */
     }
     
 
@@ -484,3 +546,4 @@
     }
   } */
   
+/* label */

@@ -159,12 +159,13 @@ const useStyles = makeStyles((theme) => ({
 		marginRight: 45,
     width: 100,
     borderRadius: 16,
-    color: 'white',
-    backgroundColor: '#272d3b',
+    color: '#213d77',
+    backgroundColor: '#efefef',
     textTransform: 'capitalize',
+    border: '1px solid #213D77',
     '&:hover': {
-      backgroundColor: '#272d3b',
-      color: '#FFF'
+      // backgroundColor: '#272d3b',
+      // color: '#FFF'
     }
   },
   container1: {
@@ -490,14 +491,15 @@ export function ProfileSettings(props) {
 						<div className={styles.textbox_hide}>
 							<ErrorOutlineIcon
 								style={{
+                  font: 'normal normal normal 17px/26px Montserrat',
 									color: 'black',
 									display: 'flex',
 									height: 'inherit',
 									alignItems: 'center'
 								}} />
 							<div className={styles.alertmessage}>
-								This email will be used for receiving Master
-								admin notifications Personal email not recommended
+              This email will be used for receiving admin
+               notifications Personal email not recommended
 							</div>
 						</div>
 
@@ -527,28 +529,30 @@ export function ProfileSettings(props) {
 						<div className={styles.textbox_show}>
 							<ErrorOutlineIcon
 								style={{
+                  font: 'normal normal normal 17px/26px Montserrat',
 									color: 'black',
 									display: 'flex',
 									height: 'inherit',
 									alignItems: 'center'
 								}} />
 							<div className={styles.alertmessage}>
-								This email will be used for receiving Master
-								admin notifications Personal email not recommended
+              This email will be used for receiving admin
+               notifications Personal email not recommended
 							</div>
 						</div>
 
 						<div className={styles.textbox}>
 							<ErrorOutlineIcon
 								style={{
+                  font: 'normal normal normal 17px/26px Montserrat',
 									color: 'black',
 									display: 'flex',
 									height: 'inherit',
 									alignItems: 'center'
 								}} />
 							<div className={styles.alertmessage}>
-								This number will be used for receiving Master
-								admin notifications Personal number not recommended
+							This number will be used for receiving admin 
+              notifications Personal number not recommended
 							</div>
 						</div>
 

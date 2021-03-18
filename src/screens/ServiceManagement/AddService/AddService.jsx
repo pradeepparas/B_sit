@@ -312,7 +312,7 @@ export function AddService(props) {
 				}
 				debugger
 
-        let a = await props.manageSFMISServices(state, isEdit);
+        let a = await props.manageSFMISServices(state, isEdit, 'STATION');
   }
 
   useEffect(() => {
@@ -425,6 +425,7 @@ export function AddService(props) {
 						if(services.end_time){
 							to = changeTime(services.end_time)
 						}
+            debugger
 
 						setState({
 							image_change: false,
@@ -759,8 +760,8 @@ const mapDispatchToProps = (dispatch) => {
     getCategoryServices: () => {
       dispatch(actions.getCategoryServices())
     },
-    manageSFMISServices: (data, isEdit) =>
-      dispatch(actions.manageSFMISServices(data, isEdit)),
+    manageSFMISServices: (data, isEdit, type) =>
+      dispatch(actions.manageSFMISServices(data, isEdit, type)),
 
 		setIsLoading: (value) =>
 	    dispatch(setIsLoading(value)),

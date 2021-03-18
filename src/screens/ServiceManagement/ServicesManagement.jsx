@@ -320,6 +320,12 @@ const rows = [
 ];
 
 export function ServicesManagement(props) {
+  const [search, setSearch] = useState({
+    vendor_name: "",
+    name: "",
+    start_date: "",
+    end_date: "",
+  })
   const [serviceCategory, setServiceCategory] = useState([])
   const [changeStatus, setChangeStatus] = useState(false)
   const [pageNo, setPageNo] = useState();
@@ -394,7 +400,7 @@ export function ServicesManagement(props) {
         }
 
         props.setIsLoading(false)
-        props.getSFMISServicesByParams(pageNo, props.limit)
+        props.getSFMISServicesByParams(pageNo, props.limit, search, "STATION")
       } else {
         debugger
         toast.error(response.data.message)
@@ -408,7 +414,7 @@ export function ServicesManagement(props) {
 
   useEffect(() => {
     props.getCategoryServices()
-    props.getSFMISServicesByParams(1, 10)
+    props.getSFMISServicesByParams(1, 10, search, "STATION")
   }, [])
 
   useEffect(() => {
@@ -842,8 +848,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getSFMISServicesByParams: (pageNo, size, params) => {
-      dispatch(actions.getSFMISServicesByParams(pageNo, size, params))
+    getSFMISServicesByParams: (pageNo, size, params, type) => {
+      dispatch(actions.getSFMISServicesByParams(pageNo, size, params, type))
     },
     getCategoryServices: () => {
       dispatch(actions.getCategoryServices())

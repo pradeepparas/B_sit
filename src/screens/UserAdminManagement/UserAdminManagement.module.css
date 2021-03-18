@@ -39,6 +39,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-left: 10px;
 }
 
 /* select css */
@@ -219,13 +220,12 @@ border-color: #cac7c7;
   margin-bottom: -23px;
 }
 .textfield2{
-  display: block;
-    flex-direction: column;
-    margin: 32px 16px 19px 23px;
-    padding-left: 2px;
-    /* padding-right: -5px; */
-    width: 100%;
-    margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  margin: 32px 16px 19px 20px;
+  padding-left: 30px;
+  width: 78%;
+
 }
 .modalBox {
   display: flex;
@@ -246,11 +246,11 @@ border-color: #cac7c7;
   height: 100%;
 
 }
-.customClasss{
-  margin-top:-100px;
+/* .customClasss{
+  margin-top:118px;
   width: 90%;
-  height: 100%;
-}
+  
+} */
 
 .box1 {
   width:web   ;
@@ -309,7 +309,7 @@ border-color: #cac7c7;
 
 .searchBarDiv {
   display: flex;
-  width: 800px;
+  width: 700px;
   justify-content: space-between;
 }
 
@@ -317,17 +317,37 @@ border-color: #cac7c7;
   width: 395px;
   justify-content: space-between;
   display: flex;
-}
+} 
 
 .dateLabel {
-  color: black;
+  color: #213d77;
   /* width: 70px; */
+  margin: 0;
   margin-bottom: 0;
   display: flex;
   align-items: center;
-  font: normal normal normal 10px Montserrat;
+  font: normal normal 600 10px Montserrat;
 }
-.Container2 {
+.input_s {
+  border: solid;
+  padding-left: 10px;
+  padding-right: 10px;
+  outline: none;
+  border-color: #c4c4c4;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  border-radius: 3px;
+  color: #213d77;
+  background-image:url("./date_icon.svg");
+  background-repeat: no-repeat;
+  background-position: 105px;
+  width: 135px;
+  border-width: thin;
+  font-size: small;
+  font-weight: 400;
+  outline: none;
+  height: 39px;
+}
+.Container2{
   margin: auto;
 }
 /* modalContainer select1 */
@@ -360,6 +380,9 @@ border-color: #cac7c7;
   .select1 {
     width: 100%;
   }
+  .input_s{
+    width: 100%;
+  }
 }
 @media (min-width: 540px) and (max-width: 680px) {
   .Container2{
@@ -377,12 +400,12 @@ border-color: #cac7c7;
   .dateDiv {
     width: 91%;
   }
-  .customClasss {
-    /* margin-top: 30px;
-    border-radius: 12px; */
+  /* .customClasss {
+    margin-top: 30px;
+    border-radius: 12px;
     width: 90%;
   margin-left: 20px;
-  }
+  } */
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   .customClasss{ 
@@ -401,11 +424,11 @@ border-color: #cac7c7;
     margin-bottom: 8px;
     font-size: 19px;
   }
-  .customClasss {
+  /* .customClasss {
     width: 98%;
     margin-left: -4px;
-    /* text-align: end; */
-  }
+    
+  } */
 }
 
 .emptyTable {
@@ -417,5 +440,43 @@ border-color: #cac7c7;
     color: #715555;
     opacity: 1;
 }
+@media (min-width: 280px) and (max-width: 340px) {
+  .modalContainer{
+    width: 75%;
+    margin-left: 33px;
+  }
+}
+@media (min-width: 345px) and (max-width: 400px) {
+  .modalContainer{
+    width: 67%;
+    margin-left: 74px;
+  }
+}
+@media (min-width: 405px) and (max-width: 810px) {
+  .modalContainer{
+  width: 60%;
+  margin-left: 124px;
+}
+}
+@media (min-width: 280px) and (max-width: 460px) {
+  .Container2{
+    display: flex;
+    margin-top: 75px;
+    width: 89%;
+    margin-left: 15px;
+  }
+  .customClasss{
+    width: 100%;
+    margin-left: -4px;
+  }
+  .textfield2{
+    display: contents;
+  }
+}
+@media (min-width: 470px) and (max-width: 1024px) {
+  .Container2{
+    margin-top: 75px;
+  }
+}
 
-/* modalContainer Container2 searchBarDiv header table*/
+/* modalContainer searchBarDiv header table*/

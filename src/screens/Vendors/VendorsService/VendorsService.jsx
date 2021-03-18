@@ -26,6 +26,7 @@ import vendor_image from './vendor_image.png';
 
 // Material UI
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Radio from "@material-ui/core/Radio";
 import clsx from 'clsx';
 import CancelIcon from "@material-ui/icons/Cancel";
 import Table from '@material-ui/core/Table';
@@ -45,11 +46,13 @@ import InputBase from '@material-ui/core/InputBase';
 import Pagination from '@material-ui/lab/Pagination';
 
 // components
-// import { getStationData } from "../../../redux/actions/stationActions";
+import { setIsLoading } from "../../../redux/actions/stationActions";
 import styles from './VendorsService.module.css';
+import * as actions from "../../../redux/actions/SFMISActions";
+import { getVendorManagement } from '../../../redux/actions/vendorActions';
 // import * as actions from "../../../redux/actions/vendorActions";
 // import { setIsLoading } from '../../../redux/actions/stationActions';
-// import * as API from '../../../constants/APIs';
+import * as API from '../../../constants/APIs';
 // import styled from 'styled-components';
 
 const BootstrapInput = withStyles((theme) => ({
@@ -96,6 +99,26 @@ const GreenCheckbox = withStyles({
   },
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
+
+const RedRadio = withStyles({
+  root: {
+    color: "#b22222",
+    '&$checked': {
+      color: "#b22222",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
+const GreenRadio = withStyles({
+  root: {
+    color: "#10AC44",
+    '&$checked': {
+      color: "#10AC44",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -185,6 +208,21 @@ const useStyles = makeStyles((theme) => ({
 			marginRight: 0,
 		}
 	},
+  deletebutton1: {
+    width: 100,
+    ["@media (min-width: 280px) and (max-width: 1192px)"]: {
+      width: '100%',
+      marginBottom: 5
+    },
+    borderRadius: 80,
+    color: 'white',
+    backgroundColor: '#213D77',
+    textTransform: 'capitalize',
+    '&:hover': {
+      backgroundColor: '#213D77',
+      color: '#FFF'
+    }
+  },
   button1: {
 		width: 100,
     ["@media (min-width: 280px) and (max-width: 1192px)"]: {
@@ -272,19 +310,21 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function createData(vendor_name, service, display_name, operational_hours, service_number, items_offered, status) {
-  return { vendor_name, service, display_name, operational_hours, service_number, items_offered, status };
-}
+// function createData(vendor_name, service, display_name, operational_hours, service_number, items_offered, status) {
+//   return { vendor_name, service, display_name, operational_hours, service_number, items_offered, status };
+// }
 
-const rows = [
-  createData("John Doe", "Medicines", "Medico Chemist", "10 AM - 10 PM",7789568542, 10, 1),
-  createData("Jack", "Wheel Chair", "Wheel Chair", "10 AM - 10 PM",7789568542, 10, 0),
-  createData("John Doe", "Wheel Chair", "Wheel Chair", "10 AM - 10 PM",7789568542, 20, 1),
-  createData("Jack", "Medicines", "Medico Chemist", "10 AM - 10 PM",7789568542, 20, 1),
-  createData("John Doe", "Wheel Chair", "Wheel Chair", "10 AM - 10 PM",7789568542, 10, 0),
-];
+// const rows = [
+//   createData("John Doe", "Medicines", "Medico Chemist", "10 AM - 10 PM",7789568542, 10, 1),
+//   createData("Jack", "Wheel Chair", "Wheel Chair", "10 AM - 10 PM",7789568542, 10, 0),
+//   createData("John Doe", "Wheel Chair", "Wheel Chair", "10 AM - 10 PM",7789568542, 20, 1),
+//   createData("Jack", "Medicines", "Medico Chemist", "10 AM - 10 PM",7789568542, 20, 1),
+//   createData("John Doe", "Wheel Chair", "Wheel Chair", "10 AM - 10 PM",7789568542, 10, 0),
+// ];
 
 export function VendorsService(props) {
+  const [changeStatus, setChangeStatus] = useState(false)
+  const [serviceCategory, setServiceCategory] = useState([])
   const [pageNo, setPageNo] = useState();
   const [date, setDate] = useState({
     start: new Date().toISOString().slice(0, 10),
@@ -293,7 +333,7 @@ export function VendorsService(props) {
   const [dropDownDetails, setDropDownDetails] = useState([]);
 	const [vendorDropDown, setVendorDropDown] = useState([]);
 	const [categoryDropDown, setCategoryDropDown] = useState([])
-  // const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState([]);
 	const [showModal, setShowModal] = useState(false);
 	const [arrayDetails, setArrayDetails] = useState([]);
   const [modal, setModal] = useState({
@@ -319,51 +359,15 @@ export function VendorsService(props) {
   });
   const [age, setAge] = useState('');
 
+  useEffect(() => {
+    props.getVendorManagement()
+    props.getCategoryServices()
+    props.getSFMISServicesByParams(1, 10, search, "VENDOR")
+  }, [])
+
 	const openModal = () => {
     setShowModal(prev => !prev);
   };
-
-// Handle Vendor Active and In-active function
-	const handleVendorStatus = (e, vendor) => {
-	// 	// set delete modal false
-	// 	console.log(vendor)
-	// 	debugger
-	// 	// return
-	// 	let data = {
-  //     "status": !vendor.status,
-  //     "id": vendor._id
-  //   }
-  //   props.setIsLoading(true)
-
-  //   axios({
-  //     url: API.VendorBlockAPI,
-  //     method: "PUT",
-  //     headers: {
-  //       //    'Accept-Language': 'hi',
-  //       "accept": "application/json",
-  //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
-  //     },
-  //     data: data
-  //   }).then((response) => {
-  //     if(response.data.success){
-  //       debugger
-  //       // toast.success(response.data.message)
-        setModal({
-          deleteModal: false,
-          deletedModal: true
-        })
-  //       props.getVendorDataByParams(pageNo, props.limit, search)
-  //     } else {
-  //       debugger
-  //       toast.error(response.data.message)
-  //     }
-  //   }).catch(err => {
-  //     toast.error(err.response.data.message)
-  //     debugger
-  //     props.setIsLoading(false)
-  //   })
-
-	}
 
 	// Drop-Down Details for category and Vendor Details
 	// useEffect(() => {
@@ -401,6 +405,16 @@ export function VendorsService(props) {
 
   // Get Vendors Data List
 
+  // Get Vendor Details
+  useEffect(() => {
+
+    if (props.docs) {
+      // console.log("",props.vendorDocs)
+      setRows(props.docs)
+      debugger
+    }
+  }, [props.docs])
+
 
   // Search Field Value
   const handleChange = (prop) => (event) => {
@@ -411,22 +425,27 @@ export function VendorsService(props) {
     setAge(event.target.value);
   };
 
-  const toggleModal =(e,data, i)=>{
-  	setModal(true);
-    setArrayDetails(rows[i]);
+  const toggleModal = (e, data, row) => {
+    setChangeStatus(row.status);
+    setArrayDetails(row);
 
-    if(data == 'delete'){
+    if (data == 'delete') {
       setModal({
         deleteModal: true
       })
-    } else {
-
+    } if(data == 'details'){
       setModal({
         details: true
       })
     }
-  	// setState({...state, packageName:data.packageName, id: data._id, })
+
+    if(data == 'status'){
+      setModal({
+        changeModel: true
+      })
     }
+    // setState({...state, packageName:data.packageName, id: data._id, })
+  }
     // close modal
     const toggleModalClose =()=>{
   	  setModal({
@@ -435,6 +454,14 @@ export function VendorsService(props) {
 				deletedModal: false
       })
     }
+
+    // Service Category for drop down
+  useEffect(() => {
+    debugger
+    if(props.serviceCategory){
+      setServiceCategory(props.serviceCategory)
+    }
+  }, [props.serviceCategory])
 
     //  used for pagination
     const handleChangePage = (event, page) => {
@@ -472,6 +499,13 @@ export function VendorsService(props) {
 		 }
 	 }
 
+   useEffect(() => {
+    if(props.vendorData){
+      setDropDownDetails(props.vendorData)
+    }
+    debugger
+  }, [props.vendorData])
+
 	 // Search filter function
 	 const filterVendors = () => {
 		 console.log(search)
@@ -489,6 +523,73 @@ export function VendorsService(props) {
 			props.getVendorDetails(event.target.value)
 		}
 	}
+
+   // Change Service Category Status
+   const handleChangeChargeable = (event, type) => {
+    if (type == 'Yes') {
+      setChangeStatus(true)
+    } else {
+      setChangeStatus(false)
+    }
+  };
+
+  // Handle Delete and Change Status function or Calling APIs for Changing Status
+  const handleDeleteAndChangeStatus = async(e, data, type) => {
+    // set delete modal false
+    console.log(data)
+    debugger
+    let a = await props.setIsLoading(true);
+
+    let config = {
+      url: type == 'delete'? `${API.SFMISAPI}/${data._id}`: `${API.SFMISAPI}/change_status`,
+      method: type == 'delete'? "DELETE": 'PUT',
+      headers: {
+        // 'Accept-Language': 'hi',
+        "accept": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    }
+
+    if(type == 'status'){
+      let value = {
+          "status": changeStatus,
+          "id": data._id
+      }
+      config.data = value
+    }
+
+    console.log(config)
+    debugger
+
+    axios(config).then((response) => {
+      if(response.data.success){
+        debugger
+        // toast.success(response.data.message)
+        if(type == 'delete'){
+          setModal({
+            deleteModal: false,
+            deletedModal: true
+          })
+        } else {
+          toast.success(response.data.message)
+          setModal({
+            ...modal,
+            changeModel: false
+          })
+        }
+
+        props.setIsLoading(false)
+        props.getSFMISServicesByParams(pageNo, props.limit, search, "VENDOR")
+      } else {
+        debugger
+        toast.error(response.data.message)
+      }
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      props.setIsLoading(false)
+    })
+
+  }
 
   return(
     <div className={styles.main}>
@@ -524,83 +625,27 @@ export function VendorsService(props) {
 
          {/*Select*/}
 				 <div className={styles.selectDiv1}>
-					 <select className={styles.select1} name="station_id" /*value={search.station_id}*/ onChange={handleInputs}>
+					 <select className={styles.select1} name="vendor_name" /*value={search.station_id}*/ onChange={handleInputs}>
 						 <option selected disabled>Vendor Name</option>
-             <option value={"1"}>All</option>
-             <option value={"2"}>ABC</option>
-             <option value={"3"}>John Doe</option>
-						 {/*dropDownDetails.length > 0 && dropDownDetails.map(data =>
-							 <option key={data._id} value={data._id}>{data.station_name}</option>
-             )*/}
+						 {dropDownDetails.length > 0 && dropDownDetails.map(data =>
+							 <option key={data._id} value={data._id}>{data.name}</option>
+             )}
 				 </select>
 				 </div>
 
 				 <div className={styles.selectDiv1}>
            <select className={styles.select1} name="service_name" /*value={search.service_name}*/ onChange={handleInputs}>
              <option selected disabled>Services Category</option>
-             <option value={"1"}>ALL</option>
-             <option value={"2"}>Medicines</option>
-             <option value={"3"}>Food and Beverage</option>
-             <option value={"4"}>Porter</option>
+             {serviceCategory.length > 0 ? serviceCategory.map(data =>
+                <option key={data._id} value={data._id}>{data.category_name}</option>
+                ) : null}
 						 {/*categoryDropDown.length > 0 && categoryDropDown.map(data =>
 							 <option key={data._id} value={data._id}>{data.category_name}</option>
              )*/}
          </select>
          </div>
 
-        {/* <div className={styles.dateDiv}> */}
-        {/*<div className={classes.container1}>
-        <label style={{width: 70}} className={styles.dateLabel}>From Date</label>
-    			<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-            placeholder="From Date"
-    				// defaultValue={new Date()}
-						name="start_date"
-            value={search.start_date}
-            onChange={(e) => handleDateChange(e, 'start')}
-    				className={classes.date1}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    				// InputLabelProps={{
-            //   placeholder: 'From Date',
-    				// 	shrink: true,
-    				// }}
-    			/>
-    		</div>*/}
-
-        {/*<div className={classes.container1}>
-          <label style={{width: 45}} className={styles.dateLabel}>To Date</label>
-    			<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-    				// defaultValue={new Date()}
-						name="end_date"
-            value={search.end_date}
-            onChange={(e) => handleDateChange(e, 'end')}
-    				className={classes.date1}
-    				// InputLabelProps={{
-            //   label: 'To Date',
-    				// 	shrink: true,
-            //   classes: { input: classes.input1 },
-            //   focused: classes.focused1,
-    				// }}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    			/>
-    		</div>*/}
+        
         </div>
         <div className={classes.div1}>
           {/*Search Button*/}
@@ -630,26 +675,26 @@ export function VendorsService(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
-            <TableRow className={classes.table} key={row.vendor_name}>
+            <TableRow className={classes.table} key={row.vendor_id}>
               <TableCell component="th" scope="row">
                 {index+1}
               </TableCell>
-              <TableCell align="center">{/*row.userName*/row.vendor_name}</TableCell>
-              <TableCell align="center">{/*row.userNumber*/row.service}</TableCell>
+              <TableCell align="center">{/*row.userName*/row.vendor?row.vendor.vendor_name: '-'}</TableCell>
+              <TableCell align="center">{/*row.userNumber*/row.service_category?row.service_category.category_name: '-'}</TableCell>
               <TableCell align="center">{/*row.userEmail*/row.display_name}</TableCell>
-              <TableCell align="center">{/*row.service*/row.operational_hours}</TableCell>
-              <TableCell align="center">{/*row.stationName*/row.service_number}</TableCell>
-              <TableCell align="center">{/*row.hours*/row.items_offered}</TableCell>
+              <TableCell align="center">{/*row.service*/row.from_time} - {row.end_time}</TableCell>
+              <TableCell align="center">{/*row.stationName*/row.service_booking_mobile}</TableCell>
+              <TableCell align="center">{/*row.hours*/"-"}</TableCell>
 							<TableCell style={{color: row.status? 'green': 'red'}} align="center">{/*row.service*/row.status?"active": "In-active"}</TableCell>
               <TableCell align="center">
               <div className={styles.dropdown}>
                 <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow}/></button>
                 <div className={styles.dropdown_content}>
-                  <a><div onClick={(e) => toggleModal(e, 'details', index)}>View Details</div></a>
-                  <a><div onClick={(e) => toggleModal(e, 'delete', index)}>Change Status</div></a>
-                  <Link to={`vendors-service/${1}`}><a><div onClick={(e) => toggleModal(e, 'details', index)}>Edit Details</div></a></Link>
+                  <a><div onClick={(e) => toggleModal(e, 'details', row)}>View Details</div></a>
+                  <a><div onClick={(e) => toggleModal(e, 'status', row)}>Change Status</div></a>
+                  <Link to={`vendors-service/${row._id}`}><a><div onClick={(e) => toggleModal(e, 'details', row)}>Edit Details</div></a></Link>
                   <Link to={`vendors-service/item-details/${1}`}><a><div>Item Details</div></a></Link>
-                  <a><div onClick={(e) => toggleModal(e, 'delete', index)}>Delete Service</div></a>
+                  <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Delete Service</div></a>
                 </div>
                 </div></TableCell>
             </TableRow>
@@ -700,12 +745,76 @@ export function VendorsService(props) {
               style={{width: 100}}
 							variant="contained"
 							className={classes.button1}
-							onClick={(e) => { handleVendorStatus(e , arrayDetails) }}
+							onClick={(e) => { handleDeleteAndChangeStatus(e, arrayDetails, 'delete') }}
 						>
 							YES
 						</Button>
 					</ModalFooter>
 				</Modal>}
+
+        {/* Modal for change Status */}
+				{<Modal className={styles.Container2} contentClassName={styles.changeStatusClass}
+				 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
+            <CancelIcon
+					 style={{
+						 width: 40,
+						 height: 40,
+						 backgroundColor: 'white',
+						 color: "#213D77",
+						 borderRadius: 55,
+						 position: "absolute",
+						 top: "-14",
+						 right: "-16",
+						 cursor: "pointer",
+					 }}
+					 onClick={toggleModalClose}
+				 />
+         <div className={styles.modalBody}>
+                <label style={{
+                    color: '#213D77',
+                    fontWeight:"bold",
+                    marginBottom: 20,
+                    fontSize: 17,
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}>
+                    Change Status</label>
+                  <div style={{display: 'flex', justifyContent: 'space-evenly'  }}>
+                  <div>
+                  <GreenRadio
+                    checked={changeStatus}
+                    onChange={(e) => handleChangeChargeable(e,"Yes")}
+                    // value="c"
+                    name="radio-button-demo"
+                    inputProps={{ 'aria-label': 'C' }}
+                  />
+                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+                  </div>
+
+                <div>
+                <RedRadio
+                    checked={!changeStatus}
+                    onChange={(e) => handleChangeChargeable(e, "No")}
+                    // value="c"
+                    name="radio-button-demo"
+                    inputProps={{ 'aria-label': 'C' }}
+                  />
+                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
+                  </div>
+                </div>
+              </div>
+						<ModalFooter className={styles.footer1}>
+							<Button
+	              style={{width: 100}}
+								variant="contained"
+	              color="black"
+	              className={classes.deletebutton1}
+								onClick={(e) => handleDeleteAndChangeStatus(e, arrayDetails, 'status')}
+							>
+							OK
+							</Button>
+						</ModalFooter>
+					</Modal>}
 
 				{/* Modal for view Details */}
         <Modal className={styles.modalContainer} contentClassName={styles.customClass}
@@ -744,18 +853,18 @@ export function VendorsService(props) {
             <div style={{fontSize: 14, marginLeft: 12, color: 'black'}} className={styles.title}>Station Admin Details</div>
 								<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 								<div className={styles.modalDiv}  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 100,marginRight: 25}}> - </span>{/*arrayDetails.userName*/arrayDetails.vendor_name}
+								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 100,marginRight: 25}}> - </span>{/*arrayDetails.userName*/arrayDetails.vendor?arrayDetails.vendor.vendor_name: '-'}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
 								<span className={styles.textModal}>Display Name</span><span style={{marginLeft: 98,marginRight: 25}}> - </span>{/*arrayDetails.userNumber*/arrayDetails.display_name}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Service Type</span><span style={{marginLeft: 105,marginRight: 25}}> - </span>{/*arrayDetails.userEmail*/arrayDetails.service_name}
+								<span className={styles.textModal}>Service Type</span><span style={{marginLeft: 105,marginRight: 25}}> - </span>{/*arrayDetails.userEmail*/arrayDetails.service_category?arrayDetails.service_category.category_name: '-'}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Service Category</span><span style={{marginLeft: 77,marginRight: 25}}> - </span>Food and Beverages
+								<span className={styles.textModal}>Service Category</span><span style={{marginLeft: 77,marginRight: 25}}> - </span>{arrayDetails.service_category?arrayDetails.service_category.category_name: '-'}
 								</div>
                 <div className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Service Booking Number</span><span style={{marginLeft: 26,marginRight: 25}}> - </span>{arrayDetails.service_number}
+								<span className={styles.textModal}>Service Booking Number</span><span style={{marginLeft: 26,marginRight: 25}}> - </span>{arrayDetails.service_booking_mobile}
 								</div>
                 <div className={styles.modalDiv} style={{flexDirection: 'row'}}>
 								<span className={styles.textModal}>Chargeable</span><span style={{marginLeft: 111,marginRight: 25}}> - </span>{arrayDetails.status? "Yes": "No"}
@@ -815,6 +924,9 @@ export function VendorsService(props) {
 const mapStateToProps = (state) => {
 	// debugger
 	return {
+    docs: state.SFMIS.sfmisDocs,
+    serviceCategory: state.SFMIS.serviceCategory,
+    vendorData: state.Vendors.vendorData,
 	//   vendorDocs: state.Vendors.docs,
     // total: state.Vendors.total,
     // limit: state.Vendors.limit,
@@ -826,6 +938,19 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+    getSFMISServicesByParams: (pageNo, size, params, type) => {
+      dispatch(actions.getSFMISServicesByParams(pageNo, size, params, type))
+    },
+
+    getVendorManagement: () =>
+			dispatch(getVendorManagement()),
+
+    getCategoryServices: () => {
+      dispatch(actions.getCategoryServices())
+    },
+
+    setIsLoading: (value) =>
+	    dispatch(setIsLoading(value))
 	// 	getStationData: () => {
     //   dispatch(getStationData())
     // },

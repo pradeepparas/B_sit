@@ -352,6 +352,31 @@ border-color: #cac7c7;
   color: #213D77;
   opacity: 1;
 }
+
+.footer1 {
+  display: flex;
+  border: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalBody {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.Container2 {
+  margin: auto;
+}
+
+.changeStatusClass {
+  padding-top: 25px;
+  border-radius: 4px;
+  padding-bottom: 20px;
+  width: 100%;
+  height: 100%;
+}
+
 /* modalContainer customClass select1 575*/
 
 @media (min-width: 280px) and (max-width: 650px) {

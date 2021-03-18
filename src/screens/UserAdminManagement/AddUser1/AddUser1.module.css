@@ -31,7 +31,7 @@
   display: flex;
   float: right;
   padding-right: 49px;
-  padding-top: -40px;
+  padding-top: 50px;
   margin-right: -64px;
   width: 74%;
 }
@@ -278,7 +278,7 @@ border-color: #cac7c7;
     width: 100%;
   }
   .textfield2{
-    width: 115%;
+    width: 114%;
     display: inline-flex;
     margin-left: 57px;
     padding-top: 14px;
@@ -310,6 +310,23 @@ border-color: #cac7c7;
     border: 1px solid #272D3B;
     border-radius: 7px;
     opacity: 1;
+}
+.inputfield1 {
+  font-weight: bold;
+  /* border-color: #00000069; */
+  font-family: Montserrat;
+  /* border-radius: 5px; */
+  width:84%;
+  /* border-width: thin; */
+  font-size: inherit;
+  outline: none;
+  height: 40px;
+  padding-left: 7px;
+  padding-right: 25px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #272D3B;
+  border-radius: 7px;
+  opacity: 1;
 }
 
   .input_s {
@@ -363,15 +380,23 @@ border-color: #cac7c7;
     grid-template-rows: 1fr 1fr;
   }
 
-  .saveButton {
+  /* .saveButton {
     display: flex;
     justify-content: flex-end;
     width: 67%;
     margin-top: -20px;
     margin-right: 207px;
-    /* margin-left: 100px; */
+  
     margin-bottom: 17px;
     float: right;
+  } */
+  .saveButton{
+    display: flex;
+    /* align-items: center; */
+    /* justify-content: space-between; */
+    width: 200px;
+    float: right;
+    margin-right: 64px;
   }
 
   .customDeleteClass {
@@ -410,21 +435,21 @@ border-color: #cac7c7;
     bottom: 39px;
     left: -20px;
   }
-  .modalFooter{ 
+  /* .saveButton{ 
     display: flex;
     align-items: center;
     justify-content: flex-end;
     width: 90%;
      
-  }
+  } */
   .btnPrimary1 {
     border-radius: 16px;
     border: 1px solid #213D77;
     background-color: #EFEFEF;
     color: #213D77;
     text-transform: capitalize;
-    margin-right: 0.25rem;
-    width: 8%;
+    margin-right: 1.25rem;
+    width: 120px;
     height: 30px;
   }
   .btnPrimary {
@@ -434,7 +459,7 @@ border-color: #cac7c7;
     color: #EFEFEF;
     text-transform: capitalize;
     margin-right: 0.25rem;
-    width: 8%;
+    width: 120px;
     height: 30px;
 }
 
@@ -493,14 +518,8 @@ border-color: #cac7c7;
     width: 100%;
     height: 280PX;
   }
-  .textfield2{
-    width: 100%;
-    /* display: inline-flex; */
-    margin-left: 57px;
-    padding-top: 14px;
-    margin: 11px 30px 11px 30px;
-    padding-left: 25px;
-    padding-right: 10px;
+ 
+  .inputfield1{
     display: block;
   }
   .textfield{
@@ -524,8 +543,29 @@ border-color: #cac7c7;
       display: flex;
       flex-direction: column;
     }
+    .textfield2{
+      width: 117%;
+      /* display: inline-flex; */
+      margin-left: 57px;
+      padding-top: 14px;
+      margin: 11px 30px 11px 30px;
+      padding-left: 25px;
+      padding-right: 10px;
+      display: block;
+    }
   }
-
+  @media (min-width: 600px) and (max-width: 900px) {
+    .textfield2{
+      width: 118%;
+      /* display: inline-flex; */
+      margin-left: 57px;
+      padding-top: 14px;
+      margin: 11px 30px 11px 30px;
+      padding-left: 25px;
+      padding-right: 10px;
+      display: block;
+    }
+  }
   @media (min-width: 900px) and (max-width: 990px) {
     .passwordDiv {
       display: flex;
@@ -570,10 +610,10 @@ border-color: #cac7c7;
     
   } */
   @media (min-width: 200px) and (max-width: 375px) {
-    .button3{
+    /* .button3{
       width: 100%;
       margin-right: 6px;
-    }
+    } */
     .title{
       text-align: center;
     }
@@ -585,7 +625,7 @@ border-color: #cac7c7;
     }
   } */
    @media (min-width: 280px) and (max-width:420px) { 
-    .modalFooter{
+    .saveButton{
       display:contents;
       margin-bottom: 10px;
       padding: 0.75rem;
@@ -606,14 +646,18 @@ border-color: #cac7c7;
       height: 850px;
     }
   } 
-  @media (min-width: 540px) and (max-width:768px) { 
-    .modalFooter{
-      /* display:contents; */
-      margin-top: -26px;
+  @media (min-width: 425px) and (max-width:850px) { 
+    .saveButton{
+      display: flex;
+      align-items: center; 
+      justify-content: space-between;
+      width: 200px;
       float: right;
+      margin-right: 14px;
+      margin-top: -7px;
       
     }
-    .btnPrimary1{  
+    /* .btnPrimary1{  
     width: 20%;
     margin-left: 161px;
     margin-top: 15px;
@@ -622,7 +666,7 @@ border-color: #cac7c7;
       width: 20%;
       margin-right:20px;
       margin-top: 15px;
-    }
+    } */
   }
   
 

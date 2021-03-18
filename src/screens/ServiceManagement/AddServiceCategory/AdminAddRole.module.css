@@ -150,12 +150,12 @@
     margin-bottom: 15px;
     margin-top: 15px;
     display: flex;
+    width: 400px;
     justify-content: space-between;
     align-items: center;
   }
   .searchBarDiv {
     display: flex;
-    width: 800px;
     justify-content: space-between;
   }
 
@@ -300,15 +300,48 @@
     margin-bottom: 8px;
   }
 
+  
+
   @media (min-width: 280px) and (max-width: 750px) {
     .textfield {
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0px 10px 0px;
+    }
+    .inputfield {
+      width: 100%;
+    }
+    .grid {
+      width: 100%;
     }
   }
 
-  @media (min-width: 280px) and (max-width: 1040px) {
+  @media (min-width: 280px) and (max-width: 750px){
+    .imageStyle {
+      display: flex;
+      justify-content: center;
+      align-items:  flex-start;
+    }
+    .image_upload {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+    .activeAndButton {
+      align-items: flex-start;
+    }
+    .saveButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 95%;
+    }
+  }
+
+  @media (min-width: 280px) and (max-width: 700px) {
     .filterContent {
       display: flex;
+      width: 100%;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -360,4 +393,4 @@
   }
 }
 
-/* 720pximage_upload textfield box1 modalCategoryContainer box1 saveButton gridtable box footer1  */
+/* 720pximage_upload textfield box1 modalCategoryContainer box1 1040 filter saveButton gridtable box footer1  */
