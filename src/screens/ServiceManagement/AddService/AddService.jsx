@@ -22,8 +22,9 @@ import styles from './AddService.module.css';
 import logo from '../../StationManagement/AddStation/logo.png';
 import flag from '../../StationManagement/flag.svg';
 import image_icon from './image_icon.png';
-// import * as API from '../../../constants/APIs';
+import * as API from '../../../constants/APIs';
 import * as actions from '../../../redux/actions/SFMISActions';
+import { setIsLoading, setIsSubmitted } from "../../../redux/actions/stationActions";
 // import Loading from '../../../components/Loading/Loading';
 
 // Material UI
@@ -112,13 +113,13 @@ const useStyles = makeStyles((theme) => ({
     // borderRadius: 8
   },
   show_image: {
-    padding: 12, 
-    width: 61, 
+    padding: 12,
+    width: 61,
     margin: 0
   },
   show_image_true: {
-    padding: 0, 
-    width: 92, 
+    padding: 0,
+    width: 92,
     margin: 0
   },
   vendor_button: {
@@ -217,6 +218,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function AddService(props) {
   // const history = useHistory();
+
   const [serviceCategory, setServiceCategory] = useState([])
   const token = localStorage.getItem('token')
 	const [add_details, setAddDetails] = useState([]);
@@ -229,13 +231,12 @@ export function AddService(props) {
   const history= useHistory();
   const [managedByList, setManagedByList] = useState([])
   const [state, setState] = useState({
+		image_change: false,
     from_time_value: "",
     to_time_value: "",
     fileName: "",
     fileNameExt: "",
-    vendor_name: "",
     display_name: "",
-    service_type: "",
     service_category: "",
     chargeable: false,
     mobile_number: "",
@@ -249,15 +250,6 @@ export function AddService(props) {
     is_cancellation: false,
     is_happy_code: false,
     is_assign_as_admin: false,
-// });
-// const [details, setDetails] = useState({
-    contact_name: "",
-    contact_mobile: "",
-    contact_email: "",
-    name: "",
-    mobile: "",
-    email: "",
-    adminPassword: ""
 })
   const [selectedValue, setSelectedValue] = useState(false);
 
@@ -287,8 +279,6 @@ export function AddService(props) {
 
   useEffect(() => {
     props.getCategoryServices()
-    // setServiceCategory(props.serviceCategory)
-    // setManagedByList(props.contractorsList)
   }, [])
 
   useEffect(() => {
@@ -298,48 +288,17 @@ export function AddService(props) {
     }
   }, [props.serviceCategory])
 
-	// if(id == 'add') {
-	// 	setIsAdd(true)
-	// } else {
-	// 	setIsAdd(false)
-	// }
-
-  const [pchecked, setPChecked] = useState(false);
-  const [achecked, setAchecked] = useState(false);
   const [errors , setErros]= useState({})
 
-  useEffect(()=>{
-		autofillDetails()
-	},[pchecked])
-
-  const autofillDetails = () => {
-    if(pchecked == true){
-      debugger
-      setState({
-        ...state,
-        name: state.contact_name,
-        mobile: state.contact_mobile,
-        email: state.contact_email
-      })
-    } else {
-      setState({
-        ...state,
-        name: "",
-        mobile: "",
-        email: ""
-      })
-    }
-  }
-  // details
 
   // close modal
   const toggleModalClose =()=>{
     setModal(false)
     props.setIsSubmitted(false);
-    history.push('/vendors-service');
+    history.push('/SFMIS-services');
   }
 
-  // Handle Submit Station
+  // Handle Submit SFMIS service
   const handleSubmit = async(e) => {
     debugger
       e.preventDefault();
@@ -347,38 +306,27 @@ export function AddService(props) {
           return
       }
 
-      if(service_id == 'add'){
-        props.manageSFMISServices(state);
-        // debugger
-      } else {
-        // console.log(state)
-        // debugger
-        // props.EditStationDetails(state)
-      }
+				let isEdit = false;
+				if(service_id !== 'add'){
+					isEdit = true;
+				}
+				debugger
 
-      // setModal(true);
-			// if(service_id == 'add'){
-			// 	setIsAdd(true);
-			// } else {
-			// 	setIsAdd(false);
-			// }
-      // props.addPackage(state)
+        let a = await props.manageSFMISServices(state, isEdit);
   }
 
   useEffect(() => {
-    // if(props.isSubmitted){
-    //   setModal(true);
-    //   if(service_id == 'add'){
-    //     setIsAdd(true);
-    //   } else {
-    //     setIsAdd(false);
-    //   }
-    // } else {
+    if(props.isSubmitted){
+      setModal(true);
+      if(service_id == 'add'){
+        setIsAdd(true);
+      } else {
+        setIsAdd(false);
+      }
+    } else {
 
-    // }
-  }, [
-    //   props.isSubmitted
-    ])
+    }
+  }, [props.isSubmitted])
 
   const handleCheckbox = (event, type) => {
     console.log(event.target.name)
@@ -391,35 +339,26 @@ export function AddService(props) {
 
    // validate form
    const validateForm =()=>{
-       
+
        var mobileValid = state.mobile_number.toString().match(/^[0]?[6789]\d{9}$/);
        var isValid= true;
        console.log(state.image)
        console.log(state.image.name)
        debugger
        if(state.display_name.toString().trim()==''|| !state.display_name.toString().match(/^[a-zA-Z ]+$/)){
-            errors.display_name="display name is required or invalid code";
+            errors.display_name="display name is required or invalid name";
             isValid =false;
         }
-        
-        // else if(state.service_type=='0'|| state.service_type==''){
-        //     errors.service_type="service type is required";
-        //     isValid =false;
-        // }
         else if(state.service_category =='0' || state.service_category ==''){
             errors.service_category="service category is required";
             isValid =false;
         }
-        // else if(state.chargeable ==''){
-        //     errors.chargeable="chargeable is required";
-        //     isValid =false;
-        // }
         else if(state.mobile_number.toString().trim()=='' || !mobileValid){
             errors.mobile_number="mobile number is required or invalid number";
             isValid =false;
         }
-        
-        else if(state.fileName == ''){
+
+        else if(!service_id && state.fileName == ''){
             errors.image="image is required";
             isValid =false;
         }
@@ -430,7 +369,7 @@ export function AddService(props) {
       }
 
       else if(state.to_time.toString().trim()==''){
-          errors.to_time="to time is required";
+          errors.to_time="time is required";
           isValid =false;
       }
 
@@ -446,115 +385,84 @@ export function AddService(props) {
       return isValid
    }
 
-  const handlecheckedChange = (event) => {
-    console.log(event.target.checked);
-    console.log(event.target.value);
-    // debugger
-    if(event.target.name === 'person'){
-      setPChecked(event.target.checked)
+	 // for converting 24 Hours
+	 const changeTime = (date) => {
+		 const [time, modifier] = date.split(' ');
+		 let [hours, minutes] = time.split(':');
+		 if (hours === '12') {
+			 hours = '00';
+		 }
+		 if (modifier === 'PM') {
+			 hours = parseInt(hours, 10) + 12;
+		 }
+
+		 return(`${hours}:${minutes}`);
+
+	 }
+
+//  Get Services By Id
+  useEffect(() => {
+    if(token == null){
+      history.push()
     } else {
-      setAchecked(event.target.checked)
-    }
+    if(service_id != 'add'){
+      props.setIsLoading(true)
+      axios({
+        url: `${API.SFMISAPI}/${service_id}`,
+        headers: {
+          //    'Accept-Language': 'hi',
+          "accept": "application/json",
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+           },
+      }).then(response => {
+        if(response.data.success){
+					console.log(response.data.services);
+					const { services } = response.data;
+          debugger
 
-    // setChecked(event.target.checked);
-  };
+						let from = changeTime(services.from_time)
+						let to = '';
+						if(services.end_time){
+							to = changeTime(services.end_time)
+						}
 
-  useEffect(() => {
-    if(state.exp_end_date && state.contract_start_date){
-      let start = moment(state.contract_start_date);
-      let end = moment(state.exp_end_date);
-
-      let years = end.diff(start , 'years');
-      let months;
-      months = end.diff(start , 'months') - years*12;
-      // let days = end.diff(start , 'days') - ;
-
-      console.log(months, years)
-      // debugger
-
-      let tenure = '';
-
-      if( years > 0){
-        tenure = years + " " + "Years"
-        if( months > 0){
-          tenure += " " + months + " " + "Months"
+						setState({
+							image_change: false,
+							SFMIS_id: services._id,
+							from_time_value: services.from_time,
+					    to_time_value: services.end_time? services.end_time: '',
+					    fileName: `http://13.235.102.214:8000/uploads/SFMISService/${services.service_icon}`,
+					    fileNameExt: "",
+					    display_name: services.display_name,
+					    service_category: services.service_category._id,
+					    chargeable: services.is_chargeable,
+					    mobile_number: services.service_booking_mobile.toString(),
+					    image: `http://13.235.102.214:8000/uploads/SFMISService/${services.service_icon}`,
+					    from_time: from,
+					    to_time: to,
+					    preparation_duration: services.preparation_duration,
+					    maximum_duration: services.max_use_duration,
+					    is_active: services.status,
+					    approve_items: false,
+					    is_cancellation: services.service_cancel,
+					    is_happy_code: services.service_happy_code,
+						})
+            // setState(data)
+						props.setIsLoading(false)
+        } else {
+          setState([]);
         }
-      } else {
-        tenure = months + " " + "Months"
+        // props.setIsLoading(false)
+      }).catch(err => {
+        // toast.error(err.response.data.message)
+        props.setIsLoading(false)
+      })
+      // props.setIsLoading(false)
+      debugger
+      // setDetails(props.stationData)
       }
-
-      console.log(tenure)
-      // debugger
-      setState({
-        ...state,
-        contract_tenure: tenure
-      })
     }
-  }, [state.exp_end_date, state.contract_start_date])
-
-  useEffect(() => {
-    // if(token == null){
-    //   history.push()
-    // } else {
-    // if(props.isEdit || service_id != 'add'){
-    //   props.setIsLoading(true)
-    //   axios({
-    //     url: `${API.GetStationAPI}/${service_id}`,
-    //     headers: {
-    //       //    'Accept-Language': 'hi',
-    //       "accept": "application/json",
-    //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
-    //        },
-    //   }).then(response => {
-    //     if(response.data.success){
-    //       debugger
-    //       // setState(response.data.staion)
-    //         let data = response.data.staion;
-    //         data.exp_end_date = moment(data.exp_end_date)
-    //         data.contract_start_date = moment(data.contract_start_date)
-    //         if(response.data.staion.station_admin){
-    //           data.name=response.data.staion.station_admin.name;
-    //           data.mobile = response.data.staion.station_admin.mobile;
-    //           data.email =response.data.staion.station_admin.email;
-    //           data.station_admin_id = response.data.staion.station_admin._id;
-    //         }
-
-    //         data.managed_by = data.managed_by?response.data.staion.managed_by._id: "";
-    //         if(data.is_assign_as_admin){
-    //           data.mobile = response.data.staion.contact_mobile
-    //           data.email = response.data.staion.contact_email
-    //           data.name = response.data.staion.contact_name
-    //           setPChecked(data.is_assign_as_admin)
-    //         }
-    //         // data.is_assign_as_admin
-    //         delete data["station_admin"];
-    //         setState(data)
-
-    //     } else {
-    //       setState([]);
-    //     }
-    //     // props.setIsLoading(false)
-    //   }).catch(err => {
-    //     toast.error(err.response.data.message)
-    //     props.setIsLoading(false)
-    //   })
-    //   setState(props.stationData)
-    //   props.setIsLoading(false)
-    //   debugger
-    //   // setDetails(props.stationData)
-    //   }
-    // }
   }, [])
-
-  const passwordGenerate = () => {
-    var randomstring = Math.random().toString(36).slice(-8);
-    setState({
-        ...state,
-        adminPassword: randomstring
-      })
-    console.log(randomstring)
-    debugger
-  }
 
   const handleInputs = (event) => {
     console.log(event.target.name)
@@ -578,8 +486,8 @@ export function AddService(props) {
 
       let name = event.target.name == 'from_time'? 'from_time_value': 'to_time_value';
       debugger
-      
-      
+
+
 
       setState({
         ...state,
@@ -639,6 +547,7 @@ export function AddService(props) {
           debugger
         setState({
           ...state,
+					image_change: true,
           fileNameExt: fileNameExt,
           fileName: reader.result
           })
@@ -659,7 +568,7 @@ export function AddService(props) {
         <div className={styles.box1}>
           <div style={{fontSize: 14, marginLeft: 12, color: '#213d77'}} className={styles.title}>Service Details</div>
             <div className={styles.grid}>
-            
+
             <div className={styles.textfield}>
                 <label style={{color: '#535763'}}>Display Name</label>
                 <input autocomplete="off" name="display_name" value={state.display_name} onChange={handleInputs} className={styles.inputfield} type="text" />
@@ -686,13 +595,13 @@ export function AddService(props) {
               </select>
               <div className={styles.error_message}>{errors.service_category}</div>
               </div>
-              
+
               <div className={styles.textfield}>
               {/* Empty label */}
-              <label>Add </label>
+              {service_id== 'add' &&(<><label>Add </label>
               <Button onClick={() => history.push('/add-service-category')} className={classes.button1 + " " + classes.category_button} variant="contained">
                 + Add Service Category
-              </Button>
+              </Button></>)}
               </div>
 
               {/* Empty Div */}
@@ -745,7 +654,7 @@ export function AddService(props) {
         <div className={styles.box1}>
           <div style={{fontSize: 14, marginLeft: 12, color: '#213d77'}} className={styles.title}>Operational Duration</div>
             <div className={styles.grid1}>
-              
+
               <div className={styles.textfield}>
                 <label style={{color: '#535763'}}>From</label>
                 <input type='time' placeholder='' className={styles.timefield} name="from_time" value={state.from_time} onChange={handleInputs} />
@@ -779,21 +688,21 @@ export function AddService(props) {
             <div className={styles.checkboxDiv}>
             <FormControlLabel
                 className={classes.form_control_checkbox}
-                control={<GreenCheckbox checked={state.is_active} 
-                onChange={handleCheckbox} 
+                control={<GreenCheckbox checked={state.is_active}
+                onChange={handleCheckbox}
                 name="is_active" />}
                 label={<span className={styles.label_span}>Is Active</span>}
             />
             <FormControlLabel
                 className={classes.form_control_checkbox}
-                control={<GreenCheckbox checked={state.is_cancellation} 
-                onChange={handleCheckbox} 
+                control={<GreenCheckbox checked={state.is_cancellation}
+                onChange={handleCheckbox}
                 name="is_cancellation" />}
                 label={<span className={styles.label_span}>Service applicable for cancellation</span>}
                 />
             <FormControlLabel
                 className={classes.form_control_checkbox}
-                control={<GreenCheckbox checked={state.is_happy_code} 
+                control={<GreenCheckbox checked={state.is_happy_code}
                 onChange={handleCheckbox}
                 name="is_happy_code" />}
                 label={<span className={styles.label_span}>Service applicable for happy code</span>}
@@ -801,9 +710,9 @@ export function AddService(props) {
             </div>
 
         </div>
-          
+
       <div className={styles.saveButton}>
-      <Button style={{}} onClick={() => history.push('/vendors-service')}  className={classes.button2} variant="contained">
+      <Button style={{}} onClick={() => history.push('/SFMIS-services')}  className={classes.button2} variant="contained">
         Cancel
       </Button>
       <Button style={{}} onClick={handleSubmit} className={classes.saveButton1} variant="contained">
@@ -815,14 +724,14 @@ export function AddService(props) {
 			<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal} toggle={toggleModalClose} centered={true}>
 					<ModalBody modalClassName={styles.modalContainer}>
           <img style={{width: 60}} src={flag} />
-					<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>{isAdd ? "Successfully Added Station": "Successfully Updated"} </strong>  </p>
+					<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>{isAdd ? "Successfully Added SFMIS Service": "Successfully Updated"} </strong>  </p>
 					</ModalBody>
 					<ModalFooter className={styles.footer}>
 						<Button
               style={{width: 100}}
 							variant="contained"
               color="black"
-              className={classes.button1}
+              className={classes.saveButton1}
 							onClick={toggleModalClose}
 						>
 						OK
@@ -839,7 +748,7 @@ const mapStateToProps = (state) => {
     // isEdit: state.Stations.isEdit,
     // stationData: state.Stations.stationData,
     // contractorsList: state.Stations.contractorsList,
-    // isSubmitted: state.Stations.isSubmitted,
+    isSubmitted: state.Stations.isSubmitted,
     // isLoading: state.Stations.isLoading,
     serviceCategory: state.SFMIS.serviceCategory
 	};
@@ -850,20 +759,21 @@ const mapDispatchToProps = (dispatch) => {
     getCategoryServices: () => {
       dispatch(actions.getCategoryServices())
     },
-    manageSFMISServices: (data) => 
-      dispatch(actions.manageSFMISServices(data))
-    // setIsSubmitted: flag => {
-    //   dispatch(actions.setIsSubmitted(flag))
-    // },
+    manageSFMISServices: (data, isEdit) =>
+      dispatch(actions.manageSFMISServices(data, isEdit)),
+
+		setIsLoading: (value) =>
+	    dispatch(setIsLoading(value)),
+    setIsSubmitted: flag => {
+      dispatch(setIsSubmitted(flag))
+    },
     // EditStationDetails: data => {
     //   dispatch(actions.EditStationDetails(data))
     // },
     // getStationData: () => {
     //   dispatch(actions.getStationData())
     // },
-    // setIsLoading: (value) =>
-    //   dispatch(actions.setIsLoading(value)),
-	};
+	}
 };
 
 export default compose(connect(mapStateToProps,  mapDispatchToProps))(AddService);

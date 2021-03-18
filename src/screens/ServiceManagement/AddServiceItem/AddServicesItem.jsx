@@ -4,7 +4,7 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { compose } from 'redux';
-import * as actions from "../../../redux/actions/userActions";
+import * as actions from "../../../redux/actions/SFMISActions";
 import * as API from "../../../constants/APIs";
 import axios from 'axios';
 import { getStationData, setIsSubmitted, setIsLoading } from "../../../redux/actions/stationActions";
@@ -23,6 +23,7 @@ import background1 from '../AddServiceItem/images/background1.png';
 import image_icon from './images/image_icon.png';
 import flag from '../AddServiceItem/images/flag.svg';
 import downArrow from './images/downArrow.png';
+import delete_logo from "../../StationManagement/delete.svg"
 // import AutoPassword from './images/auto-password.svg';
 
 // Material UI
@@ -88,8 +89,8 @@ const useStyles = makeStyles((theme) => ({
     color: "red",
     position: "absolute",
     marginLeft: "-386px",
-   
-    
+
+
     ["@media (max-width:320px)"]: {},
   },
   textField1: {
@@ -115,11 +116,11 @@ const useStyles = makeStyles((theme) => ({
   button1: {
     borderRadius: 16,
     border: '1px solid #213D77',
-    backgroundColor: '#EFEFEF',
+    backgroundColor: 'transparent',
     color: '#213D77',
     textTransform: 'capitalize',
     '&:hover': {
-      backgroundColor: '#EFEFEF',
+      backgroundColor: 'transparent',
     }
   },
 
@@ -245,20 +246,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function AddServicesItem(props) {
+  const [isEdit, setIsEdit] = useState(false);
   const [dropDownDetails, setDropDownDetails] = useState([]);
   const [isAdd, setIsAdd] = useState(false);
   const [servicesType, setServicesType] = useState([])
   const [role, setRole] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState({
+    deleteModal: false,
+    deletedModal: false,
+  });
+
   const classes = useStyles();
   const history = useHistory();
-  const { user_id } = useParams();
+  const { service_id } = useParams();
   const [pageNo, setPageNo] = useState();
   const [rows, setRows] = useState([]);
+
   const [state, setState] = useState({
-    category_name: "",
-    service_type: "",
-    category_icon: "",
+    image_change: false,
+    name: "",
+    description: "",
+    status: false,
+    fileName: "",
+    fileNameExt: "",
+    price: "",
+    delivery_charge: ""
   });
   const [search, setSearch] = useState({
 
@@ -272,75 +284,42 @@ export function AddServicesItem(props) {
   const [arrayDetails, setArrayDetails] = useState([]);
 
 
-  const toggleModal = (e, data, i) => {
+  const toggleModal = (e, data, row) => {
     // setModal(true);
-    // rows[i].id = i;
-    // setArrayDetails(rows[i]);
-    // if (data == 'delete') {
-    //   setModal({
-    //     deleteModal: true
-    //   })
-    // } else {
+    setArrayDetails(row);
+    if (data == 'delete') {
+      setModal({
+        deleteModal: true
+      })
+    }
 
-    //   setModal({
-    //     details: true
-    //   })
-    // }
-    // setState({...state, packageName:data.packageName, id: data._id, })
   }
   // close modal
   const toggleModalClose = () => {
-    setModal(false)
-    props.setIsSubmitted(false)
-    history.push('/Services-management')
-  }
-  const editUser = (e, i, data) => {
-    data.id = i
-    props.setUserData(data)
+    setModal({
+      deleteModal: false,
+      deletedModal: false,
+    })
+
   }
 
 
-  // 
-  useEffect(() => {
-    if (props.isEdit) {
-      console.log(props.user)
-
-      setState(props.user)
-      // set value in startDate
-
-      //funciton
-    }
-  }, [])
-  // Changing Date fields
-  const handleDateChange = (data, type) => {
-    console.log(data)
-    // 
-    if (type == 'start') {
-      setSearch({
-        ...search,
-        start_date: data.target.value
-      })
-    } else {
-      setSearch({
-        ...search,
-        end_date: data.target.value
-      })
-    }
-  }
   const handleChangePage = (event, page) => {
     setPageNo(page)
-    props.getUserDataByParams(page, props.limit, search)
+    props.getItemsByParams(page, props.limit, search)
   }
 
-  const searchUsers = () => {
+  const handleSubmit = () => {
     debugger
-    console.log(search)
     if (!validateForm()) {
       return
     }
-    else {
-      // save logic
-    }
+
+    state.service_id = service_id;
+    console.log(isEdit)
+    debugger
+
+    props.manageItems(state, isEdit)
 
     //props.getUserDataByParams(1, 10, search)
   }
@@ -349,143 +328,69 @@ export function AddServicesItem(props) {
   const validateForm = () => {
     debugger
     var isValid = true
-    if (state.category_name.trim() == '') {
-      errors.category_name = "Category is required"; isValid = false;
+    if (state.name.toString().trim()==''|| !state.name.toString().match(/^[a-zA-Z ]+$/)) {
+      errors.name = "Name is required or Invalid name";
+      isValid = false;
     }
-    else if (state.service_type.trim() == '') {
-      errors.service_type = "Service type is required"; isValid = false;
+    else if (state.delivery_charge == '') {
+      errors.delivery_charge = "Delivery Charges is required";
+      isValid = false;
     }
-    else if (state.category_icon.trim() == '') {
-      errors.service_type = "Please upload category icon"; isValid = false;
+    else if(state.description.trim() == ''){
+      errors.description = "Description is required";
+      isValid = false;
+    }
+    else if(state.fileName == ''){
+        errors.image="image is required";
+        isValid =false;
+    }
+    else if(state.price == ''){
+      errors.price = "Price field is required";
+      isValid = false;
     }
     setErros({ ...errors, errors })
     return isValid
   }
 
-
-  //  Getting dropdown details  
   useEffect(() => {
-    if (props.userDetails) {
-      setDropDownDetails(props.userDetails)
-      console.log(props.userDetails)
-      // 
-    }
-  }, [props.userDetails])
-
-  useEffect(() => {
-    props.setIsLoading(true)
-    axios({
-      url: API.GetRoleAPI,
-      headers: {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      }
-    }).then((response) => {
-      setRole(response.data.role)
-      props.setIsLoading(false)
+    setIsEdit(false)
+    setState({
+      image_change: false,
+      name: "",
+      delivery_charge: "",
+      status: "",
+      price: "",
+      description: "",
+      fileName: "",
+      _id: ""
     })
-
-    if (props.isEdit || user_id != 'add') {
-      props.setIsLoading(true)
-      axios({
-        url: `${API.GetUserAPI}/${user_id}`,
-        headers: {
-          //    'Accept-Language': 'hi', 
-          "accept": "application/json",
-          'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        },
-      }).then(response => {
-        if (response.data.success) {
-          console.log(response.data.user)
-
-          // setState(data)
-          setState({
-            _id: response.data.user._id,
-            userName: response.data.user.name,
-            userNumber: response.data.user.mobile,
-            userAddress: response.data.user.address,
-            userPassword: response.data.user.password ? response.data.user.password : '',
-            role: response.data.user.role_id,         
-            userEmail: response.data.user.email ? response.data.user.email : '',
-        
-          })
-        } else {
-          setState([]);
-        }
-      }).catch(err => {
-        toast.error(err.response.data.message)
-        props.setIsLoading(false)
-      })
-      props.setIsLoading(false)
-    }
-  }, [])
-
-  const handleSubmit = (e) => {
-
-    e.preventDefault();
-    if (!validateForm()) {
-      return
-    }
-
-    // Add and Update User
-    if (user_id === 'add') {
-
-      state.date = moment(new Date()).format("DD-MM-YYYY")
-      console.log(state)
-
-      props.addUserDetails(state)
-      // 
-    } else {
-      props.EditUserDetails(state)
-    }
-  }
-
-  // Open Modal for Add User Successfully and Update User Successfully
-  useEffect(() => {
-
-    if (props.isSubmitted) {
-      setModal(true);
-      if (user_id == 'add') {
-        setIsAdd(true);
-      } else {
-        setIsAdd(false);
-      }
-    } else {
-
-    }
-  }, [props.isSubmitted])
+  }, [props.itemsDocs])
 
   // useEffect
   useEffect(() => {
-    props.getUserData()
+    props.getItemsByParams(1, 10, service_id)
   }, [])
 
-  const passwordGenerate = () => {
-    var randomstring = Math.random().toString(36).slice(-8);
-    setState({
-      ...state,
-      adminPassword: randomstring
-    })
-    console.log(randomstring)
-
-  }
-
+  useEffect(() => {
+    if(props.itemsDocs){
+      setRows(props.itemsDocs)
+    }
+    console.log(props.itemsDocs)
+    debugger
+  }, [props.itemsDocs])
 
 
   const handleInputs = (event) => {
-    console.log(event.target.name, event.target.value)
-    // 
-
+    if((event.target.name == 'price'|| event.target.name == 'delivery_charge') && isNaN(event.target.value)){
+      return;
+    }
     setState({
       ...state,
-      [event.target.name]: (event.target.name == 'userPassword'
-        || event.target.name == 'userNumber') ?
-        event.target.value.trim() : event.target.value
+      [event.target.name]:  event.target.value
     })
-    // 
     setErros({ errors, [event.target.name]: "" })
   }
+
   // function for adding user or Setting IsEdit False
   const addRole = () => {
     props.setIsEditFalse(false)
@@ -497,14 +402,12 @@ export function AddServicesItem(props) {
     setValues({ ...values, showPassword: !values.showPassword });
   };
   const handleMouseDownPassword = (event) => {
-
-
-
     event.preventDefault();
   };
+
   const setPage = () => {
 
-    let total = Math.ceil(90 / 10)
+    let total = Math.ceil(rows.length / 10)
     return (
       <Pagination
         onChange={handleChangePage}
@@ -514,70 +417,130 @@ export function AddServicesItem(props) {
         size='small' />
     )
   }
-  const uploadFile = (e, type) => {
+
+// handle Status Value
+  const handleCheckbox = (event, type) => {
+    setState({
+        ...state,
+        [event.target.name]: event.target.checked
+    })
+  }
+
+  // Upload Icon
+  const uploadFile = (e, type)=>{
     debugger
-    if (e.target.files && e.target.files.length > 0) {
-      var a = e.target.files[0].size;
-      const fsize = Math.round((a / 1024));
-      // this.setState({
-      //   fsize: fsize
-      // })
+    if (e.target.files && e.target.files.length > 0 ) {
+        var a = e.target.files[0].size;
+        const fsize = Math.round((a / 1024));
 
-      // console.log(fsize);
-      // console.log('fsize')
-      var fileName = e.target.files[0].name;
-      console.log(fileName)
-      debugger
-      var validExtensions = ['jpg', 'png', 'PNG', 'JPG', 'jpeg'];
+        var validExtensions=['jpg','png','PNG','JPG','jpeg', 'JPEG'];
+        var isValid = true;
+        let file_name = e.target.files[0].name;
+        let fileExt = file_name.substr(file_name.lastIndexOf('.') + 1);
+         console.log(e.target.files[0])
+         if(e.target.files[0]){
+           if(e.target.files[0].size > (1048576*2)){
+             e.target.value = "";
+             isValid = false;
+             toast.error(`file size should less than ${2}mb`)
+             return;
+           }
+         }
 
-      var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-      var isValid = true;
-      for (let img of e.target.files) {
-        debugger
-        // if($.inArray(img.name.substr(img.name.lastIndexOf('.') + 1), validExtensions) == -1){
-        //     e.target.value = "";
-        //     isValid = false;
-        //     toast.error("Invalid file type")
-        //    }
-        //  break;
-      }
-      if (e.target.files[0]) {
-        if (e.target.files[0].size > (1048576 * 2)) {
-          e.target.value = "";
-          isValid = false;
-          toast.error(`file size should less than ${2}mb`)
+        let n = validExtensions.includes(fileExt);
+
+        if(!n) {
+          toast.error(`please select image file`)
+          return
         }
-      }
-      if (isValid) {
-        debugger
+
+      if(isValid){
+      debugger
         var fileName = e.target.files[0].name;
         var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+          debugger
+        }
         let reader = new FileReader();
-        debugger
+        reader.onloadend = (e) => {
+          debugger
         setState({
           ...state,
-          image: (e.target.files[0]),
-          image_name: true
-        })
-        debugger
-        setErros({ errors, image: "" })
-      }
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        debugger
-        setState({
-          ...state,
+					image_change: true,
+          fileNameExt: fileNameExt,
           fileName: reader.result
-        })
-      }
+          })
+        }
       reader.readAsDataURL(e.target.files[0]);
-    }
-  }
+      }
+   }
+
+   //  Edit Items details
+   const editDetails = (event, data) => {
+
+     document.body.scrollTop = 0;
+     document.documentElement.scrollTop = 0;
+
+     setIsEdit(true);
+     console.log(data)
+
+     debugger
+     setState({
+       ...state,
+       name: data.name,
+       delivery_charge: data.delivery_charge,
+       status: data.status,
+       price: data.price,
+       description: data.description,
+       fileName: `http://13.235.102.214:8000/uploads/items/${data.item_icon}`,
+       _id: data._id
+   })
+
+   }
+
+
+   const handleDeleteItems = async(e, data) => {
+     console.log(data)
+     debugger
+
+     let a = await props.setIsLoading(true);
+
+     let config = {
+       url: `${API.ItemsAPI}/${data._id}?service_id=${data.service_id._id}`,
+       method: "DELETE",
+       headers: {
+         // 'Accept-Language': 'hi',
+         "accept": "application/json",
+         'Authorization': 'Bearer ' + localStorage.getItem('token'),
+       }
+     }
+
+     console.log(config)
+     debugger
+
+     axios(config).then((response) => {
+       if(response.data.success){
+           setModal({
+             deleteModal: false,
+             deletedModal: true
+           })
+
+         props.setIsLoading(false)
+         props.getItemsByParams(pageNo, props.limit, data.service_id._id)
+       } else {
+         debugger
+         toast.error(response.data.message)
+       }
+     }).catch(err => {
+       toast.error(err.response.data.message)
+       props.setIsLoading(false)
+     })
+
+   }
 
   return (
     <div className={styles.main}>
       <div className={styles.header}>
-        <div className={styles.title1}>{user_id == 'add' ? "Add User" : "Add Item"}</div>
+        <div className={styles.title1}>{service_id == 'add' ? "Add User" : "Add Item"}</div>
         <Button startIcon={<ArrowBackIosIcon color="white" />} onClick={() => history.push('/SFMIS-services')} className={classes.button1} variant="contained">
           Back
         </Button>
@@ -585,25 +548,25 @@ export function AddServicesItem(props) {
       <div className={styles.box}>
         <div className={styles.box1}>
 
-          <div>
+
             <div className={styles.grid}>
 
               <div className={styles.textfield}>
                 <label className={styles.labelLeft}>Item Name</label>
-                <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
-                <div className={styles.error_message}>{errors.category_name}</div>
+                <input autocomplete="off" name="name" value={state.name} onChange={handleInputs} className={styles.inputfield} type="text" />
+                <div className={styles.error_message}>{errors.name}</div>
               </div>
               {/* <br /><br /> */}
               {/* <div className={styles.error_message}>{errors.roleName}</div> */}
               <div className={styles.textfield+" " +styles.p_t_0}>
               <label className={styles.labelRight}>Delivery Charges(if applicable)</label>
-                <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield+" "+styles.m_r_9} type="text" />
-                <div className={styles.massageRight}>{errors.category_name}</div>
+                <input autocomplete="off" name="delivery_charge" value={state.delivery_charge} onChange={handleInputs} className={styles.inputfield+" "+styles.m_r_9} type="text" />
+                <div className={styles.massageRight}>{errors.delivery_charge}</div>
               </div>
               <div className={styles.textfield}>
                 <label  className={styles.labelLeft}>Description</label>
-                <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
-                <div className={styles.error_message}>{errors.category_name}</div>
+                <input autocomplete="off" name="description" value={state.description} onChange={handleInputs} className={styles.inputfield} type="text" />
+                <div className={styles.error_message}>{errors.description}</div>
               </div>
 
               <div className={styles.textfield}>
@@ -620,8 +583,8 @@ export function AddServicesItem(props) {
 
               <div className={styles.textfield}>
                 <label  className={styles.labelLeft}>Price</label>
-                <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
-                <div className={styles.error_message}>{errors.category_name}</div>
+                <input autocomplete="off" name="price" value={state.price} onChange={handleInputs} className={styles.inputfield} type="text" />
+                <div className={styles.error_message}>{errors.price}</div>
               </div>
 
 
@@ -630,7 +593,10 @@ export function AddServicesItem(props) {
 
                 <FormControlLabel
                   className={classes.label}
-                  control={<GreenCheckbox checked={true} name="checkedG" />}
+                  control={<GreenCheckbox
+                     onChange={handleCheckbox}
+                     checked={state.status}
+                     name="status" />}
                   label={
                     <span
                       className={styles.checkBoxLabel}
@@ -642,62 +608,12 @@ export function AddServicesItem(props) {
                 />
               </div>
 
-              {/* <div className={styles.textfield}>
-              <label style={{ color: '#272D3B', width: '100%', marginBlock: 'auto' }}>Description</label>
-              <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
-              <div className={styles.error_message}>{errors.category_name}</div>
-            </div> */}
-              {/* <br /><br />            */}
-              {/* <div className={styles.textfield}>
-              <label style={{ color: '#272D3B', width: '100%', marginBlock: 'auto' }}>Price</label>
-              <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
-              <div className={styles.error_message}>{errors.category_name}</div>
-            </div><br/><br/>
-            <div className={styles.textfield}>
-              <label style={{ color: '#272D3B', width: '100%', marginBlock: 'auto' }}>Delivery Charges(if applicable)</label>
-              <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />
-              <div className={styles.error_message}>{errors.category_name}</div>
-            </div><br /><br />
-          
-
-            <div className={styles.textfield}>
-            <label style={{color: 'soloid #535763'}}>Upload Service Icon</label>
-              <div className={styles.image_upload}>
-              <label className={state.fileName?classes.show_image_true: classes.show_image} for="file-input">
-                  <img style={{ marginTop:'7px' }}src={state.fileName? state.fileName: image_icon} />
-              </label>
-              </div>
-              <input id="file-input" type="file" style={{display: 'none'}} onChange={uploadFile} className={styles.upload_image} accept="image/*" />
-              <div className={styles.error_message}>{errors.image}</div>
-             
-            </div><br /><br />
-            <div className={styles.textfield}>
-
-            
-              <FormControlLabel
-                className={classes.label}
-                control={<GreenCheckbox checked={true} name="checkedG" />}
-                label={
-                  <span
-                    className={styles.checkBoxLabel}
-                    style={{ color: "#213D77" }}
-                  >
-                    Is Active
-                </span>
-                }
-              />
-            </div> */}
-
-
-
-
             </div>
             <div className={styles.saveButton}>
-              <Button onClick={searchUsers} className={classes.saveButton1} variant="contained">
-                {user_id == 'add' ? "Save" : "Save"}
+              <Button onClick={handleSubmit} className={classes.saveButton1} variant="contained">
+                {isEdit ? "Update" : "Save"}
               </Button>
             </div>
-          </div>
         </div>
       </div>
       <div>
@@ -712,7 +628,7 @@ export function AddServicesItem(props) {
                       className={classes.textField1}
                       id="outlined-adornment-weight"
                       value={search.name}
-                      name="name"
+                      name={"name"}
                       onChange={handleInputs}
                       startAdornment={<SearchOutlinedIcon />}
                       aria-describedby="outlined-weight-helper-text"
@@ -728,7 +644,7 @@ export function AddServicesItem(props) {
                 </div>
                 <div className={classes.div1}>
                   {/*Search Button*/}
-                  <Button onClick={searchUsers} className={classes.button3} variant="contained">
+                  <Button onClick={(e) => console.log('hello')} className={classes.button3} variant="contained">
                     Search
           </Button>
                 </div>
@@ -757,104 +673,34 @@ export function AddServicesItem(props) {
                   </TableHead>
                   <TableBody>
 
-                    <TableRow className={classes.table} >
+                    {rows.map((row, index) => (<TableRow className={classes.table} key={row._id}>
                       <TableCell component="th" scope="row">
-                        1
+                        {index + 1}
               </TableCell>
-                      <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                      <TableCell align="center">Wheelchair</TableCell>
-                      <TableCell align="center">Demo Description</TableCell>
-                      <TableCell align="center">100.00</TableCell>
-                      <TableCell align="center">00.00</TableCell>
+                      <TableCell align="center"><img src={`http://13.235.102.214:8000/uploads/items/${row.item_icon}`} style={{ width: '38px' }} /></TableCell>
+                      <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{row.description}</TableCell>
+                      <TableCell align="center">{row.price}</TableCell>
+                      <TableCell align="center">{row.delivery_charge}</TableCell>
                       <TableCell align="center">
                         <div className={styles.dropdown}>
                           <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
                           <div className={styles.dropdown_content}>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Delete Item</div></a>
+                            <a><div onClick={(e) => editDetails(e, row)}>Edit Details</div></a>
+                            <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Delete Item</div></a>
                           </div>
                         </div></TableCell>
-                    </TableRow>
-                    <TableRow className={classes.table} >
-                      <TableCell component="th" scope="row">
-                        2
-              </TableCell>
-                      <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                      <TableCell align="center">Wheelchair</TableCell>
-                      <TableCell align="center">Demo Description</TableCell>
-                      <TableCell align="center">100.00</TableCell>
-                      <TableCell align="center">00.00</TableCell>
-                      <TableCell align="center">
-                        <div className={styles.dropdown}>
-                          <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                          <div className={styles.dropdown_content}>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Delete Item</div></a>
-                          </div>
-                        </div></TableCell>
-                    </TableRow>
-                    <TableRow className={classes.table} >
-                      <TableCell component="th" scope="row">
-                        3
-              </TableCell>
-                      <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                      <TableCell align="center">Wheelchair</TableCell>
-                      <TableCell align="center">Demo Description</TableCell>
-                      <TableCell align="center">100.00</TableCell>
-                      <TableCell align="center">00.00</TableCell>
-                      <TableCell align="center">
-                        <div className={styles.dropdown}>
-                          <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                          <div className={styles.dropdown_content}>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Delete Item</div></a>
-                          </div>
-                        </div></TableCell>
-                    </TableRow>
-                    <TableRow className={classes.table} >
-                      <TableCell component="th" scope="row">
-                        4
-              </TableCell>
-                      <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                      <TableCell align="center">Wheelchair</TableCell>
-                      <TableCell align="center">Demo Description</TableCell>
-                      <TableCell align="center">100.00</TableCell>
-                      <TableCell align="center">00.00</TableCell>
-                      <TableCell align="center">
-                        <div className={styles.dropdown}>
-                          <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                          <div className={styles.dropdown_content}>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Delete Item</div></a>
-                          </div>
-                        </div></TableCell>
-                    </TableRow>
-                    <TableRow className={classes.table} >
-                      <TableCell component="th" scope="row">
-                        5
-              </TableCell>
-                      <TableCell ><img src={background1} style={{ height: 'fit-Content', width: 'auto', display: 'block', margin: 'auto' }} /></TableCell>
-                      <TableCell align="center">Wheelchair</TableCell>
-                      <TableCell align="center">Demo Description</TableCell>
-                      <TableCell align="center">100.00</TableCell>
-                      <TableCell align="center">00.00</TableCell>
-                      <TableCell align="center">
-                        <div className={styles.dropdown}>
-                          <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
-                          <div className={styles.dropdown_content}>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Edit Details</div></a>
-                            <a><div onClick={(e) => toggleModal(e, 'details',)}>Delete Item</div></a>
-                          </div>
-                        </div></TableCell>
-                    </TableRow>
+                    </TableRow>))}
+
                   </TableBody>
                 </Table>
               </TableContainer>
+              {rows.length == 0 && <div className={styles.emptyTable} style={{ display: 'flex', justifyContent: 'center'}}>No Data Found</div>}
             </div>
           </div>
         </div>
         {/* Modal for Add Update User */}
-        <Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal} toggle={toggleModalClose} centered={true}>
+        <Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={false} toggle={toggleModalClose} centered={true}>
           <ModalBody modalClassName={styles.modalContainer}>
             <img style={{ width: 60 }} src={flag} />
             <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>{isAdd ? "Successfully Added User" : "Successfully Updated"} </strong>  </p>
@@ -871,6 +717,53 @@ export function AddServicesItem(props) {
 						</Button>
           </ModalFooter>
         </Modal>
+
+        {/* After Delete Modal */}
+        {<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deletedModal} toggle={toggleModalClose} centered={true}>
+          <ModalBody modalClassName={styles.modalContainer}>
+            <img style={{ width: 60 }} src={flag} />
+            <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>Successfully Deleted Services</strong>  </p>
+          </ModalBody>
+          <ModalFooter className={styles.deleteFooter}>
+            <Button
+              style={{ width: 100 }}
+              variant="contained"
+              color="black"
+              className={classes.button1}
+              onClick={toggleModalClose}
+            >
+              OK
+  						</Button>
+          </ModalFooter>
+        </Modal>}
+
+        {/*Delete SFMIS Service*/}
+        {<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deleteModal} toggle={toggleModalClose} centered={true}>
+          <ModalBody modalClassName={styles.modalContainer}>
+            <img style={{ width: 60 }} src={delete_logo} />
+            <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>Are you sure you want to delete {arrayDetails.name} SFMIS Service?</strong>  </p>
+
+          </ModalBody>
+          <ModalFooter className={styles.deleteFooter}>
+            <Button
+              style={{ width: 100 }}
+              variant="contained"
+              color="black"
+              className={classes.button1}
+              onClick={toggleModalClose}
+            >
+              NO
+  						</Button>
+            <Button
+              style={{ width: 100 }}
+              variant="contained"
+              className={classes.saveButton1}
+              onClick={(e) => { handleDeleteItems(e, arrayDetails) }}
+            >
+              YES
+  						</Button>
+          </ModalFooter>
+        </Modal>}
 
 
         {rows.length == 0 && <div className={styles.pageDiv}>
@@ -891,30 +784,21 @@ export function AddServicesItem(props) {
 const mapStateToProps = (state) => {
 
   return {
-    isSubmitted: state.Stations.isSubmitted,
-
-    user: state.Users.userData,
-    isEdit: state.Users.isEdit,
-    userDetails: state.Stations.stationDetails,
-
+    itemsDocs: state.SFMIS.itemsDocs,
+    limit: state.SFMIS.itemsLimit
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    manageItems: (data, isEdit) =>
+      dispatch(actions.manageItems(data, isEdit)),
 
-    setIsSubmitted: flag => {
-      dispatch(setIsSubmitted(flag))
-    },
+    getItemsByParams: (page, limit, service_id) =>
+      dispatch(actions.getItemsByParams(page, limit, service_id)),
+
     setIsLoading: (value) =>
       dispatch(setIsLoading(value)),
-    addUserDetails: (user) =>
-      dispatch(actions.userActions(user)),
-    getUserData: () => {
-      dispatch(getStationData())
-    },
-    EditUserDetails: (details) =>
-      dispatch(actions.EditUserDetails(details))
   }
 }
 

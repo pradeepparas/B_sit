@@ -482,7 +482,7 @@ export function ItemDetails(props) {
           Back
         </Button>
       </div>
-      
+
       <div className={styles.table}>
       <div className={styles.filterContent}>
         <div className={styles.searchBarDiv}>
@@ -682,10 +682,10 @@ export function ItemDetails(props) {
 						 cursor: "pointer",
 					 }}
 					 onClick={toggleModalClose}
-				 /> 
+				 />
 
 		    <div className={styles.modalOuterDiv} style={{display: 'flex', paddingBottom: 20}}>
-      
+
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <div className={styles.image_box}>
                 <img src={food_image} />
@@ -715,11 +715,11 @@ export function ItemDetails(props) {
 
                                 <div className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <span style={{marginRight: 20}} className={styles.textModal} >Approve</span><label className={styles.switch}>
-                                <input type="checkbox" checked={true} />
+                                <input type="checkbox" value={true} />
                                 <span className={styles.slider + " " + styles.round}></span>
                                 </label>
                                 </div>
-                        
+
 								</div>
 						</div>
                 </div>

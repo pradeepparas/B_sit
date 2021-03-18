@@ -109,14 +109,12 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     color: "red",
-    margin: "auto",
-    marginTop: "-11px",
     display: "flex",
-    marginRight: "165px",
+    marginRight: "60px",
     ["@media (min-width: 540px) and (max-width: 720px)"]: {
       marginTop:'-28px',
       marginRight: '296px'
-      
+
     },
   },
   textField1: {
@@ -164,10 +162,6 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
     height: 40,
     width: 100,
-    position: 'absolute',
-    margin: 'inherit',
-    marginLeft: '264px',
-
     '&:hover': {
       backgroundColor: '#213D77',
       color: '#FFF'
@@ -319,7 +313,7 @@ export function AddServiceCategory(props) {
     status: false
   });
   const [search, setSearch] = useState({
-    
+
   })
 
   const [values, setValues] = useState({
@@ -392,7 +386,7 @@ export function AddServiceCategory(props) {
   // Changing Date fields
   const handleDateChange = (data, type) => {
     console.log(data)
-    // 
+    //
     if (type == 'start') {
       setSearch({
         ...search,
@@ -415,15 +409,15 @@ export function AddServiceCategory(props) {
       e.preventDefault();
       if (!validateForm()) {
         return
-      } 
+      }
         state.category_icon = state.image_icon ? state.image_icon: "";
-        props.manageCategoryServices(state, isEdit);   
+        props.manageCategoryServices(state, isEdit);
     }
 
     useEffect(() => {
       setIsEdit(false)
       setState({
-        image_icon: "", 
+        image_icon: "",
         category_name: "",
         category_icon: "",
         service_type: "",
@@ -438,7 +432,7 @@ export function AddServiceCategory(props) {
      debugger
      var isValid=true
      if(state.category_name.trim()==''){
-       errors.category_name="Service category Name is required"; 
+       errors.category_name="Service category Name is required";
        isValid=false;
      }
      else if(state.service_type.trim()=='' || state.service_type == '0'){
@@ -477,14 +471,14 @@ export function AddServiceCategory(props) {
     //   axios({
     //     url: `${API.GetUserAPI}/${user_id}`,
     //     headers: {
-    //       //    'Accept-Language': 'hi', 
+    //       //    'Accept-Language': 'hi',
     //       "accept": "application/json",
     //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
     //     },
     //   }).then(response => {
     //     if (response.data.success) {
     //       console.log(response.data.user)
-          
+
     //       // setState(data)
     //       setState({
     //         _id: response.data.user._id,
@@ -512,7 +506,7 @@ export function AddServiceCategory(props) {
 
   // Open Modal for Add User Successfully and Update User Successfully
   // useEffect(() => {
-    
+
   //   if (props.isSubmitted) {
   //     setModal(true);
   //     if (user_id == 'add') {
@@ -537,10 +531,10 @@ export function AddServiceCategory(props) {
       adminPassword: randomstring
     })
     console.log(randomstring)
-    
+
   }
 
- 
+
 
   const handleInputs = (event) => {
 
@@ -548,7 +542,7 @@ export function AddServiceCategory(props) {
       ...state,
       [event.target.name]: event.target.value
     })
-    // 
+    //
     setErros({ errors, [event.target.name]: "" })
   }
 
@@ -572,13 +566,13 @@ export function AddServiceCategory(props) {
     setValues({ ...values, showPassword: !values.showPassword });
   };
   const handleMouseDownPassword = (event) => {
-  
+
 
 
     event.preventDefault();
   };
   const setPage = () => {
-    
+
     let total = Math.ceil(90 / 10)
     return (
       <Pagination
@@ -604,7 +598,7 @@ export function AddServiceCategory(props) {
         // 'Accept-Language': 'hi',
         "accept": "application/json",
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      } 
+      }
     }
 
     if(type == 'status'){
@@ -646,10 +640,6 @@ export function AddServiceCategory(props) {
       props.setIsLoading(false)
     })
 
-		// setModal({
-		// 	deleteModal: false,
-		// 	deletedModal: true
-		// })
 	}
 
   const uploadFile = (e, type)=> {
@@ -712,7 +702,7 @@ export function AddServiceCategory(props) {
     let name = `http://13.235.102.214:8000/uploads/category/${data.category_icon}`;
 
     setIsEdit(true);
-    
+
     debugger
     setState({
       ...state,
@@ -741,24 +731,17 @@ export function AddServiceCategory(props) {
           <div className={styles.grid}>
             <div className={styles.textfield}>
               <label style={{ color: '#272D3B', width: '100%', marginBlock: 'auto' }}>Service Category Name</label>
-              <input autocomplete="off" name="category_name" value={state.category_name} onChange={handleInputs} className={styles.inputfield} type="text" />
+              <input autocomplete="off" className={styles.inputfield} name="category_name" value={state.category_name} onChange={handleInputs} type="text" />
               <div className={styles.error_message}>{errors.category_name}</div>
-              <br /><br /><br />
 
-            </div><br /><br />
+
+            </div>
             {/* <div className={styles.error_message}>{errors.category_name}</div> */}
 
-            <div className={styles.textfield}>
-
-              {/* <option selected disabled style={{ color: '#272D3B', width: '100%', marginBlock: 'auto' }}>Service Type</option>
-              <input autocomplete="off" name="roleDescription" value={state.roleDescription} onChange={handleInputs} className={styles.inputfield} type="text" /> */}
               <div className={styles.textfield}>
-                <label style={{color: 'black',width: 'inherit',padding:'inherit',marginLeft:'-79px'}}>Services Type</label>
-                <select style={{width: '100%',
-                              height:'40px',paddingRight:'25px',
-                              backgroundColor:'#ffffff',marginRight:'-40px',
-                              borderRadius:'7px',border:'1px solid #272D3B'
-                            }} 
+                <label style={{color: '#272D3B', width: '100%', marginBlock: 'auto'}}>Services Type</label>
+                <select
+                            className={styles.inputfield}
                       name="service_type" value={state.service_type} onChange={handleInputs}>
                   <option value="0">-Select Service Type-</option>
                   <option value="BOOK">Book</option>
@@ -766,9 +749,6 @@ export function AddServiceCategory(props) {
               </select>
               <div className={styles.error_message}>{errors.service_type}</div>
               </div>
-
-
-            </div><br /><br /><br />
 
             <div className={styles.textfield}>
             <label style={{color: ' soloid #535763'}}>Upload Service Icon</label>
@@ -779,27 +759,14 @@ export function AddServiceCategory(props) {
               </div>
               <input id="file-input" type="file" style={{display: 'none'}} onChange={uploadFile} className={styles.upload_image} accept="image/*" />
               <div className={styles.error_message}>{errors.image}</div>
-             
-            </div><br /><br />
-            <div className={styles.textfield}>
 
+            </div>
+            <div className={styles.textfield+ " "+ styles.activeAndButton}>
 
-            {/* <div className={styles.textfield}>
-              <label style={{color: '#535763'}}>Upload Service Icon</label>
-              <div className={styles.image_upload}>
-              <label className={state.fileName?classes.show_image_true: classes.show_image} for="file-input">
-                  <img src={state.fileName? state.fileName: image_icon} />
-              </label>
-              </div>
-              <input id="file-input" type="file" style={{display: 'none'}} onChange={uploadFile} className={styles.upload_image} accept="image/*" />
-              <div className={styles.error_message}>{errors.image}</div>
-            </div> */}
-
-            
               <FormControlLabel
                 className={classes.label}
-                control={<GreenCheckbox checked={state.status} 
-                onChange={handleCheckbox} 
+                control={<GreenCheckbox checked={state.status}
+                onChange={handleCheckbox}
                 name="status" />}
 
                 label={
@@ -811,12 +778,13 @@ export function AddServiceCategory(props) {
                 </span>
                 }
               />
+              <div className={styles.saveButton}>
+              <Button onClick={handleSubmit} className={classes.saveButton1} variant="contained">
+                {isEdit ? "Update" : "Save"}
+              </Button>
+              </div>
             </div>
-            <div className={styles.saveButton}>
-            <Button onClick={handleSubmit} className={classes.saveButton1} variant="contained">
-              {isEdit ? "Update" : "Save"}
-            </Button>
-            </div>
+
 
           </div>
 
@@ -886,7 +854,7 @@ export function AddServiceCategory(props) {
                       <div className={styles.dropdown_content}>
                         <a><div onClick={(e) => editDetails(e, row)}>Edit Details </div></a>
                         <a><div onClick={(e) => toggleModal(e, 'change', row)}>Change Status</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Remove</div></a>                    
+                        <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Remove</div></a>
                       </div>
                     </div></TableCell>
             </TableRow>
@@ -985,11 +953,11 @@ export function AddServiceCategory(props) {
 				 />
          <div className={styles.modalBody}>
                 <label style={{
-                    color: '#213D77', 
-                    fontWeight:"bold", 
-                    marginBottom: 20, 
-                    fontSize: 17, 
-                    display: 'flex', 
+                    color: '#213D77',
+                    fontWeight:"bold",
+                    marginBottom: 20,
+                    fontSize: 17,
+                    display: 'flex',
                     justifyContent: 'center'
                   }}>
                     Change Status</label>
@@ -1045,7 +1013,7 @@ export function AddServiceCategory(props) {
 
 
 const mapStateToProps = (state) => {
-  
+
   return {
     categoryDocs: state.SFMIS.docs,
     // isSubmitted: state.Stations.isSubmitted,
@@ -1057,9 +1025,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    manageCategoryServices: (category, edit) => 
+    manageCategoryServices: (category, edit) =>
       dispatch(actions.manageCategoryServices(category, edit)),
-    getCategoryServicesByParams: (page, limit) => 
+    getCategoryServicesByParams: (page, limit) =>
       dispatch(actions.getCategoryServicesByParams(page, limit)),
     // setIsSubmitted: flag => {
     //   dispatch(setIsSubmitted(flag))

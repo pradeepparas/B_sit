@@ -5,7 +5,10 @@ import { Row, Col } from "reactstrap";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from 'redux';
-//  
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import * as API from '../../constants/APIs';
+// radio_label
 import {
   Modal,
   ModalHeader,
@@ -26,6 +29,7 @@ import flag from '../StationManagement/flag.svg';
 
 // Material UI
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Radio from "@material-ui/core/Radio";
 import clsx from 'clsx';
 import CancelIcon from "@material-ui/icons/Cancel";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -51,16 +55,17 @@ import Pagination from '@material-ui/lab/Pagination';
 import {
   FormControlLabel,
   Checkbox,
- 
+
   Icon
   } from '@material-ui/core';
 
 // components
 import styles from './ServicesManagement.module.css';
-import * as actions from "../../redux/actions/vendorActions";
+import * as actions from "../../redux/actions/SFMISActions";
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { blue } from '@material-ui/core/colors';
+import { setIsLoading } from "../../redux/actions/stationActions";
 // import styled from 'styled-components';
 
 const BootstrapInput = withStyles((theme) => ({
@@ -107,6 +112,27 @@ const GreenCheckbox = withStyles({
   },
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
+
+const RedRadio = withStyles({
+  root: {
+    color: "#b22222",
+    '&$checked': {
+      color: "#b22222",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
+const GreenRadio = withStyles({
+  root: {
+    color: "#10AC44",
+    '&$checked': {
+      color: "#10AC44",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& MuiButton-contained:hover": {
@@ -142,6 +168,21 @@ const useStyles = makeStyles((theme) => ({
     ["@media (min-width: 180px) and (max-width: 1010px)"]: {
       overflow: 'auto'
     },
+  },
+  deletebutton1: {
+    width: 100,
+    ["@media (min-width: 280px) and (max-width: 1192px)"]: {
+      width: '100%',
+      marginBottom: 5
+    },
+    borderRadius: 80,
+    color: 'white',
+    backgroundColor: '#213D77',
+    textTransform: 'capitalize',
+    '&:hover': {
+      backgroundColor: '#213D77',
+      color: '#FFF'
+    }
   },
   textField1: {
     ["@media (min-width: 280px) and (max-width: 1192px)"]: {
@@ -199,14 +240,19 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   button2: {
-    width: 100,
+    width: 120,
+    border: 'solid',
+    borderWidth: '1.9px',
+    boxShadow: 'none',
     borderRadius: 16,
-    color: 'white',
-    backgroundColor: '#213d77',
+    borderColor: '#213d77',
+    color: '#213d77',
+    backgroundColor: 'transparent',
     textTransform: 'capitalize',
     '&:hover': {
-      backgroundColor: '#213d77',
-      color: '#FFF'
+      borderColor: '#213d77',
+      backgroundColor: 'transparent',
+      color: '#213d77'
     }
   },
   container1: {
@@ -274,18 +320,18 @@ const rows = [
 ];
 
 export function ServicesManagement(props) {
+  const [serviceCategory, setServiceCategory] = useState([])
+  const [changeStatus, setChangeStatus] = useState(false)
   const [pageNo, setPageNo] = useState();
-  const [date, setDate] = useState({
-    start: new Date().toISOString().slice(0, 10),
-    end: new Date().toISOString().slice(0, 10),
-  })
-  // const [rows, setRows] = useState([]);
+
+  const [rows, setRows] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [arrayDetails, setArrayDetails] = useState([]);
   const [modal, setModal] = useState({
     deleteModal: false,
     details: false,
-    deletedModal: false
+    deletedModal: false,
+    changeModel: false
   });
   const classes = useStyles();
   const [values, setValues] = React.useState({
@@ -300,56 +346,92 @@ export function ServicesManagement(props) {
   const openModal = () => {
     setShowModal(prev => !prev);
   };
-  // Handle Delete function
-  const handleDeleteSubmit = () => {
+
+
+  // Handle Delete and Change Status function or Calling APIs for Changing Status
+  const handleDeleteAndChangeStatus = async(e, data, type) => {
     // set delete modal false
-    setModal({
-      deleteModal: false,
-      deletedModal: true
+    console.log(data)
+    debugger
+    let a = await props.setIsLoading(true);
+
+    let config = {
+      url: type == 'delete'? `${API.SFMISAPI}/${data._id}`: `${API.SFMISAPI}/change_status`,
+      method: type == 'delete'? "DELETE": 'PUT',
+      headers: {
+        // 'Accept-Language': 'hi',
+        "accept": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    }
+
+    if(type == 'status'){
+      let value = {
+          "status": changeStatus,
+          "id": data._id
+      }
+      config.data = value
+    }
+
+    console.log(config)
+    debugger
+
+    axios(config).then((response) => {
+      if(response.data.success){
+        debugger
+        // toast.success(response.data.message)
+        if(type == 'delete'){
+          setModal({
+            deleteModal: false,
+            deletedModal: true
+          })
+        } else {
+          toast.success(response.data.message)
+          setModal({
+            ...modal,
+            changeModel: false
+          })
+        }
+
+        props.setIsLoading(false)
+        props.getSFMISServicesByParams(pageNo, props.limit)
+      } else {
+        debugger
+        toast.error(response.data.message)
+      }
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      props.setIsLoading(false)
     })
+
   }
 
   useEffect(() => {
-    // setRoleList(props.role)
-    // if(props.userDetails){
-    //   setDropDownDetails(props.userDetails)
-    //   console.log(props.userDetails)
-    //   // debugger
-    // }
+    props.getCategoryServices()
+    props.getSFMISServicesByParams(1, 10)
+  }, [])
 
-    if (props.vendorDocs) {
+  useEffect(() => {
+
+    if (props.docs) {
       // console.log("",props.vendorDocs)
-      // setRows(props.vendorDocs)
+      setRows(props.docs)
       debugger
     }
-  }, [props.vendorDocs])
+  }, [props.docs])
 
   // Getting Vendors List
   useEffect(() => {
-    // props.getRole();
-    // props.getUserData();
-    props.getVendorDataByParams(1, 10);
     // debugger
   }, [])
 
-  // Changing Date fields
-  const handleDateChange = (data, type) => {
-    console.log(data)
-    // debugger
-    if (type == 'start') {
-      setDate({
-        ...date,
-        start: data.target.value
-      })
-    } else {
-      setDate({
-        ...date,
-        end: data.target.value
-      })
+// Service Category for drop down
+  useEffect(() => {
+    debugger
+    if(props.serviceCategory){
+      setServiceCategory(props.serviceCategory)
     }
-  }
-
-  // Get Vendors Data List
+  }, [props.serviceCategory])
 
 
   // Search Field Value
@@ -361,18 +443,23 @@ export function ServicesManagement(props) {
     setAge(event.target.value);
   };
 
-  const toggleModal = (e, data, i) => {
-    setModal(true);
-    setArrayDetails(rows[i]);
+  const toggleModal = (e, data, row) => {
+    setChangeStatus(row.status);
+    setArrayDetails(row);
 
     if (data == 'delete') {
       setModal({
         deleteModal: true
       })
-    } else {
-
+    } if(data == 'details'){
       setModal({
         details: true
+      })
+    }
+
+    if(data == 'status'){
+      setModal({
+        changeModel: true
       })
     }
     // setState({...state, packageName:data.packageName, id: data._id, })
@@ -391,6 +478,15 @@ export function ServicesManagement(props) {
     setPageNo(page)
     // props.getUserDataByParams(page, props.limit)
   }
+
+  // Change Service Category Status
+  const handleChangeChargeable = (event, type) => {
+    if (type == 'Yes') {
+      setChangeStatus(true)
+    } else {
+      setChangeStatus(false)
+    }
+  };
 
   // Used for Pagination
   const setPage = () => {
@@ -442,8 +538,9 @@ export function ServicesManagement(props) {
             <div className={styles.selectDiv1}>
               <select className={styles.select1} name="slct" id="slct">
                 <option selected disabled>Service Category</option>
-                <option value="1">John Doe</option>
-                <option value="2">Name</option>
+                {serviceCategory.length > 0 ? serviceCategory.map(data =>
+                <option key={data._id} value={data._id}>{data.category_name}</option>
+                ) : null}
               </select>
             </div>
 
@@ -474,26 +571,26 @@ export function ServicesManagement(props) {
             </TableHead>
             <TableBody>
               {rows.map((row, index) => (
-                <TableRow className={classes.table} key={row.name}>
+                <TableRow className={classes.table} key={row.display_name}>
                   <TableCell component="th" scope="row">
                     {index + 1}
                   </TableCell>
-                  <TableCell align="center">{row.userName}</TableCell>
-                  <TableCell align="center">{row.userNumber}</TableCell>
-                  <TableCell align="center">{row.userEmail}</TableCell>
-                  <TableCell align="center">{row.service}</TableCell>
-                  <TableCell align="center">{row.stationName}</TableCell>
+                  <TableCell align="center">{row.service_category?row.service_category.category_name: '-'}</TableCell>
+                  <TableCell align="center">{row.display_name}</TableCell>
+                  <TableCell align="center">{row.from_time} - {row.end_time}</TableCell>
+                  <TableCell align="center">{row.service_booking_mobile}</TableCell>
+                  <TableCell align="center">{row.items}</TableCell>
                   {/* <TableCell align="center">{row.hours}</TableCell> */}
-                  <TableCell align="center">{row.date}</TableCell>
+                  <TableCell style={{color: row.status? 'green': 'red'}} align="center">{row.status? "active": "In-active"}</TableCell>
                   <TableCell align="center">
                     <div className={styles.dropdown}>
                       <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
                       <div className={styles.dropdown_content}>
-                        <a><div onClick={(e) => toggleModal(e, 'details', index)}>View Details</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details', index)}>Change Status</div></a>
-                        <a><div onClick={(e) => toggleModal(e, 'details', index)}>Edit Details</div></a>
-                        <Link to={`/SFMIS-services/add-service-item`}><div onClick={(e) => toggleModal(e, 'details', index)}>Manage Item</div></Link>
-                        <a><div onClick={(e) => toggleModal(e, 'details', index)}>Delete Details</div></a>
+                        <a><div onClick={(e) => toggleModal(e, 'details', row)}>View Details</div></a>
+                        <a><div onClick={(e) => toggleModal(e, 'status', row)}>Change Status</div></a>
+                        <Link to={`/SFMIS-services/${row._id}`}><a><div onClick={(e) => toggleModal(e, 'details', row)}>Edit Details</div></a></Link>
+                        <Link to={`/SFMIS-services/add-service-item/${row._id}`}><div onClick={(e) => toggleModal(e, 'details', row)}>Manage Item</div></Link>
+                        <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Delete Details</div></a>
 
                       </div>
                     </div></TableCell>
@@ -509,7 +606,7 @@ export function ServicesManagement(props) {
       {<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deletedModal} toggle={toggleModalClose} centered={true}>
         <ModalBody modalClassName={styles.modalContainer}>
           <img style={{ width: 60 }} src={flag} />
-          <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>Successfully Blocked Vendor</strong>  </p>
+          <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>Successfully Deleted Services</strong>  </p>
         </ModalBody>
         <ModalFooter className={styles.deleteFooter}>
           <Button
@@ -524,11 +621,11 @@ export function ServicesManagement(props) {
         </ModalFooter>
       </Modal>}
 
-      {/*Delete User*/}
+      {/*Delete SFMIS Service*/}
       {<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal.deleteModal} toggle={toggleModalClose} centered={true}>
         <ModalBody modalClassName={styles.modalContainer}>
           <img style={{ width: 60 }} src={delete_logo} />
-          <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>Are you sure you want to block {arrayDetails.userName} Vendor?</strong>  </p>
+          <p style={{ marginTop: 20 }}><strong style={{ fontSize: 20 }}>Are you sure you want to delete {arrayDetails.display_name} SFMIS Service?</strong>  </p>
 
         </ModalBody>
         <ModalFooter className={styles.deleteFooter}>
@@ -545,7 +642,7 @@ export function ServicesManagement(props) {
             style={{ width: 100 }}
             variant="contained"
             className={classes.button1}
-            onClick={(e) => { handleDeleteSubmit(e) }}
+            onClick={(e) => { handleDeleteAndChangeStatus(e, arrayDetails, 'delete') }}
           >
             YES
 						</Button>
@@ -586,18 +683,18 @@ export function ServicesManagement(props) {
                 <div className={styles.box1}>
                   <div className={styles.modalBox} >
                     <div className={styles.modalDiv} className={styles.modalDiv} style={{ flexDirection: 'row' }}>
-                      <span className={styles.textModal}>Display Name</span><span style={{ marginLeft: 103, marginRight: 25 }}> - </span>Wheelchair{arrayDetails.DisplayName}
+                      <span className={styles.textModal}>Display Name</span><span style={{ marginLeft: 103, marginRight: 25 }}> - </span>{arrayDetails.display_name}
                     </div>
                     <div className={styles.modalDiv} style={{ flexDirection: 'row' }}>
-                      <span className={styles.textModal}>Service Type</span><span style={{ marginLeft: 111, marginRight: 25 }}> - </span>Block{arrayDetails.ServicType}
+                      <span className={styles.textModal}>Service Type</span><span style={{ marginLeft: 111, marginRight: 25 }}> - </span>{arrayDetails.service_type}
                     </div>
                     <div className={styles.modalDiv} style={{ flexDirection: 'row' }}>
-                      <span className={styles.textModal}>Service Category</span><span style={{ marginLeft: 83, marginRight: 25 }}> - </span>Wheelchair{arrayDetails.ServiceCategory}
+                      <span className={styles.textModal}>Service Category</span><span style={{ marginLeft: 83, marginRight: 25 }}> - </span>{arrayDetails.service_category?arrayDetails.service_category.category_name: '-'}
 
 
                     </div>
                     <div className={styles.modalDiv} style={{ flexDirection: 'row' }}>
-                      <span className={styles.textModal}>Service Booking Number</span><span style={{ marginLeft: 33, marginRight: 25 }}> - </span>9768543210{arrayDetails.ServiceNumber}
+                      <span className={styles.textModal}>Service Booking Number</span><span style={{ marginLeft: 33, marginRight: 25 }}> - </span>{arrayDetails.service_booking_mobile}
                     </div>
                     <div className={styles.modalDiv} style={{ flexDirection: 'row' }}>
                       <span className={styles.textModal}>Chargeable</span><span style={{ marginLeft: 117, marginRight: 25 }}> - </span>Yes{ }
@@ -613,17 +710,17 @@ export function ServicesManagement(props) {
               <div className={styles.box1}>
                 <div className={styles.modalBox} >
                   <div className={styles.modalDiv} style={{ flexDirection: 'row' }}>
-                    <span className={styles.textModal}>Operational Hours</span><span style={{ marginLeft: 82, marginRight: 25 }}> - </span>{arrayDetails.OperationalHours}Mon - Sat (10 AM - 10 PM)
+                    <span className={styles.textModal}>Operational Hours</span><span style={{ marginLeft: 82, marginRight: 25 }}> - </span>{arrayDetails.from_time} - {arrayDetails.end_time}
 							</div><div className={styles.modalDiv} style={{ flexDirection: 'row' }}>
-                    <span className={styles.textModal}>Delivery Preparation<br /> Duration</span><span style={{ marginLeft: 143, marginRight: 25 }}> - </span>{arrayDetails.DeliveryPreparation}40 mins
+                    <span className={styles.textModal}>Delivery Preparation<br /> Duration</span><span style={{ marginLeft: 143, marginRight: 25 }}> - </span>{arrayDetails.preparation_duration}
 							</div><div className={styles.modalDiv} style={{ flexDirection: 'row' }}>
 
-                    <span className={styles.textModal}>Maximum Use Duration</span><span style={{ marginLeft: 51, marginRight: 25 }}> - </span>45 mins
+                    <span className={styles.textModal}>Maximum Use Duration</span><span style={{ marginLeft: 51, marginRight: 25 }}> - </span>{arrayDetails.max_use_duration}
 							</div>
               <div className={styles.textfield}>
             <FormControlLabel
               className={classes.label}
-              control={<GreenCheckbox checked={true}  name="checkedG" />}         
+              control={<GreenCheckbox checked={true}  name="checkedG" />}
               label={
                 <span
                   className={styles.checkBoxLabel}
@@ -637,7 +734,7 @@ export function ServicesManagement(props) {
             <div className={styles.textfield}>
             <FormControlLabel
               className={classes.label}
-              control={<GreenCheckbox checked={true}  name="checkedG" />}         
+              control={<GreenCheckbox checked={true}  name="checkedG" />}
               label={
                 <span
                   className={styles.checkBoxLabel}
@@ -648,7 +745,7 @@ export function ServicesManagement(props) {
               }
             />
             </div>
-                  
+
                   <div className={styles.modalDiv} className={styles.modalDiv} style={{ flexDirection: 'row' }}>
                     <span className={styles.textModal}></span><span style={{ marginLeft: 80, marginRight: 25 }}> </span>
                   </div>
@@ -657,10 +754,71 @@ export function ServicesManagement(props) {
             </Col>
           </Row>
         </div>
-
-
-
       </Modal>
+
+      {/* Modal for change Status */}
+				{<Modal className={styles.Container2} contentClassName={styles.changeStatusClass}
+				 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
+            <CancelIcon
+					 style={{
+						 width: 40,
+						 height: 40,
+						 backgroundColor: 'white',
+						 color: "#213D77",
+						 borderRadius: 55,
+						 position: "absolute",
+						 top: "-14",
+						 right: "-16",
+						 cursor: "pointer",
+					 }}
+					 onClick={toggleModalClose}
+				 />
+         <div className={styles.modalBody}>
+                <label style={{
+                    color: '#213D77',
+                    fontWeight:"bold",
+                    marginBottom: 20,
+                    fontSize: 17,
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}>
+                    Change Status</label>
+                  <div style={{display: 'flex', justifyContent: 'space-evenly'  }}>
+                  <div>
+                  <GreenRadio
+                    checked={changeStatus}
+                    onChange={(e) => handleChangeChargeable(e,"Yes")}
+                    // value="c"
+                    name="radio-button-demo"
+                    inputProps={{ 'aria-label': 'C' }}
+                  />
+                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+                  </div>
+
+                <div>
+                <RedRadio
+                    checked={!changeStatus}
+                    onChange={(e) => handleChangeChargeable(e, "No")}
+                    // value="c"
+                    name="radio-button-demo"
+                    inputProps={{ 'aria-label': 'C' }}
+                  />
+                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
+                  </div>
+                </div>
+              </div>
+						<ModalFooter className={styles.footer1}>
+							<Button
+	              style={{width: 100}}
+								variant="contained"
+	              color="black"
+	              className={classes.deletebutton1}
+								onClick={(e) => handleDeleteAndChangeStatus(e, arrayDetails, 'status')}
+							>
+							OK
+							</Button>
+						</ModalFooter>
+					</Modal>}
 
 
       {rows.length > 0 && <div className={styles.pageDiv}>
@@ -675,18 +833,26 @@ export function ServicesManagement(props) {
 const mapStateToProps = (state) => {
   // debugger
   return {
-    vendorDocs: state.Vendors.docs,
-    total: state.Vendors.total,
-    limit: state.Vendors.limit
-
+    docs: state.SFMIS.sfmisDocs,
+    serviceCategory: state.SFMIS.serviceCategory,
+    total: state.SFMIS.sfmisTotal,
+    limit: state.SFMIS.sfmisLimit
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getVendorDataByParams: (pageNo, size, params) => {
-      dispatch(actions.getVendorDataByParams(pageNo, size, params))
+    getSFMISServicesByParams: (pageNo, size, params) => {
+      dispatch(actions.getSFMISServicesByParams(pageNo, size, params))
     },
+    getCategoryServices: () => {
+      dispatch(actions.getCategoryServices())
+    },
+    setIsLoading: (value) =>
+	    dispatch(setIsLoading(value))
+    // getVendorDataByParams: (pageNo, size, params) => {
+    //   dispatch(actions.getVendorDataByParams(pageNo, size, params))
+    // },
 
   }
 }

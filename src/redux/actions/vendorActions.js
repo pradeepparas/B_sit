@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import axios from 'axios';
 import * as API from '../../constants/APIs';
-import { setIsLoading } from './stationActions';
+import { setIsLoading, setIsSubmitted } from './stationActions';
 import { toast } from 'react-toastify';
 
 export function getVendorDataByParams(page, limit, value) {
@@ -80,4 +80,146 @@ export function fetchVendorDataByParams(docs, total, limit){
         total: total,
         limit: limit
       }
+}
+
+// Creating Vendors Details
+export function manageVendorService(vendor, is_edit) {
+    return async dispatch => {
+
+        let station_id = localStorage.getItem('station_id');
+
+        let data = {
+          "name": vendor.vendor_name,
+          "mobile": vendor.mobile_number,
+          "email": vendor.email_address,
+          "station_id": station_id,
+          "warehouse_address": vendor.warehouse_address,
+          "holder_name": vendor.account_holder_name,
+          "account_number": vendor.account_number,
+          "ifsc_code": vendor.ifsc_code,
+          "bank_name": vendor.bank_name,
+          "branch_address": vendor.branch_address,
+          "max_commission": vendor.maximum_commission,
+          "mini_commission": vendor.minimum_commission,
+          "percentage_commission": vendor.commission_in_percentage,
+          "status": vendor.status,
+          "role": "602a45fe01252b2aa4fcd810"
+        }
+
+        console.log(data)
+        debugger
+
+
+        let a = await dispatch(setIsLoading(true));
+        let url = is_edit ? `${API.VendorAPI}/${vendor._id}?station_id=${station_id}`:
+                  `${API.VendorAPI}?station_id=${station_id}`
+
+        let method = is_edit? "PUT": "POST";
+
+        axios({
+            url: url,
+            method: method,
+            headers: {
+                "accept": "application/json",
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            },
+            data: data
+        }).then(response => {
+          debugger
+            if(response.data.success){
+              debugger
+                dispatch(setIsSubmitted(true))
+                // toast.success(response.data.message)
+                dispatch(setIsLoading(false));
+            } else {
+              debugger
+                toast.error(response.data.message)
+            }
+        }).catch(err => {
+          debugger
+            toast.error(err.response.data.message)
+            dispatch(setIsLoading(false));
+        })
+    }
+}
+
+// Getting Vendor Management for details
+export function getVendorManagementByParams(page, limit, params) {
+    return async dispatch => {
+        let a = await dispatch(setIsLoading(true));
+
+        let station_id = localStorage.getItem('station_id');
+        let url = `${API.VendorAPI}/${page}/${limit}?station_id=${station_id}`;
+        debugger
+        axios({
+            url: url,
+            headers: {
+                "accept": "application/json",
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            }
+        }).then(response => {
+            console.log(response)
+            debugger
+            if(response.data.success){
+                dispatch(setIsLoading(false));
+                console.log(response.data)
+                debugger
+                dispatch(fetchVendorManagementByParams(response.data.vendor.docs, response.data.vendor.total, response.data.vendor.limit))
+            }
+            debugger
+        }).catch(err => {
+            toast.error(err.response.data.message)
+            debugger
+            dispatch(setIsLoading(false));
+        })
+    }
+}
+
+// fetching SFMIS Services details
+export function fetchVendorManagementByParams(docs, total, limit) {
+    return {
+        docs: docs,
+        total: total,
+        limit: limit,
+        type: actionTypes.FETCH_VENDOR_MANAGEMENT_BYPARAMS
+    }
+}
+
+// Get Vendor data for drop down
+export function getVendorManagement(){
+  return async dispatch => {
+
+    let station_id = localStorage.getItem('station_id');
+    let a = await dispatch(setIsLoading(true))
+    axios({
+      url: `${API.VendorAPI}?station_id=${station_id}`,
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    }).then(response => {
+      console.log(response)
+      if(response.data.success){
+        dispatch(fetchVendorManagement(response.data.vendor))
+      } else {
+
+      }
+      dispatch(setIsLoading(false))
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      // dispatch(setIsSubmitted(false))
+      dispatch(setIsLoading(false))
+    })
+  }
+}
+
+// Fetch Vendor data for drop down
+export function fetchVendorManagement(data) {
+  return {
+    type: actionTypes.FETCH_VENDOR_MANAGEMENT,
+    data: data
+  }
 }

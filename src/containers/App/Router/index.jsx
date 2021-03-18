@@ -57,8 +57,8 @@ const Router = () => (
         <Route exact={true} path="/reset-password" component={ResetPasswordAdmin} />
         <Route exact={true} path="/SFMIS-services" render={(props) => <Drawer page={<ServicesManagement />} />}/>
         <Route path="/add-service-category" exact={true} render={(props) => <Drawer page={<AddServiceCategory />} />}/>
-        <Route path="/SFMIS-services/add-service-item" exact={true} render={(props) => <Drawer page={<AddServiceItem />} />}/>
-        
+        <Route path="/SFMIS-services/add-service-item/:service_id" exact={true} render={(props) => <Drawer page={<AddServiceItem />} />}/>
+
         {/* Chandan Sir */}
         <Route path="/user-management" exact={true} render={(props) => <Drawer page={<UserManagement />} />}/>
         <Route path="/user-management/:user_id" exact={true} render={(props) => <Drawer page={<AddUser />} />}/>

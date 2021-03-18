@@ -15,6 +15,7 @@ export const GetRoleAPI = `${url}/roles`;
 export const BlockUserAPI = `${url}/users`;
 
 // Vendors
+export const VendorAPI = `${url}/vendors`;
 export const GetVendorAPI = `${url}/services/vendor_report`;
 export const VendorBlockAPI = `${url}/services/change_status`;
 
@@ -30,3 +31,6 @@ export const UpdateProfileAPI = `${url}/users/profile_update`;
 // SFMIS Service Management
 export const AddServiceCategories = `${url}/servicecategories`;
 export const SFMISAPI = `${url}/services`;
+
+// Items APIs
+export const ItemsAPI = `${url}/items`;

@@ -6,7 +6,11 @@ const initialState = {
   total: '',
   limit: '',
   vendorDetails: [],
-  categoryData: []
+  categoryData: [],
+  vendorDocs: [],
+  vendorTotal: "",
+  vendorLimit: "",
+  vendorData: []
 };
 
 const vendorReducer = (state = initialState, action) => {
@@ -31,6 +35,20 @@ const vendorReducer = (state = initialState, action) => {
               categoryData: action.categoryData,
               vendorDetails: action.vendorData,
             }
+
+        case actionTypes.FETCH_VENDOR_MANAGEMENT_BYPARAMS:
+            return {
+              ...state,
+              vendorDocs: action.docs,
+              vendorTotal: action.total,
+              vendorLimit: action.limit
+            }
+
+        case actionTypes.FETCH_VENDOR_MANAGEMENT:
+              return {
+                ...state,
+                vendorData: action.data
+              }
         default:
             return state;
     }

@@ -28,7 +28,7 @@ import flag from '../VendorManagement/flag.svg';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import CancelIcon from "@material-ui/icons/Cancel";
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Radio from "@material-ui/core/Radio";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -51,7 +51,7 @@ import Pagination from '@material-ui/lab/Pagination';
 // components
 import styles from './VendorManagement.module.css';
 // import styled from 'styled-components';
-import * as actions from "../../redux/actions/userActions";
+import * as actions from "../../redux/actions/vendorActions";
 import { getStationData, setIsLoading } from "../../redux/actions/stationActions";
 
 
@@ -75,6 +75,26 @@ import { getStationData, setIsLoading } from "../../redux/actions/stationActions
 //   font-size: 24px;
 //   cursor: pointer;
 // `;
+
+const RedRadio = withStyles({
+  root: {
+    color: "#b22222",
+    '&$checked': {
+      color: "#b22222",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
+const GreenRadio = withStyles({
+  root: {
+    color: "#10AC44",
+    '&$checked': {
+      color: "#10AC44",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
@@ -138,6 +158,21 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#213D77'
     }
   },
+	deletebutton1: {
+    width: 100,
+    ["@media (min-width: 280px) and (max-width: 1192px)"]: {
+      width: '100%',
+      marginBottom: 5
+    },
+    borderRadius: 80,
+    color: 'white',
+    backgroundColor: '#213D77',
+    textTransform: 'capitalize',
+    '&:hover': {
+      backgroundColor: '#213D77',
+      color: '#FFF'
+    }
+  },
   textField: {
     ["@media (min-width: 280px) and (max-width: 1040px)"]: {
       width: '100%'
@@ -190,7 +225,7 @@ const useStyles = makeStyles((theme) => ({
   button3: {
     ["@media (min-width: 280px) and (max-width: 1040px)"]: {
       width: '100%',
-    
+
     },
     borderRadius: 80,
     color: 'white',
@@ -199,12 +234,12 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: '#213D77',
       color: '#FFF',
-      
-     
+
+
     },
     width: 135,
     marginBottom: -80,
-   
+
   },
 	div1: {
 		marginRight: 10,
@@ -290,6 +325,7 @@ const useStyles = makeStyles((theme) => ({
 // ];
 
 export function UserManagement(props) {
+	const [changeStatus, setChangeStatus] = useState(false)
 	const [rows, setRows] = useState([]);
   const [pageNo, setPageNo] = useState();
 	const [showModal, setShowModal] = useState(false);
@@ -298,7 +334,8 @@ export function UserManagement(props) {
   const [modal, setModal] = useState({
     deleteModal: false,
     details: false,
-		deletedModal: false
+		deletedModal: false,
+		changeModel: false
   });
   const classes = useStyles();
   const [search, setSearch] = useState({
@@ -322,73 +359,35 @@ export function UserManagement(props) {
     setShowModal(prev => !prev);
   };
 
-// Handle Delete function
-	const handleDeleteSubmit = (e, userData) => {
-		// set delete modal false
-    console.log(userData)
-    debugger
-    let data = {
-      "block_status": userData.is_blocked,
-      "user_id": userData._id
-    }
-    props.setIsLoading(true)
-
-    axios({
-      url: `${API.BlockUserAPI}/${userData._id}`,
-      method: "DELETE",
-      headers: {
-        //    'Accept-Language': 'hi',
-        "accept": "application/json",
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      }
-    }).then((response) => {
-      if(response.data.success){
-        debugger
-        // toast.success(response.data.message)
-        setModal({
-          deleteModal: false,
-          deletedModal: true
-        })
-        props.getUserDataByParams(pageNo, props.limit)
-      } else {
-        debugger
-        toast.error(response.data.message)
-      }
-    }).catch(err => {
-      toast.error(err.response.data.message)
-      props.setIsLoading(false)
-    })
-    props.setIsLoading(false)
-
-    props.deleteUser(arrayDetails.id)
-		setModal({
-			deleteModal: false,
-			deletedModal: true
-		})
-	}
-
-  // Getting Users list By Parameters
+  // Getting Vendors By Parameters
     useEffect(() => {
-      props.getRole();
-      props.getUserData();
-      props.getUserDataByParams(1, 10);
-      // debugger
+			props.getVendorManagement()
+      props.getVendorManagementByParams(1, 10)
+      debugger
     }, [])
 
-    useEffect(() => {
-      setRoleList(props.role)
-      if(props.userDetails){
-        setDropDownDetails(props.userDetails)
-        console.log(props.userDetails)
-        // debugger
-      }
+		useEffect(() => {
+			if(props.vendorData){
+				setDropDownDetails(props.vendorData)
+			}
+		}, [props.vendorData])
 
-      if(props.userDocs){
-        console.log("",props.userDocs)
-        setRows(props.userDocs)
-        debugger
-      }
-    }, [props.userDocs, props.userDetails])
+		// Change Service Category Status
+		const handleChangeChargeable = (event, type) => {
+			if (type == 'Yes') {
+				setChangeStatus(true)
+			} else {
+				setChangeStatus(false)
+			}
+		};
+
+		useEffect(() => {
+			console.log("Vendor", props.vendorDocs)
+			if(props.vendorDocs){
+				setRows(props.vendorDocs)
+				debugger
+			}
+		}, [props.vendorDocs])
 
    // Changing Date fields
    const handleDateChange = (data, type) => {
@@ -436,21 +435,26 @@ export function UserManagement(props) {
     setAge(event.target.value);
   };
 
-  const toggleModal =(e,data, i)=>{
-  	setModal(true);
-    rows[i].id = i;
-    setArrayDetails(rows[i]);
-    if(data == 'delete'){
+  const toggleModal =(e,data, row)=>{
+  	// setModal(true);
+		setChangeStatus(row.status);
+    setArrayDetails(row);
+
+		if (data == 'delete') {
       setModal({
         deleteModal: true
       })
-    } else {
-
+    } if(data == 'details'){
       setModal({
         details: true
       })
     }
-  	// setState({...state, packageName:data.packageName, id: data._id, })
+
+    if(data == 'status'){
+      setModal({
+        changeModel: true
+      })
+    }
     }
     // close modal
     const toggleModalClose =()=>{
@@ -460,16 +464,69 @@ export function UserManagement(props) {
 				deletedModal: false
       })
     }
-		const editUser=(e, i,  data)=>{
-			data.id=i
-			props.setUserData(data)
+
+		// Handle Delete and Change Status function or Calling APIs for Changing Status
+		const handleDeleteAndChangeStatus = async(e, data, type) => {
+			// set delete modal false
+			console.log(data)
+			debugger
+			let a = await props.setIsLoading(true);
+
+			let config = {
+				url: type == 'delete'? `${API.VendorAPI}/${data.vendor_id}`: `${API.VendorAPI}/change_status/${data.vendor_id}`,
+				method: type == 'delete'? "DELETE": 'PUT',
+				headers: {
+					// 'Accept-Language': 'hi',
+					"accept": "application/json",
+					'Authorization': 'Bearer ' + localStorage.getItem('token'),
+				}
+			}
+
+			if(type == 'status'){
+				let value = {
+						"block_status": !changeStatus,
+						"user_id": data.vendor_id
+				}
+				config.data = value
+			}
+
+			console.log(config)
+			debugger
+
+			axios(config).then((response) => {
+				if(response.data.success){
+					debugger
+					// toast.success(response.data.message)
+					if(type == 'delete'){
+						setModal({
+							deleteModal: false,
+							deletedModal: true
+						})
+					} else {
+						toast.success(response.data.message)
+						setModal({
+							...modal,
+							changeModel: false
+						})
+					}
+
+					props.setIsLoading(false)
+					props.getVendorManagementByParams(pageNo, props.limit)
+				} else {
+					debugger
+					toast.error(response.data.message)
+				}
+			}).catch(err => {
+				toast.error(err.response.data.message)
+				props.setIsLoading(false)
+			})
+
 		}
 
-    // function for adding user or Setting IsEdit False
-    const addUser = () => {
+		const editUser=(e, i,  data)=>{
+			console.log('edit')
+		}
 
-      props.setIsEditFalse(false)
-    }
 
     const searchUsers = () => {
       console.log(search)
@@ -489,7 +546,7 @@ export function UserManagement(props) {
       <div className={styles.header}>
         <div className={styles.title}> Vendors</div>
         <Link to={`/vendor-management/add`}>
-        <Button className={classes.button3} onClick={addUser} variant="contained">
+        <Button className={classes.button3}  variant="contained">
           +Add vendors
         </Button>
         </Link>
@@ -527,14 +584,14 @@ export function UserManagement(props) {
          </select>
          </div> */}
 
-          <div className={styles.selectDiv1}>
-            <select className={styles.select1} name="role" /*value={this.state.courseId}*/ onChange={handleInputs}>
-              <option selected disabled>Vendor Name</option>
-              {role.length > 0 && role.map(data =>
-                  <option key={data._id} value={data._id}>{data.role.replace('_', ' ')}</option>
-                  )}
-          </select>
-          </div>
+				 <div className={styles.selectDiv1}>
+					<select className={styles.select1} name="vendor_id" /*value={search.station_id}*/ onChange={handleInputs}>
+						<option selected disabled>Vendor Name</option>
+						{dropDownDetails.length > 0 && dropDownDetails.map(data =>
+							<option key={data._id} value={data._id}>{data.name}</option>
+						 )}
+				</select>
+				</div>
 
         {/* <div className={styles.dateDiv}> */}
         <div className={classes.container1}>
@@ -634,18 +691,18 @@ export function UserManagement(props) {
               <TableCell align="center">{row.name}</TableCell>
               <TableCell align="center">{row.mobile}</TableCell>
               <TableCell align="center">{row.email? row.email:'-'}</TableCell>
-            
+
               {/* <TableCell align="center">{row.station_id?row.station_id.station_name: '-'}</TableCell> */}
               <TableCell align="center">{moment(row.created_at).format("DD-MM-YYYY")}</TableCell>
-              <TableCell align="center">{row.is_blocked?"In-active": "Active"}</TableCell>
+              <TableCell style={{color: row.status? 'green':'red'}} align="center">{row.status?"active": "In-active"}</TableCell>
               <TableCell align="center">
               <div className={styles.dropdown}>
                 <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow}/></button>
                 <div className={styles.dropdown_content}>
-                  <a><div onClick={(e) => toggleModal(e, 'details', index)}>View Details</div></a>
-                  <a> Change Status</a>
-                  <Link to={`admin-management-add/${row._id}`}><div onClick={(e) =>editUser(e, index, row)}>Edit Details</div></Link>
-                  <a><div onClick={(e) => toggleModal(e, 'delete', index)}>Delete vendor</div></a>
+                  <a><div onClick={(e) => toggleModal(e, 'details', row)}>View Details</div></a>
+                  <a><div onClick={(e) => toggleModal(e, 'status', row)}>Change Status</div></a>
+                  <Link to={`/vendor-management/${row._id}`}><div onClick={(e) =>editUser(e, index, row)}>Edit Details</div></Link>
+                  <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Delete vendor</div></a>
                 </div>
                 </div></TableCell>
             </TableRow>
@@ -696,7 +753,7 @@ export function UserManagement(props) {
               style={{width: 100}}
 							variant="contained"
 							className={classes.button1}
-							onClick={(e) => { handleDeleteSubmit(e, arrayDetails) }}
+							onClick={(e) => { handleDeleteAndChangeStatus(e, arrayDetails, 'delete') }}
 						>
 							YES
 						</Button>
@@ -762,6 +819,70 @@ export function UserManagement(props) {
 						</ModalFooter>
 					</Modal>}
 
+					{/* Modal for change Status */}
+						{<Modal className={styles.Container2} contentClassName={styles.changeStatusClass}
+						 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
+		            <CancelIcon
+							 style={{
+								 width: 40,
+								 height: 40,
+								 backgroundColor: 'white',
+								 color: "#213D77",
+								 borderRadius: 55,
+								 position: "absolute",
+								 top: "-14",
+								 right: "-16",
+								 cursor: "pointer",
+							 }}
+							 onClick={toggleModalClose}
+						 />
+		         <div className={styles.modalBody}>
+		                <label style={{
+		                    color: '#213D77',
+		                    fontWeight:"bold",
+		                    marginBottom: 20,
+		                    fontSize: 17,
+		                    display: 'flex',
+		                    justifyContent: 'center'
+		                  }}>
+		                    Change Status</label>
+		                  <div style={{display: 'flex', justifyContent: 'space-evenly'  }}>
+		                  <div>
+		                  <GreenRadio
+		                    checked={changeStatus}
+		                    onChange={(e) => handleChangeChargeable(e,"Yes")}
+		                    // value="c"
+		                    name="radio-button-demo"
+		                    inputProps={{ 'aria-label': 'C' }}
+		                  />
+		                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+		                  </div>
+
+		                <div>
+		                <RedRadio
+		                    checked={!changeStatus}
+		                    onChange={(e) => handleChangeChargeable(e, "No")}
+		                    // value="c"
+		                    name="radio-button-demo"
+		                    inputProps={{ 'aria-label': 'C' }}
+		                  />
+		                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
+		                  </div>
+		                </div>
+		              </div>
+								<ModalFooter className={styles.footer1}>
+									<Button
+			              style={{width: 100}}
+										variant="contained"
+			              color="black"
+			              className={classes.deletebutton1}
+										onClick={(e) => handleDeleteAndChangeStatus(e, arrayDetails, 'status')}
+									>
+									OK
+									</Button>
+								</ModalFooter>
+							</Modal>}
+
 
       {rows.length > 0 &&<div className={styles.pageDiv}>
       <div style={{marginTop: 40}}>
@@ -775,36 +896,23 @@ export function UserManagement(props) {
 const mapStateToProps = (state) => {
 	// debugger
 	return {
-		// user: state.Users.usersList,
-    userDocs: state.Users.docs,
-    userDetails: state.Stations.stationDetails,
-    total: state.Users.total,
-    limit: state.Users.limit,
-    role: state.Users.role
+		vendorDocs: state.Vendors.vendorDocs,
+    total: state.Vendors.vendorTotal,
+    limit: state.Vendors.vendorLimit,
+		vendorData: state.Vendors.vendorData
 	}
 }
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-    getUserDataByParams: (pageNo, size, params) => {
-      dispatch(actions.getUserDataByParams(pageNo, size, params))
-    },
     setIsLoading: (value) =>
       dispatch(setIsLoading(value)),
-    getRole: () => {
-      dispatch(actions.getRole())
-    },
-    getUserData: () => {
-      dispatch(getStationData())
-    },
-    setIsEditFalse: (value) =>
-      dispatch(actions.setIsEditFalse(value)),
-		// add_user: (user) =>
-		// 	dispatch(actions.userActions(user))
-	  setUserData	: (data) =>
-			dispatch(actions.setUserData(data)),
-    deleteUser: (id) =>
-      dispatch(actions.deleteUser(id))
+
+    getVendorManagementByParams: (pageNo, size, params) =>
+			dispatch(actions.getVendorManagementByParams(pageNo, size, params)),
+
+		getVendorManagement: () =>
+			dispatch(actions.getVendorManagement()),
 	}
 }
 

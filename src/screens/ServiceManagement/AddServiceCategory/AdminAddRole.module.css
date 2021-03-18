@@ -2,12 +2,13 @@
 
 .main {
   width: 100%;
-  padding: 24px;
   flex-grow: 1;
   min-width: 0;
+  padding-left: 20px;
+  padding-right: 20px;
   background-color: #efefef;
-
 }
+
 .title1 {
   text-align: left;
   font: normal normal bold 25px/26px Montserrat;
@@ -18,8 +19,6 @@
 
 .header {
   margin-top: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -47,36 +46,38 @@
  }
  .box {
     margin-top: 50px;
-    padding-left: 20px;
-    padding-right: 20px;
     width: 100%;
     overflow: hidden;
-    border-radius: 20px;
-
-  }
-  .box1 {
-    width: 100%;
-    padding-top: 6px;
     background-color: white;
     box-shadow: 0px 4px 8px 0px #08080833;
-    margin-bottom: 60px;
+  }
+
+  .box1 {
+    width: 100%;
+    padding-top: 25px;
+    padding-bottom: 15px;
+    background-color: white;
+    /* box-shadow: 0px 4px 8px 0px #08080833; */
     display: block;
-    height: 300px;
+    /* height: 300px; */
     color: #272D3B;
   }
   .grid {
-    grid-template-rows: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     margin-left: 0px;
     padding-top: 0px;
-    margin-bottom: -24px;
+    /* margin-bottom: -24px; */
     border-radius: 8px;
-    width: 45%;
+    width: 510px;
     line-height: 0.43;
-    margin-left: -40px;
+    /* margin-left: -40px; */
 }
+
 .textfield {
     font-family: Montserrat;
     display: flex;
+    align-items: center;
     margin: 11px 30px 11px 30px;
     padding-left: 25px;
     padding-right: 10px;
@@ -95,20 +96,17 @@
     width: 18px;
     color: #272D3B;
    }
+
    .saveButton {
     display: flex;
     justify-content: flex-end;
-    width: 67%;
-    margin-top: -62px;
-    margin-right: -23px;
-    margin-bottom: 17px;
-    float: right;
+    align-items: center;
    }
-  
+
   .inputfield {
     font-weight: bold;
     font-family: Montserrat;
-    width: -webkit-fill-available;
+    width: 485px;
     font-size: inherit;
     outline: none;
     height: 40px;
@@ -120,14 +118,12 @@
     opacity: 1;
 }
 .box2 {
-    margin-top: -58px;
-    padding-left: 20px;
-    padding-right: 20px;
+    margin-top: 38px;
     width: 100%;
     overflow: hidden;
     border-radius: 20px;
-
   }
+
   .box3 {
     width: 100%;
     padding-top: 4px;
@@ -142,10 +138,11 @@
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
 }
-  
+
   .table {
     padding-top: 1px;
-    margin-top: 50px;
+    /* margin-top: 50px; */
+    box-shadow: 0px 4px 8px 0px #08080833;
     width: 100%;
     border-radius: 20px;
   }
@@ -161,6 +158,12 @@
     width: 800px;
     justify-content: space-between;
   }
+
+  .activeAndButton{
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .dropbtn {
     display: flex;
     background-color: white;
@@ -170,14 +173,14 @@
     font-size: 14px;
     border: none;
   }
-  
+
   .dropdown {
     position: relative;
     display: inline-block;
     text-align: center;
   }
   .checkBoxLabel{
-  
+
     text-align: left;
     font: normal normal bold 12px/20px Montserrat;
     letter-spacing: 0px;
@@ -212,7 +215,7 @@
     box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 20%);
     z-index: 1;
   }
-  
+
   .dropdown_content a {
     color: black;
     font-size: 10px;
@@ -233,7 +236,6 @@
     border-radius: 5px;
     margin: auto 86px;
     justify-content: center;
-    margin-top: -17px
 }
 
 .modalBody {
@@ -270,159 +272,40 @@
   justify-content: center;
   align-items: center;
 }
- 
+
   .upload_image > input {
     display: none;
   }
   .dropdown_content div:hover { cursor: pointer; }
-  
+
   .dropdown:hover .dropdown_content {display: block;}
-  
+
   .dropdown:hover .dropbtn {background-color: white;}
-  
+
   .arrow {
     width: 10px;
     height: 10px;
     margin-left: 5px;
     margin-top: 3px;
   }
-  
+
   .pageDiv {
     width: 100%;
     display: flex;
     justify-content: center;
   }
- @media (min-width: 900px) and (max-width: 1024px) {
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-     
-    }
-    .extraDiv {
-      display: none;
-    }
-    .grid1 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr;
-    }
-  }
-@media (min-width:540px) and (max-width:720px) {
-  .textfield {
-  display: flex;
-  flex-direction: column;
-  width: 217%;
-  }
-.inputfield {
-  margin-top: inherit;
-}
-.title1 {
-  margin-left: -34px;
-}
-.box {
-  margin-top: 33px;
-  padding-left: 0px;
-  padding-right: 0px;
-  width: 113%;
-  margin-left: -25px;
-}
-.box2 {
-  margin-top: -58px;
-  padding-left: 0px;
-  padding-right: 23px;
-  width: 118%;
-}
 
+  .title1 {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
 
-}
-  /* @media (min-width: 360px) and (max-width: 640px) {
-    .main {
-      width: 401px;
-      margin-left: -69px;
-    }
-    .title1 {
-      margin-bottom: 10px;
-      margin-left: 10px;
-      margin-top: -28px;
-      padding: inherit;
-    }
-    .inputfield {
-      width: 42%;
-      margin-top: 21px;
-      margin-left: 16px;
-    }
-    .textfield{
-      margin-top: -40px;
-      width: 42%
-    } 
-    
-  } */
-  @media (min-width: 900px) and (max-width: 1024px) {
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-    .extraDiv {
-      display: none;
-    }
-    .grid1 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr;
+  @media (min-width: 280px) and (max-width: 750px) {
+    .textfield {
+      flex-direction: column;
     }
   }
-    .title1 {
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
-    .saveButton {
-      display: flex;
-      flex-direction: column;
-      margin-right: 0px;
-      margin-top: 0px;
-    }
 
-  @media (min-width: 280px) and (max-width: 1040px) {
-    .filterContent {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .searchBarDiv {
-      width: 91%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .dateDiv {
-      width: 500px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .selectDiv1 {
-      width: 100%;
-      margin-bottom: 5px;
-    }
-    .select1 {
-          font-weight: bold;
-    font-family: Montserrat;
-    width: 130%;
-    font-size: inherit;
-    outline: none;
-    height: 40px;
-    padding-left: 7px;
-    padding-right: 25px;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    border: 1px solid #272D3B;
-    border-radius: 7px;
-    opacity: 1;
-    margin-right: -41px;
-    }
-  }
   @media (min-width: 280px) and (max-width: 1040px) {
     .filterContent {
       display: flex;
@@ -476,5 +359,5 @@
     flex-direction: column;
   }
 }
-  
-/* box3 modalCategoryContainer footer1  */
+
+/* 720pximage_upload textfield box1 modalCategoryContainer box1 saveButton gridtable box footer1  */
