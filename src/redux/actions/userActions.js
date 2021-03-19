@@ -5,12 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { setIsSubmitted, setIsLoading } from './stationActions';
 import { mapProps } from 'recompose';
-// export function userActions(user) {
-//   return {
-//     type: actionTypes.ADD_USER,
-//     user: user
-//   };
-// }
+// role
 
 export function userActions(details) {
   return async dispatch => {
@@ -18,7 +13,8 @@ export function userActions(details) {
     debugger
     console.log(details)
     debugger
-    const data = {
+
+    var data = {
       "name": details.userName,
       // "email": details.userEmail,
       "mobile": details.userNumber,
@@ -108,14 +104,16 @@ export function setUserData(user) {
 export function getUserDataByParams(page, limit, values, type) {
   debugger
   return async (dispatch) => {
+
+    let station_id = localStorage.getItem('station_id');
     let a = await dispatch(setIsLoading(true))
     console.log(a)
     debugger
     let type1 = type ? type: '';
 
     debugger
-    let url = values ? `${API.GetUserAPI}/${page}/${limit}?search=${values.name}&station_id=${values.station_name}&type=${type1}&role_id=${values.role}&start_date=${values.start_date}&end_date=${values.end_date}`
-        : `${API.GetUserAPI}/${page}/${limit}?type=${type1}`; 
+    let url = values ? `${API.GetUserAPI}/${page}/${limit}?search=${values.name}&station_id=${station_id}&type=3&role_id=${values.role}&start_date=${values.start_date}&end_date=${values.end_date}`
+        : `${API.GetUserAPI}/${page}/${limit}?type=3&station_id=${station_id}`; 
     debugger
     axios({
       url: url,
@@ -182,6 +180,10 @@ export function getRole(){
       dispatch(setRole(response.data.role))
       // setRole(response.data.role)
       dispatch(setIsLoading(false))
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      dispatch(setIsLoading(false))
+      debugger
     })
     
 }
@@ -193,3 +195,135 @@ export function setRole(role) {
     role: role
   }
 }
+
+export function manageRole(role) {
+  return async dispatch => {
+    let a = await dispatch(setIsLoading(true));
+    let station_id = localStorage.getItem('station_id');
+
+    let data = {
+      "role": role.role_name,
+      "description": role.description,
+      "status": role.status
+    }
+
+    axios({
+      url: `${API.GetRoleAPI}?station_id=${station_id}`,
+      method: "POST",
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      },
+      data: data
+    }).then(response => {
+      if(response.data.success){
+        toast.success(response.data.message)
+        dispatch(setIsLoading(false))
+        debugger
+      } else {
+        toast.error(response.data.message)
+      }
+    }).catch(err => {
+      debugger
+      toast.error(err.response.data.message)
+      dispatch(setIsLoading(false))
+    })
+  }
+}
+
+export function getRoleDataByParams(page, limit, params){
+  return async dispatch => {
+    
+    let a = await dispatch(setIsLoading(true));
+    let station_id = localStorage.getItem('station_id');
+    
+    axios({
+      url: `${API.GetRoleAPI}/${page}/${limit}?station_id=${station_id}&search=`,
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      },
+    }).then(response => {
+      if(response.data.success){
+        debugger
+        dispatch(setIsLoading(false))
+        dispatch(fetchRoleDataByParams(response.data.role.docs, response.data.role.total, response.data.role.limit))
+        debugger
+      } else {
+        toast.error(response.data.message)
+      }
+    }).catch(err => {
+      debugger
+      // toast.error(err.response.data.message)
+      dispatch(setIsLoading(false))
+    })
+  }
+}
+
+export function fetchRoleDataByParams(docs, total, limit) {
+  return {
+    type: actionTypes.FETCH_ROLES_BYPARAMS,
+    docs: docs,
+    total: total,
+    limit: limit
+  }
+}
+
+// Manage Users
+export function manageUsers(details, is_edit) {
+  return async dispatch => {
+
+    let station_id = localStorage.getItem('station_id');
+    let a = await dispatch(setIsLoading(true))
+    debugger
+    console.log(details)
+    debugger
+
+    var data = {
+      "name": details.userName,
+      // "email": details.userEmail,
+      "mobile": details.userNumber,
+      "station_id": station_id,
+      "role": details.role,
+      "password": details.password,
+      // "status": details.status
+    }
+
+    if(is_edit){
+      // data.status = details.status;
+    }
+
+    if(details.userEmail)data.email= details.userEmail;
+
+    if(details.userAddress)data.address = details.userAddress;
+
+    axios({
+      method: is_edit? 'PUT': "POST",
+      url: is_edit ?`${API.GetUserAPI}/${details._id}?type=admin` : `${API.AddUserAPI}?type=admin`,
+      headers: { 
+      //  'Accept-Language': 'hi',
+          "accept": "application/json",
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      },
+      data : JSON.stringify(data)
+    }).then(response => {
+      if(response.data.success){
+        dispatch(setIsSubmitted(true))
+        console.log(response)
+      } else {
+        debugger
+      }
+      dispatch(setIsLoading(false))
+    }).catch((response) => {
+      // debugger
+      toast.error(response.response.data.message)
+      dispatch(setIsSubmitted(false))
+      dispatch(setIsLoading(false))
+    })
+    
+  }
+}
+

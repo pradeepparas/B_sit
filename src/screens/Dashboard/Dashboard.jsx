@@ -55,6 +55,8 @@ export function Dashboard(props) {
 		let token = localStorage.getItem('token')
 		if(token == null){
 			history.push('/')
+		} else {
+			history.push('/dashboard')
 		}
 		console.log(jwt_decode(localStorage.getItem('token')).exp < Date.now() / 1000)
 		debugger

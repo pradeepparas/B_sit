@@ -347,7 +347,7 @@ export function AddVendorService(props) {
 
            setState({
              approve_items: services.auto_approved_item,
-             vendor_name: services.vendor_id.vendor_id,
+             vendor_name: services.vendor_id,
              image_change: false,
              SFMIS_id: services._id,
              from_time_value: services.from_time,

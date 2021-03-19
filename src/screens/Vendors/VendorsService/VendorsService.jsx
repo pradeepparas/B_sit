@@ -343,12 +343,10 @@ export function VendorsService(props) {
   });
 	const [search, setSearch] = useState({
 		name: "",
-    vendor_id: "",
+    vendor_name: "",
     service_name: "",
-    station_id: "",
-    start_date: "",
-    end_date: "",
   });
+
   const classes = useStyles();
   const [values, setValues] = useState({
     amount: '',
@@ -369,42 +367,6 @@ export function VendorsService(props) {
     setShowModal(prev => !prev);
   };
 
-	// Drop-Down Details for category and Vendor Details
-	// useEffect(() => {
-	// 	if(props.categoryData){
-	// 		setCategoryDropDown(props.categoryData)
-	// 	}
-	// 	if(props.vendorDetails){
-	// 		setVendorDropDown(props.vendorDetails)
-	// 	}
-	// }, [props.categoryData, props.vendorDetails])
-
-	// Drop-Down Details for Delivery Station
-  // useEffect(() => {
-  //   // setRoleList(props.role)
-	// 	if(props.stationDetails){
-  //     setDropDownDetails(props.stationDetails)
-  //     // debugger
-  //   }
-
-  //   if(props.vendorDocs){
-  //     // console.log("",props.vendorDocs)
-  //     setRows(props.vendorDocs)
-  //     debugger
-  //   }
-  // }, [props.vendorDocs, props.stationDetails, props.vendorDetails])
-
-  // Getting Vendors List
-  // useEffect(() => {
-	// 	props.getStationData()
-  //   // props.getRole();
-  //   // props.getUserData();
-  //   props.getVendorDataByParams(1, 10);
-  //   // debugger
-  // }, [])
-
-  // Get Vendors Data List
-
   // Get Vendor Details
   useEffect(() => {
 
@@ -419,10 +381,6 @@ export function VendorsService(props) {
   // Search Field Value
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleSelectChange = (event) => {
-    setAge(event.target.value);
   };
 
   const toggleModal = (e, data, row) => {
@@ -482,23 +440,6 @@ export function VendorsService(props) {
     )
   }
 
-		// Changing Date fields
-		const handleDateChange = (data, type) => {
-		 console.log(data)
-		 // debugger
-		 if(type == 'start') {
-			 setSearch({
-				 ...search,
-				 start_date: data.target.value
-			 })
-		 } else {
-			 setSearch({
-				 ...search,
-				 end_date: data.target.value
-			 })
-		 }
-	 }
-
    useEffect(() => {
     if(props.vendorData){
       setDropDownDetails(props.vendorData)
@@ -510,7 +451,7 @@ export function VendorsService(props) {
 	 const filterVendors = () => {
 		 console.log(search)
 		 debugger
-		 props.getVendorDataByParams(1, 10, search)
+		 props.getSFMISServicesByParams(1, 10, search, "VENDOR")
 	 }
 
 	// Handle Inputs for Seaching
@@ -519,9 +460,6 @@ export function VendorsService(props) {
 			...search,
 			[event.target.name]: [event.target.value]
 		})
-		if(event.target.name == "station_id"){
-			props.getVendorDetails(event.target.value)
-		}
 	}
 
    // Change Service Category Status
@@ -628,7 +566,7 @@ export function VendorsService(props) {
 					 <select className={styles.select1} name="vendor_name" /*value={search.station_id}*/ onChange={handleInputs}>
 						 <option selected disabled>Vendor Name</option>
 						 {dropDownDetails.length > 0 && dropDownDetails.map(data =>
-							 <option key={data._id} value={data._id}>{data.name}</option>
+							 <option key={data._id} value={data.vendor_id}>{data.name}</option>
              )}
 				 </select>
 				 </div>
@@ -853,13 +791,13 @@ export function VendorsService(props) {
             <div style={{fontSize: 14, marginLeft: 12, color: 'black'}} className={styles.title}>Station Admin Details</div>
 								<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 								<div className={styles.modalDiv}  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 100,marginRight: 25}}> - </span>{/*arrayDetails.userName*/arrayDetails.vendor?arrayDetails.vendor.vendor_name: '-'}
+								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 100,marginRight: 25}}> - </span>{arrayDetails.vendor?arrayDetails.vendor.vendor_name: '-'}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Display Name</span><span style={{marginLeft: 98,marginRight: 25}}> - </span>{/*arrayDetails.userNumber*/arrayDetails.display_name}
+								<span className={styles.textModal}>Display Name</span><span style={{marginLeft: 98,marginRight: 25}}> - </span>{arrayDetails.display_name}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Service Type</span><span style={{marginLeft: 105,marginRight: 25}}> - </span>{/*arrayDetails.userEmail*/arrayDetails.service_category?arrayDetails.service_category.category_name: '-'}
+								<span className={styles.textModal}>Service Type</span><span style={{marginLeft: 105,marginRight: 25}}> - </span>{arrayDetails.service_category?arrayDetails.service_category.category_name: '-'}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
 								<span className={styles.textModal}>Service Category</span><span style={{marginLeft: 77,marginRight: 25}}> - </span>{arrayDetails.service_category?arrayDetails.service_category.category_name: '-'}
 								</div>
@@ -876,30 +814,27 @@ export function VendorsService(props) {
             <div style={{fontSize: 14, marginLeft: 12,  color: 'black'}} className={styles.title}>Station Admin Details</div>
 							<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 							<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-							<span className={styles.textModal}>Operational Hours</span><span style={{marginLeft: 78,marginRight: 25}}> - </span>{/*arrayDetails.service*/arrayDetails.operational_hours}
+							<span className={styles.textModal}>Operational Hours</span><span style={{marginLeft: 78,marginRight: 25}}> - </span>{arrayDetails.from_time} - {arrayDetails.end_time}
 							</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-							<span className={styles.textModal}>Delivery Preparation Duration</span><span style={{marginLeft: 4,marginRight: 25}}> - </span>40 mins
+							<span className={styles.textModal}>Delivery Preparation Duration</span><span style={{marginLeft: 4,marginRight: 25}}> - </span>{arrayDetails.preparation_duration}
 							</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-							<span className={styles.textModal}>Maximum Use Duration</span><span style={{marginLeft: 44,marginRight: 25}}> - </span>45 mins
+							<span className={styles.textModal}>Maximum Use Duration</span><span style={{marginLeft: 44,marginRight: 25}}> - </span>{arrayDetails.max_use_duration}
 							</div>
               <FormControlLabel
                   className={classes.form_control_checkbox}
-                  control={<GreenCheckbox checked={true} 
-                  /*onChange={handleChange}*/ 
+                  control={<GreenCheckbox checked={arrayDetails.status} 
                   name="checkedG" />}
                   label={<span className={styles.label_span}>Is Active</span>}
               />
               <FormControlLabel
                   className={classes.form_control_checkbox}
-                  control={<GreenCheckbox checked={true} 
-                  /*onChange={handleChange}*/ 
+                  control={<GreenCheckbox checked={arrayDetails.auto_approved_item} 
                   name="checkedG" />}
                   label={<span className={styles.label_span}>Auto Approve Items</span>}
               />
               <FormControlLabel
                   className={classes.form_control_checkbox}
-                  control={<GreenCheckbox checked={true} 
-                  /*onChange={handleChange}*/ 
+                  control={<GreenCheckbox checked={arrayDetails.service_cancel} 
                   name="checkedG" />}
                   label={<span className={styles.label_span}>Service applicable for cancellation</span>}
               />

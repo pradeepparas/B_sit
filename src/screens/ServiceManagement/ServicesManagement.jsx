@@ -320,11 +320,10 @@ const rows = [
 ];
 
 export function ServicesManagement(props) {
+
   const [search, setSearch] = useState({
-    vendor_name: "",
     name: "",
-    start_date: "",
-    end_date: "",
+    service_name: ""
   })
   const [serviceCategory, setServiceCategory] = useState([])
   const [changeStatus, setChangeStatus] = useState(false)
@@ -479,6 +478,13 @@ export function ServicesManagement(props) {
     })
   }
 
+  // Search filter function
+  const filterSFMIS = () => {
+    console.log(search)
+    debugger
+    props.getSFMISServicesByParams(1, 10, search, "STATION")
+  }
+
   //  used for pagination
   const handleChangePage = (event, page) => {
     setPageNo(page)
@@ -507,6 +513,14 @@ export function ServicesManagement(props) {
     )
   }
 
+  // Handle Inputs for Seaching
+	const handleInputs = (event) => {
+		setSearch({
+			...search,
+			[event.target.name]: [event.target.value]
+		})
+	}
+
   return (
     <div className={styles.main}>
       <div className={styles.header}>
@@ -526,8 +540,9 @@ export function ServicesManagement(props) {
                 // label="Search"
                 className={classes.textField1}
                 id="outlined-adornment-weight"
-                value={values.weight}
-                onChange={handleChange('weight')}
+                value={search.name}
+                name="name"
+                onChange={handleInputs}
                 startAdornment={<SearchOutlinedIcon />}
                 aria-describedby="outlined-weight-helper-text"
                 inputProps={{
@@ -542,7 +557,7 @@ export function ServicesManagement(props) {
 
 
             <div className={styles.selectDiv1}>
-              <select className={styles.select1} name="slct" id="slct">
+              <select onChange={handleInputs} className={styles.select1} name="service_name" id="slct">
                 <option selected disabled>Service Category</option>
                 {serviceCategory.length > 0 ? serviceCategory.map(data =>
                 <option key={data._id} value={data._id}>{data.category_name}</option>
@@ -550,7 +565,7 @@ export function ServicesManagement(props) {
               </select>
             </div>
 
-            <Button className={classes.button1} variant="contained">
+            <Button className={classes.button1} onClick={filterSFMIS} variant="contained">
               Search
           </Button>
           </div>

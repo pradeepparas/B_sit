@@ -195,6 +195,21 @@ const useStyles = makeStyles((theme) => ({
     // color: '#b22222',
     // borderRadius: 8
   },
+  deletebutton1: {
+    width: 100,
+    ["@media (min-width: 280px) and (max-width: 1192px)"]: {
+      width: '100%',
+      marginBottom: 5
+    },
+    borderRadius: 80,
+    color: 'white',
+    backgroundColor: '#213D77',
+    textTransform: 'capitalize',
+    '&:hover': {
+      backgroundColor: '#213D77',
+      color: '#FFF'
+    }
+  },
   button1: {
     ["@media (min-width: 280px) and (max-width: 1040px)"]: {
       width: '100%',
@@ -304,11 +319,13 @@ const useStyles = makeStyles((theme) => ({
 // ];
 
 export function UserManagement(props) {
+  const [changeStatus, setChangeStatus] = useState(false);
 	const [rows, setRows] = useState([]);
   const [pageNo, setPageNo] = useState();
 	const [showModal, setShowModal] = useState(false);
 	const [arrayDetails, setArrayDetails] = useState([]);
-  const [role, setRoleList] = useState([]);
+  // const [role, setRoleList] = useState([]);
+  const [role, setRole] = useState([]);
   const [errors , setErros]= useState({})
   const [modal, setModal] = useState({
     deleteModal: false,
@@ -318,7 +335,6 @@ export function UserManagement(props) {
   });
   const classes = useStyles();
   const [search, setSearch] = useState({
-    station_name: "",
     name: "",
     role: "",
     start_date: "",
@@ -367,7 +383,7 @@ export function UserManagement(props) {
           deleteModal: false,
           deletedModal: true
         })
-        props.getUserDataByParams(pageNo, props.limit)
+        props.getUserDataByParams(pageNo, props.limit, search)
       } else {
         
         toast.error(response.data.message)
@@ -384,34 +400,87 @@ export function UserManagement(props) {
 			deletedModal: true
 		})
 	}
-  const handleChangeChargeable = (event, type) => {
-    if (type == 'Yes') {
-      setState({
-        ...state,
-        chargeable: true
-      })
-    } else {
-      setState({
-        ...state,
-        chargeable: false
-      })
+  
+    // Change Service Category Status
+    const handleChangeChargeable = (event, type) => {
+      if (type == 'Yes') {
+        setChangeStatus(true)
+      } else {
+        setChangeStatus(false)
+      }
+    };
+
+
+    // Handle Change Status Calling APIs for Changing Status
+  const handleChangeStatus = async(e, data, type) => {
+
+    console.log(data)
+    debugger
+    let a = await props.setIsLoading(true);
+
+    let config = {
+      url: `${API.GetUserAPI}/change_status`,
+      method: 'PUT',
+      headers: {
+        // 'Accept-Language': 'hi',
+        "accept": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
     }
-    props.statusUser(arrayDetails.id)
-		setModal({
-			changeModal: false,
-			changedModal: true
-		})
-  };
+
+      let value = {
+          "status": changeStatus,
+          "id": data._id
+      }
+
+      config.data = value
+
+    console.log(config)
+    debugger
+
+    axios(config).then((response) => {
+      if(response.data.success){
+        debugger
+        // toast.success(response.data.message)
+        
+        toast.success(response.data.message)
+        setModal({
+          ...modal,
+          changeModel: false
+        })
+
+        props.setIsLoading(false)
+        props.getUserDataByParams(pageNo, props.limit, search)
+      } else {
+        debugger
+        toast.error(response.data.message)
+      }
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      props.setIsLoading(false)
+    })
+
+  }
+
+
   // Getting Users list By Parameters
     useEffect(() => {
       props.getRole();
       props.getUserData();
-      props.getUserDataByParams(1, 10);
+      props.getUserDataByParams(1, 10, search);
       // 
     }, [])
 
+     // GET Role for drop down
+     useEffect(() => {
+      if(props.role){
+        setRole(props.role)
+      }
+      debugger
+    }, [props.role])
+
     useEffect(() => {
-      setRoleList(props.role)
+      // setRoleList(props.role)
       if(props.userDetails){
         setDropDownDetails(props.userDetails)
         console.log(props.userDetails)
@@ -491,10 +560,11 @@ export function UserManagement(props) {
     setAge(event.target.value);
   };
 
-  const toggleModal =(e,data, i)=>{
-  	setModal(true);
-    rows[i].id = i;
-    setArrayDetails(rows[i]);
+  const toggleModal =(e,data, row)=>{
+
+  	// setModal(true);
+    setChangeStatus(row.status)
+    setArrayDetails(row);
     if(data == 'details'){
       setModal({
         details: true
@@ -513,7 +583,7 @@ export function UserManagement(props) {
         deleteModal: false,
         details: false,
 				deletedModal: false,
-        change:false
+        changeModel:false
       })
     }
 		const editUser=(e, i,  data)=>{
@@ -586,8 +656,8 @@ export function UserManagement(props) {
           <div className={styles.selectDiv1}>
             <select className={styles.select1} name="role" /*value={this.state.courseId}*/ onChange={handleInputs}>
               <option selected disabled>Role</option>
-              {role.length > 1 && role.map(data =>
-                  <option key={data._id} value={data._id}>{data.role.replace('_', '_',' ')}</option>
+              {role.length > 0 && role.map(data =>
+                  <option key={data._id} value={data._id}>{data.role.replace('_', ' ')}</option>
                   
                   
                   )}
@@ -612,27 +682,6 @@ export function UserManagement(props) {
 
         <div className={classes.container1}>
           <label style={{width: 45}} className={styles.dateLabel}>To Date</label>
-    			{/*<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-    				// defaultValue={new Date()}
-						
-    				className={classes.date1}
-    				// InputLabelProps={{
-            //   label: 'To Date',
-    				// 	shrink: true,
-            //   classes: { input: classes.input1 },
-            //   focused: classes.focused1,
-    				// }}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    			/>*/}
                 <DatePicker
                   autoComplete="off"
                   name="end_date"
@@ -685,14 +734,14 @@ export function UserManagement(props) {
               <TableCell align="center">{row.role_id?row.role_id.role/*.replace('_', ' ')*/: '-'}</TableCell>
               {/* <TableCell align="center">{row.station_id?row.station_id.station_name: '-'}</TableCell> */}
               <TableCell align="center">{moment(row.created_at).format("DD-MM-YYYY")}</TableCell>
-              <TableCell align="center">{row.is_blocked?"In-active": "Active"}</TableCell>
+              <TableCell style={{color: row.status? 'green': 'red'}} align="center">{row.status?"active": "In-active"}</TableCell>
               <TableCell align="center">
               <div className={styles.dropdown}>
                 <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow}/></button>
                 <div className={styles.dropdown_content}>
-                  <a><div onClick={(e) => toggleModal(e, 'details', index)}>View Details</div></a>
-                  <Link to={`user-management/${row._id}`}><div onClick={(e) =>editUser(e, index, row)}>Edit Details</div></Link>
-                  <a><div onClick={(e) => toggleModal(e, 'change', index)}>Change Status</div></a>
+                  <a><div onClick={(e) => toggleModal(e, 'details', row)}>View Details</div></a>
+                  <Link to={`user-management/${row._id}`}><div onClick={(e) =>editUser(e, row, row)}>Edit Details</div></Link>
+                  <a><div onClick={(e) => toggleModal(e, 'change', row)}>Change Status</div></a>
                 </div>
                 </div></TableCell>
             </TableRow>
@@ -816,57 +865,69 @@ export function UserManagement(props) {
 						</ModalFooter>
 					</Modal>}
           {/* Modal for change Status */}
-				{<Modal className={styles.Container2} contentClassName={styles.customClasss}
-				 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
-            <CancelIcon
-					 style={{
-						 width: 40,
-						 height: 40,
-						 backgroundColor: 'white',
-						 color: "#213D77",
-						 borderRadius: 55,
-						 position: "absolute",
-						 top: "-14",
-						 right: "-16",
-						 cursor: "pointer",
-					 }}
-					 onClick={toggleModalClose}
-				 />
-         <div className={styles.textfield2}>
-                <label style={{color: '#213D77', fontWeight:"700",paddingBottom:'30',width:"185"}}>Change Status</label>
-                  <div style={{display: 'flex', alignItems: 'center', marginLeft:'41'  }}>
-                  <GreenRadio
-                    checked={state.chargeable}
-                    onChange={(e) => handleChangeChargeable(e,"Yes")}
-                    // value="c"
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-label': 'C' }}
-                  />
-                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+				{/* Modal for change Status */}
+        {<Modal className={styles.Container2} contentClassName={styles.changeStatusClass}
+						 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
+		            <CancelIcon
+							 style={{
+								 width: 40,
+								 height: 40,
+								 backgroundColor: 'white',
+								 color: "#213D77",
+								 borderRadius: 55,
+								 position: "absolute",
+								 top: "-14",
+								 right: "-16",
+								 cursor: "pointer",
+							 }}
+							 onClick={toggleModalClose}
+						 />
+		         <div className={styles.modalBody}>
+		                <label style={{
+		                    color: '#213D77',
+		                    fontWeight:"bold",
+		                    marginBottom: 20,
+		                    fontSize: 17,
+		                    display: 'flex',
+		                    justifyContent: 'center'
+		                  }}>
+		                    Change Status</label>
+		                  <div style={{display: 'flex', justifyContent: 'space-evenly'  }}>
+		                  <div>
+		                  <GreenRadio
+		                    checked={changeStatus}
+		                    onChange={(e) => handleChangeChargeable(e,"Yes")}
+		                    // value="c"
+		                    name="radio-button-demo"
+		                    inputProps={{ 'aria-label': 'C' }}
+		                  />
+		                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+		                  </div>
 
-                <RedRadio
-                    checked={!state.chargeable}
-                    onChange={(e) => handleChangeChargeable(e, "No")}
-                    // value="c"
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-label': 'C' }}
-                  />
-                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
-                </div>
-                <div className={styles.error_message}>{errors.chargeable}</div>
-              </div>
-						<ModalFooter className={styles.footer1}>
-							<Button
-	              style={{width: 100}}
-								variant="contained"
-	              color="black"
-	              className={classes.button1}
-								onClick={toggleModalClose}
-							>
-							OK
-							</Button>
-						</ModalFooter>
-					</Modal>}
+		                <div>
+		                <RedRadio
+		                    checked={!changeStatus}
+		                    onChange={(e) => handleChangeChargeable(e, "No")}
+		                    // value="c"
+		                    name="radio-button-demo"
+		                    inputProps={{ 'aria-label': 'C' }}
+		                  />
+		                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
+		                  </div>
+		                </div>
+		              </div>
+								<ModalFooter className={styles.footer1}>
+									<Button
+			              style={{width: 100}}
+										variant="contained"
+			              color="black"
+			              className={classes.deletebutton1}
+										onClick={(e) => handleChangeStatus(e, arrayDetails, 'status')}
+									>
+									OK
+									</Button>
+								</ModalFooter>
+							</Modal>} 
 
 
       {rows.length > 0 &&<div className={styles.pageDiv}>

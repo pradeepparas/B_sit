@@ -111,9 +111,11 @@ export const changeProfileOrPassword = (profile, type) => {
             new_password: profile.newPassword,
             confirm_password: profile.confirmPassword
         }
+
+        // /${profile._id}
         axios({
             method: "PUT",
-            url: type=='1' ? `${API.UpdateProfileAPI}/${profile._id}` : API.ChangePasswordAPI,
+            url: type=='1' ? `${API.UpdateProfileAPI}` : API.ChangePasswordAPI,
             data: data,
             headers: {
                 "accept": "application/json",
@@ -126,6 +128,9 @@ export const changeProfileOrPassword = (profile, type) => {
                 dispatch(setIsLoading(false))
                 dispatch(setIsSubmitted(true))
                 localStorage.setItem('token', response.data.token)
+                if(type=='1'){
+                    localStorage.setItem('username', data.name)
+                }
             } else {
 
             }

@@ -137,7 +137,7 @@ export function fetchCategoryServices(serviceCategory) {
     }
 }
 
-// Creating SFMIS services Details
+// Creating SFMIS services Details and Vendor Service Details According to type As STATION or VENDOR
 export function manageSFMISServices(SFMIS, is_edit, type) {
     return async dispatch => {
 
@@ -215,7 +215,11 @@ export function getSFMISServicesByParams(page, limit, params, type) {
         let a = await dispatch(setIsLoading(true));
 
         let station_id = localStorage.getItem('station_id');
-        let url = `${API.SFMISAPI}/${page}/${limit}?station_id=${station_id}&provided_by=${type}`;
+        var url = `${API.SFMISAPI}/${page}/${limit}?station_id=${station_id}&provided_by=${type}&search=${params.name}&category_id=${params.service_name}`;
+        if(type == "VENDOR"){
+            url = `${API.SFMISAPI}/${page}/${limit}?station_id=${station_id}&provided_by=${type}&search=${params.name}&category_id=${params.service_name}&vendor_id=${params.vendor_name}`;
+        }
+
         debugger
         axios({
             url: url,
@@ -237,6 +241,9 @@ export function getSFMISServicesByParams(page, limit, params, type) {
         }).catch(err => {
             console.log(err)
             debugger
+            if(err.response.data.message == 'No Records Found'){
+                dispatch(fetchSFMISServicesByParams([]))
+            }
             dispatch(setIsLoading(false));
         })
     }

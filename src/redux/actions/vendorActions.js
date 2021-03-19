@@ -170,7 +170,10 @@ export function getVendorManagementByParams(page, limit, params) {
             }
             debugger
         }).catch(err => {
-            toast.error(err.response.data.message)
+            // toast.error(err.response.data.message)
+            if(err.response.data.message == "No Record Found"){
+              dispatch(fetchVendorManagementByParams([]))
+            }
             debugger
             dispatch(setIsLoading(false));
         })

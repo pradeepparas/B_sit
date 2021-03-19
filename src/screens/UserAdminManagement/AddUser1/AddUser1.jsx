@@ -135,6 +135,23 @@ const useStyles = makeStyles((theme) => ({
   //     backgroundColor: '#EFEFEF',
   //   }
   // },
+  successButton: {
+    ["@media (max-width:428px)"]: {
+      marginRight: 0,
+      width: '100%',
+      marginBottom: 5
+    },
+    borderRadius: 16,
+    color: 'white',
+    backgroundColor: '#213D77',
+    textTransform: 'capitalize',
+    border:'1px solid #213D77',
+    '&:hover': {
+      backgroundColor: '#213D77',
+      color: 'white'
+    },
+    width: 114
+  },
   button1: {
     ["@media (max-width:428px)"]: {
       marginRight: 0,
@@ -238,7 +255,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function AddUser(props) {
-  const [dropDownDetails, setDropDownDetails] = useState([]);
+  // const [dropDownDetails, setDropDownDetails] = useState([]);
   const [isAdd, setIsAdd] = useState(false);
   const [role, setRole] = useState([]);
   const [modal, setModal] = useState(false);
@@ -246,6 +263,7 @@ export function AddUser(props) {
   const history= useHistory();
 	const { user_id } = useParams();
   const [state, setState]=useState({
+      status: false,
       userName:"",
       userNumber:"",
       role:"",
@@ -256,8 +274,6 @@ export function AddUser(props) {
       password:"",
       // userPassword:"",
       userAddress:''
-      // IDEA:
-			// isEdit:false, isAdd:false,
   });
 	const [values, setValues] = useState({
 		password: "",
@@ -285,30 +301,19 @@ export function AddUser(props) {
 		}
 		},[])
 
-    //  Getting dropdown details  
+    // GET Role for drop down
     useEffect(() => {
-      if(props.userDetails){
-        setDropDownDetails(props.userDetails)
-        console.log(props.userDetails)
-        // debugger
+      if(props.role){
+        setRole(props.role)
       }
-    }, [props.userDetails])
+      debugger
+    }, [props.role])
 
+    // GET User Data
     useEffect(() => {
       props.setIsLoading(true)
-      axios({
-        url: API.GetRoleAPI,
-        headers: {
-          "accept": "application/json",
-          "Content-Type": "application/json",
-          'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        }
-      }).then((response)=> {
-        setRole(response.data.role)
-        props.setIsLoading(false)
-      })
 
-      if(props.isEdit || user_id != 'add'){
+      if( user_id != 'add'){
         props.setIsLoading(true)
         axios({
           url: `${API.GetUserAPI}/${user_id}`,
@@ -327,11 +332,12 @@ export function AddUser(props) {
                 userName: response.data.user.name,
                 userNumber: response.data.user.mobile,
                 userAddress: response.data.user.address,
-                userPassword: response.data.user.password?response.data.user.password:'',
+                // userPassword: response.data.user.password?response.data.user.password:'',
                 role: response.data.user.role_id,
                 // stationName: response.data.user.station_id,
                 userEmail: response.data.user.email?response.data.user.email:'',
                 // date: response.data.user,
+                status: response.data.user.status
               })
           } else {
             setState([]);
@@ -354,18 +360,15 @@ export function AddUser(props) {
       if (!validateForm()) {
           return
       }
-      
+
+      let isEdit = false;
+				if(user_id !== 'add'){
+					isEdit = true;
+				}
+      console.log(state)  
+      debugger
       // Add and Update User
-      if(user_id === 'add') {
-        debugger
-        state.date = moment(new Date()).format("DD-MM-YYYY")
-        console.log(state)
-        debugger
-		    props.addUserDetails(state)
-        // debugger
-      } else {
-        props.EditUserDetails(state)
-      }
+      props.manageUsers(state, isEdit)
   }
 
   // Open Modal for Add User Successfully and Update User Successfully
@@ -385,7 +388,8 @@ export function AddUser(props) {
 
 	// useEffect
 	useEffect(() => {
-		props.getUserData()	
+    props.getRole()
+		// props.getUserData()	
 	}, [])
 
   const passwordGenerate = () => {
@@ -442,7 +446,7 @@ debugger
 
   const handleInputs = (event) => {
 		console.log(event.target.name, event.target.value)
-		// debugger
+		debugger
       
     setState({
       ...state,
@@ -476,8 +480,11 @@ debugger
 	// };
 
   // handle checkbox
-  const handleCheckBox =()=>{
-    setChecked(!checked)
+  const handleCheckBox =(e)=>{
+    setState({
+      ...state,
+      [e.target.name]: e.target.checked
+    })
   }
   
   return(
@@ -528,16 +535,6 @@ debugger
 	            </div><br/>
               <div className={styles.error_message}>{errors.userAddress}</div>
 
-            {/* <div className={styles.textfield}>
-              <label style={{color: 'black'}}>Station Name</label>
-              <select className={styles.select1} name="stationName" value={state.stationName} onChange={handleInputs}>
-                <option value={'0'}>Station Name</option>
-                {dropDownDetails.length > 0 && dropDownDetails.map(data => 
-                  <option key={data._id} value={data._id}>{data.station_name}</option>
-                )}
-            </select>
-            <div className={styles.error_message}>{errors.stationName}</div>
-            </div> */}
 
 						<div className={styles.textfield}>
 							<label className={styles.label} style={{color:'#272D3B'}}>Role</label>
@@ -549,6 +546,8 @@ debugger
 						</select>
 						</div><br/>
             <div className={styles.error_message}>{errors.role}</div>
+
+
              {user_id=='add'&&<div className={styles.textfield2}>
               <label className={styles.label} style={{color:'black'}}>Password</label>
               <input style={{position: 'relative'}} autocomplete="off" name="password" value={state.password} onChange={handleInputs} className={styles.inputfield1} type={values.showPassword? "text" : "text"} />
@@ -561,7 +560,7 @@ debugger
             <div style={{paddingTop:user_id?"40px":"0px"}} className={styles.bex}>
               <FormControlLabel
                 className={classes.label}
-                control={<GreenCheckbox checked={checked} onChange={handleCheckBox}  name="checkedG" />}
+                control={<GreenCheckbox checked={state.status} onChange={handleCheckBox}  name="status" />}
                 label={
                   <span
                     className={styles.checkBoxLabel}
@@ -576,7 +575,7 @@ debugger
             <div className ={styles.saveButton}>
               <button onClick={() => history.push('/user-management')}  type="button" className={styles.btnPrimary1} variant="contained">Cancel</button>
               <button onClick={handleSubmit} bsstyle="primary" type="submit" className={styles.btnPrimary} variant="contained">
-              {user_id ? "Save" : "Update"}
+              {user_id == 'add' ? "Save" : "Update"}
                 </button>
               </div>
             {/* <div className={styles.saveButton}>
@@ -603,7 +602,7 @@ debugger
               style={{width: 100}}
 							variant="contained"
               color="black"
-              className={classes.button1}
+              className={classes.successButton}
 							onClick={toggleModalClose}
 						>
 						OK
@@ -620,6 +619,7 @@ const mapStateToProps = (state) => {
 		user: state.Users.userData,
 		isEdit: state.Users.isEdit,
     userDetails: state.Stations.stationDetails,
+    role: state.Users.role
 	}
 }
 
@@ -628,6 +628,10 @@ const mapDispatchToProps = (dispatch) => {
     setIsSubmitted: flag => {
       dispatch(setIsSubmitted(flag))
     },
+    manageUsers: (data, isEdit) =>
+      dispatch(actions.manageUsers(data, isEdit)),
+    getRole: () => 
+      dispatch(actions.getRole()),
     setIsLoading: (value) =>
       dispatch(setIsLoading(value)),
 		addUserDetails: (user) =>

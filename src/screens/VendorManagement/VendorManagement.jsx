@@ -487,7 +487,7 @@ export function UserManagement(props) {
 
 			if(type == 'status'){
 				let value = {
-						"block_status": !changeStatus,
+						"block_status": changeStatus,
 						"user_id": data.vendor_id
 				}
 				config.data = value
@@ -591,7 +591,7 @@ export function UserManagement(props) {
 					<select className={styles.select1} name="vendor_name" /*value={search.station_id}*/ onChange={handleInputs}>
 						<option selected disabled>Vendor Name</option>
 						{dropDownDetails.length > 0 && dropDownDetails.map(data =>
-							<option key={data._id} value={data._id}>{data.name}</option>
+							<option key={data._id} value={data.vendor_id}>{data.name}</option>
 						 )}
 				</select>
 				</div>
@@ -934,3 +934,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(UserManagement);
+// deletebutton1

@@ -33,13 +33,8 @@ import {
   Checkbox,
   Button
 } from '@material-ui/core';
-import InputBase from '@material-ui/core/InputBase';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Pagination from '@material-ui/lab/Pagination';
 import { toast } from 'react-toastify';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -47,7 +42,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -62,40 +56,6 @@ const GreenCheckbox = withStyles({
   checked: {},
 })((props) => <Checkbox color="#213D77" {...props} />);
 
-// const BootstrapInput = withStyles((theme) => ({
-//   root: {
-//     'label + &': {
-//       marginTop: theme.spacing(3),
-//     },
-//   },
-//   input: {
-//     borderRadius: 4,
-//     position: 'relative',
-//     backgroundColor: theme.palette.background.paper,
-//     border: '1px solid #ced4da',
-//     fontSize: 16,
-//     padding: '10px 26px 10px 12px',
-//     transition: theme.transitions.create(['border-color', 'box-shadow']),
-//     // Use the system font instead of the default Roboto font.
-//     fontFamily: [
-//       '-apple-system',
-//       'BlinkMacSystemFont',
-//       '"Segoe UI"',
-//       'Roboto',
-//       '"Helvetica Neue"',
-//       'Arial',
-//       'sans-serif',
-//       '"Apple Color Emoji"',
-//       '"Segoe UI Emoji"',
-//       '"Segoe UI Symbol"',
-//     ].join(','),
-//     '&:focus': {
-//       borderRadius: 4,
-//       borderColor: '#80bdff',
-//       boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-//     },
-//   },
-// }))(InputBase);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,27 +63,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#b22222',
     },
   },
-  // container1: {
-	// 	["@media (min-width: 280px) and (max-width: 1040px)"]: {
-  //     width: '100%',
-	// 		display: 'flex',
-	// 		flexDirection: 'column',
-  //     marginBottom: 5
-  //   },
-	// 	display: "flex",
-	// 	// flexWrap: "wrap",
-  //   width: 192,
-	// },
   ul1: {
     "& .Mui-selected:hover": {
       borderRadius: 8,
       color: "white",
-      backgroundColor: '#b22222'
+      backgroundColor: '#213D77'
     },
     "& .Mui-selected": {
       borderRadius: 8,
       color: "white",
-      backgroundColor: '#b22222'
+      backgroundColor: '#213D77'
     }
   },
   textField: {
@@ -154,6 +103,21 @@ const useStyles = makeStyles((theme) => ({
     // '& .MuiInput-underline:after': {
     //   borderBottomColor: '#6c757d',
     // },
+  },
+  deletebutton1: {
+    width: 100,
+    ["@media (min-width: 280px) and (max-width: 1192px)"]: {
+      width: '100%',
+      marginBottom: 5
+    },
+    borderRadius: 80,
+    color: 'white',
+    backgroundColor: '#213D77',
+    textTransform: 'capitalize',
+    '&:hover': {
+      backgroundColor: '#213D77',
+      color: '#FFF'
+    }
   },
   label: {
     color: "red",
@@ -360,19 +324,23 @@ const GreenRadio = withStyles({
 })((props) => <Radio color="default" {...props} />);
 
 export function AddUser(props) {
+  const [changeStatus, setChangeStatus] = useState(false);
   const [dropDownDetails, setDropDownDetails] = useState([]);
   const [isAdd, setIsAdd] = useState(false);
   const [role, setRole] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState({
+    changeModel: false
+  });
   const classes = useStyles();
   const history = useHistory();
   const { user_id, role_id } = useParams();
   const [pageNo, setPageNo] = useState();
   const [rows, setRows] = useState([]);
   const [state, setState] = useState({
-    roleName: "",
-    roleDescription: "",
+    role_name: "",
+    description: "",
     role: "",
+    status: false,
     stationName: "",
     userEmail: "",
     date: "",
@@ -397,45 +365,31 @@ export function AddUser(props) {
   const [checked, setChecked] = useState(true)
 
 
-  const toggleModal = (e, data, i) => {
-    setModal(true);
-    // rows[i].id = i;
-    //setArrayDetails(rows[i]);
-  setModal(!modal)
-    // setState({...state, packageName:data.packageName, id: data._id, })
+  const toggleModal = (e, data, row) => {
+    
+    setChangeStatus(row.status);
+    setArrayDetails(row);
+    setModal({
+      changeModel: true
+    });
+    //setArrayDetails(row);
+
   }
   
   // close modal
   const toggleModalClose = () => {
-    setModal(false)
-    
-   
+    setModal({
+      changeModel: false
+    })
   }
-  // close modal
-  // const toggleModalClose =()=>{
-  //   setModal({
-  //     deleteModal: false,
-  //     details: false,
-  // 		deletedModal: false
-  //   })
-  // }
-  const editUser = (e, i, data) => {
-    data.id = i
-    props.setUserData(data)
-  }
-
 
   // 
   useEffect(() => {
-    if (props.isEdit) {
-      console.log(props.user)
-      debugger
-      setState(props.user)
-      // set value in startDate
-
-      //funciton
+    if (props.roleDocs) {
+      setRows(props.roleDocs)
     }
-  }, [])
+  }, [props.roleDocs])
+
   // Changing Date fields
   const handleDateChange = (data, type) => {
     console.log(data)
@@ -452,10 +406,27 @@ export function AddUser(props) {
       })
     }
   }
+
   const handleChangePage = (event, page) => {
     setPageNo(page)
-    props.getUserDataByParams(page, props.limit, search)
+    props.getRoleDataByParams(page, props.limit, search)
+    
   }
+
+  // Used for Pagination
+  const setPage = () => {
+		let total = Math.ceil(props.total / props.limit)
+		return (
+
+        <Pagination
+          onChange={handleChangePage}
+    			count={total}
+          shape="rounded"
+          classes={{ ul: classes.ul1 }}
+          size='small'/>
+		)
+
+	}
 
   const searchUsers = () => {
     console.log(search)
@@ -524,44 +495,25 @@ export function AddUser(props) {
       // setDetails(props.stationData)
     }
   }, [])
+
+  // Change Service Category Status
   const handleChangeChargeable = (event, type) => {
     if (type == 'Yes') {
-      setState({
-        ...state,
-        chargeable: true
-      })
+      setChangeStatus(true)
     } else {
-      setState({
-        ...state,
-        chargeable: false
-      })
+      setChangeStatus(false)
     }
-    props.statusUser(arrayDetails.id)
-		setModal({
-			changeModal: false,
-			changedModal: true
-		})
   };
 
-  // Handle Submit User
+  // Handle Submit Role
   const handleSubmit = (e) => {
 
     e.preventDefault();
     if (!validateForm()) {
       return
     }
+    props.manageRole(state, false)
 
-    // Add and Update User
-    if (user_id === 'add') {
-      debugger
-      state.date = moment(new Date()).format("DD-MM-YYYY")
-      console.log(state)
-      debugger
-      props.addUserDetails(state)
-      // debugger
-    } else {
-      props.EditUserDetails(state)
-    }
   }
 
   // Open Modal for Add User Successfully and Update User Successfully
@@ -581,7 +533,7 @@ export function AddUser(props) {
 
   // useEffect
   useEffect(() => {
-    props.getUserData()
+    props.getRoleDataByParams(1, 10, search)
   }, [])
 
   const passwordGenerate = () => {
@@ -600,12 +552,12 @@ export function AddUser(props) {
     //  var userAddressRegex = state.userAddress.toString().match(/^[a-zA-Z0-9]+$/);
 
     var isValid = true;
-    if (state.roleName.trim() == '') {
-      errors.roleName = "Role name is required";
+    if (state.role_name.trim() == '') {
+      errors.role_name = "Role name is required";
       isValid = false;
     }
-    else if (state.roleDescription.trim() == '') {
-      errors.roleDescription = "Role description is required ";
+    else if (state.description.trim() == '') {
+      errors.description = "Role description is required ";
       isValid = false;
     }
 
@@ -626,13 +578,12 @@ export function AddUser(props) {
 
     setState({
       ...state,
-      [event.target.name]: (event.target.name == 'userPassword'
-        || event.target.name == 'userNumber') ?
-        event.target.value.trim() : event.target.value
+      [event.target.name]: event.target.value
     })
     // debugger
     setErros({ errors, [event.target.name]: "" })
   }
+
   // const handleInputs = (event) => {
   //   setSearch({
   //     ...search,
@@ -652,18 +603,66 @@ export function AddUser(props) {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  //autogenerate password 
-  // const handleClickAutoGeneratePassword =()=>{
-  //   console.log(value.password);
-  //   setValues({ ...values, AutoGeneratePassword : !values.AutoGeneratePassword  });
-  // };
-  // const handleMouseDownPassword = (event) => {
-  // 	event.preventDefault();
-  // };
-  // handle checkbox
-  const handleCheckBox = () => {
-    setChecked(!checked)
+ 
+  // Handle Delete and Change Status function or Calling APIs for Changing Status
+  const handleChangeStatus = async(e, data, type) => {
+
+    console.log(data)
+    debugger
+    let a = await props.setIsLoading(true);
+
+    let config = {
+      url: `${API.GetRoleAPI}/change_status`,
+      method: 'PUT',
+      headers: {
+        // 'Accept-Language': 'hi',
+        "accept": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    }
+
+      let value = {
+          "status": changeStatus,
+          "id": data._id
+      }
+
+      config.data = value
+
+    console.log(config)
+    debugger
+
+    axios(config).then((response) => {
+      if(response.data.success){
+        debugger
+        // toast.success(response.data.message)
+        
+        toast.success(response.data.message)
+        setModal({
+          ...modal,
+          changeModel: false
+        })
+
+        props.setIsLoading(false)
+        props.getRoleDataByParams(pageNo, props.limit, search)
+      } else {
+        debugger
+        toast.error(response.data.message)
+      }
+    }).catch(err => {
+      toast.error(err.response.data.message)
+      props.setIsLoading(false)
+    })
+
   }
+
+  // handle checkbox
+  const handleCheckBox = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.checked
+    })
+  }
+
   return (
     <div className={styles.main}>
       <div className={styles.header}>
@@ -678,43 +677,22 @@ export function AddUser(props) {
           <div className={styles.grid}>
             <div className={styles.textfield}>
               <label className={styles.label} style={{ color: 'black' }}>Role Name</label>
-              <input autocomplete="off" name="roleName" value={state.roleName} onChange={handleInputs} className={styles.inputfield} type="text" />             
+              <input autocomplete="off" name="role_name" value={state.role_name} onChange={handleInputs} className={styles.inputfield} type="text" />             
             </div><br />
-            <div className={styles.error_message}>{errors.roleName}</div><br />
+            <div className={styles.error_message}>{errors.role_name}</div><br />
             <div className={styles.textfield}>
               <label className={styles.label} style={{ color: 'black' }}>Role Description</label>
-              <input autocomplete="off" name="roleDescription" value={state.roleDescription} onChange={handleInputs} className={styles.inputfield} type="text" />
+              <input autocomplete="off" name="description" value={state.description} onChange={handleInputs} className={styles.inputfield} type="text" />
             </div><br />
-            <div className={styles.error_message}>{errors.roleDescription}</div>
-         
-            {/* <div className={styles.bex}>
-              <FormControlLabel
-                className={classes.label}
-                control={<GreenCheckbox checked={checked} onChange={handleCheckBox} name="checkedG" />}
-                label={
-                  <span
-                    className={styles.checkBoxLabel}
-                    style={{ color: "#213D77" }}
-                  >
-                    Is Active
-                </span>
-                }
-              />
-            </div> */}
-            {/* <div className={styles.extraDiv}></div> */}
-            {/* <div></div> */}
-            {/* <div className={styles.saveButton}>
-              <Button style={{}} onClick={handleSubmit} className={classes.saveButton1} variant="contained">
-                {user_id == 'add' ? "Save" : "Save"}
-              </Button>
-            </div> */}
+            <div className={styles.error_message}>{errors.description}</div>  
+            
           </div>
         {/* </div> */}
         <div className={styles.main1}  >
         <div className={styles.bex}>
               <FormControlLabel
                 className={classes.label}
-                control={<GreenCheckbox checked={checked} onChange={handleCheckBox} name="checkedG" />}
+                control={<GreenCheckbox checked={state.status} onChange={handleCheckBox} name="status" />}
                 label={
                   <span
                     className={styles.checkBoxLabel}
@@ -781,81 +759,101 @@ export function AddUser(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-                <TableRow className={classes.table} >
+            {rows.map((row, index) => (
+                <TableRow className={classes.table} key={row._id}>
                   <TableCell component="th" scope="row">
-                   1
+                   {index+1}
                   </TableCell>
-                  <TableCell align="center">hi</TableCell>
-                  <TableCell align="center">hi</TableCell>
-                  <TableCell align="center">hi</TableCell>
+                  <TableCell align="center">{row.role}</TableCell>
+                  <TableCell align="center">{row.description}</TableCell>
+                  <TableCell style={{color: row.status?'green': 'red'}} align="center">{row.status? "active": "In-active"}</TableCell>
                   <TableCell align="center">
                     <div className={styles.dropdown}>
                       <button className={styles.dropbtn}>Action <img src={downArrow} className={styles.arrow} /></button>
                       <div className={styles.dropdown_content}>
                       <Link to={`add-role/manage-role`}><a><div onClick={(e) => toggleModal(e, 'details', 1)}>Manage Details</div></a></Link>
-                        <a><div onClick={(e) => toggleModal(e, 'change', 1)}>Change Status</div></a>
+                        <a><div onClick={(e) => toggleModal(e, 'change', row)}>Change Status</div></a>
                       </div>
                     </div></TableCell>
                 </TableRow>
-        
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
+
         {rows.length == 0 && <div className={styles.emptyTable} style={{ display: 'flex', justifyContent: 'center' }}>No Data Found</div>}
       </div>
-      <Modal className={styles.modalContainer1} contentClassName={styles.customClasss}
-				 isOpen={modal} toggle={toggleModalClose} centered={true}>
-            <CancelIcon
-					 style={{
-						 width: 40,
-						 height: 40,
-						 backgroundColor: 'white',
-						 color: "#213D77",
-						 borderRadius: 55,
-						 position: "absolute",
-						 top: "-14",
-						 right: "-16",
-						 cursor: "pointer",
-					 }}
-					 onClick={toggleModalClose}
-				 />
-         <div className={styles.textfield2}>
-                <label style={{color: '#213D77', fontWeight:"700", marginRight:"-84",marginBottom:"35"}}>Change Status</label>
-                  <div style={{display: 'flex', alignItems: 'center', marginLeft:'41'  }}>
-                  <GreenRadio
-                    checked={state.chargeable}
-                    onChange={(e) => handleChangeChargeable(e, "Yes")}
-                    // value="c"
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-label': 'C' }}
-                  />
-                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+      
+      
+      {/* Modal for change Status */}
+      {<Modal className={styles.Container2} contentClassName={styles.changeStatusClass}
+						 isOpen={modal.changeModel} toggle={toggleModalClose} centered={true}>
+		            <CancelIcon
+							 style={{
+								 width: 40,
+								 height: 40,
+								 backgroundColor: 'white',
+								 color: "#213D77",
+								 borderRadius: 55,
+								 position: "absolute",
+								 top: "-14",
+								 right: "-16",
+								 cursor: "pointer",
+							 }}
+							 onClick={toggleModalClose}
+						 />
+		         <div className={styles.modalBody}>
+		                <label style={{
+		                    color: '#213D77',
+		                    fontWeight:"bold",
+		                    marginBottom: 20,
+		                    fontSize: 17,
+		                    display: 'flex',
+		                    justifyContent: 'center'
+		                  }}>
+		                    Change Status</label>
+		                  <div style={{display: 'flex', justifyContent: 'space-evenly'  }}>
+		                  <div>
+		                  <GreenRadio
+		                    checked={changeStatus}
+		                    onChange={(e) => handleChangeChargeable(e,"Yes")}
+		                    // value="c"
+		                    name="radio-button-demo"
+		                    inputProps={{ 'aria-label': 'C' }}
+		                  />
+		                  <label className={classes.radio_label} style={{color: '#10AC44', fontWeight: '700'}}>Active</label>
+		                  </div>
 
-                <RedRadio
-                    checked={!state.chargeable}
-                    onChange={(e) => handleChangeChargeable(e, "No")}
-                    // value="c"
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-label': 'C' }}
-                  />
-                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
-                </div>
-                <div className={styles.error_message}>{errors.chargeable}</div>
-              </div>
-						<ModalFooter className={styles.footer1}>
-							<Button
-	              style={{width: 100}}
-								variant="contained"
-	              color="black"
-	              className={classes.button1}
-								onClick={toggleModalClose}
-							>
-							OK
-							</Button>
-						</ModalFooter>
-					</Modal>
+		                <div>
+		                <RedRadio
+		                    checked={!changeStatus}
+		                    onChange={(e) => handleChangeChargeable(e, "No")}
+		                    // value="c"
+		                    name="radio-button-demo"
+		                    inputProps={{ 'aria-label': 'C' }}
+		                  />
+		                  <label style={{color: '#b22222', fontWeight: '700', margin: 0}}>Inactive</label>
+		                  </div>
+		                </div>
+		              </div>
+								<ModalFooter className={styles.footer1}>
+									<Button
+			              style={{width: 100}}
+										variant="contained"
+			              color="black"
+			              className={classes.deletebutton1}
+										onClick={(e) => handleChangeStatus(e, arrayDetails, 'status')}
+									>
+									OK
+									</Button>
+								</ModalFooter>
+							</Modal>}
 
-
+          {rows.length > 0 &&<div className={styles.pageDiv}>
+      <div style={{marginTop: 40}}>
+      {rows.length > 0 && setPage()}
+      </div>
+      </div>}
      
     </div>
   );
@@ -863,7 +861,10 @@ export function AddUser(props) {
 
 const mapStateToProps = (state) => {
   return {
+    roleDocs: state.Users.roleDocs,
     isSubmitted: state.Stations.isSubmitted,
+    total: state.Users.roleTotal,
+    limit: state.Users.roleLimit,
     user: state.Users.userData,
     isEdit: state.Users.isEdit,
     userDetails: state.Stations.stationDetails,
@@ -875,6 +876,13 @@ const mapDispatchToProps = (dispatch) => {
     setIsSubmitted: flag => {
       dispatch(setIsSubmitted(flag))
     },
+
+    manageRole: (role, is_edit) => 
+      dispatch(actions.manageRole(role, is_edit)),
+
+    getRoleDataByParams: (pageNo, size, params) =>
+      dispatch(actions.getRoleDataByParams(pageNo, size, params)),
+
     setIsLoading: (value) =>
       dispatch(setIsLoading(value)),
     addUserDetails: (user) =>

@@ -41,22 +41,7 @@
   align-items: center;
 }
 
-/* select css */
-/* select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  outline: 0;
-   box-shadow: none;
-  border: 5px !important;
-  background: green;
-   background-image: none;
-} */
-/* Remove IE arrow */
-/* select::-ms-expand {
-  display: none;
-} */
+
 /* Custom Select */
 .select1 {
     outline: none;
@@ -86,13 +71,8 @@
   height: 100px;
   overflow: hidden;
 }
-/* select {
-  flex: 1;
-  padding: 0 .5em;
-  color: black;
-  cursor: pointer;
-} */
-/* Arrow */
+
+
 .select1::after {
   border-width: thin;
 border-color: #cac7c7;
@@ -469,4 +449,4 @@ border-color: #cac7c7;
   }
 }
 
-/* label_span custom image_box select1 modalButton*/
+/* label_span select1 custom image_box select1 modalButton*/

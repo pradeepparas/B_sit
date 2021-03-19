@@ -7,7 +7,10 @@ const initialState = {
   docs: [],
   total: '',
   limit: '',
-  role: []
+  role: [],
+  roleDocs: [],
+  roleTotal: "",
+  roleLimit: ""
 };
 // FETCH_USER_BYPARAMS
 const userReducer = (state = initialState, action) => {
@@ -54,6 +57,14 @@ const userReducer = (state = initialState, action) => {
           ...state,
           role: action.role
         }
+
+      case actionTypes.FETCH_ROLES_BYPARAMS:
+          return {
+            ...state,
+            roleDocs: action.docs,
+            roleTotal: action.total,
+            roleLimit: action.limit
+          }
         
     default:
       return state;
