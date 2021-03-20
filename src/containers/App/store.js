@@ -15,7 +15,8 @@ import {
   userReducer,
   vendorReducer,
   auth,
-  SFMISReducer
+  SFMISReducer,
+  feedbackReducer
 } from '../../redux/reducers/index';
 import appConfigReducer from '../../redux/reducers/appConfigReducer';
 import covidReducer from '../Maps/VectorMapWithRequestData/redux/covidReducer';
@@ -60,6 +61,7 @@ const reducer = combineReducers({
   user: authReducer,
   covid: covidReducer,
   todo: todoReducer,
+  Feedback: feedbackReducer
 });
 const store = createStore(reducer, applyMiddleware(thunk, checkTokenExpirationMiddleware));
 

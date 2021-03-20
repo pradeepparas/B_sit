@@ -550,7 +550,7 @@ debugger
 
              {user_id=='add'&&<div className={styles.textfield2}>
               <label className={styles.label} style={{color:'black'}}>Password</label>
-              <input style={{position: 'relative'}} autocomplete="off" name="password" value={state.password} onChange={handleInputs} className={styles.inputfield1} type={values.showPassword? "text" : "text"} />
+              <input style={{position: 'relative'}} autocomplete="off" name="password" value={state.password} onChange={handleInputs} className={styles.inputfield1} type={values.showPassword? "password" : "password"} />
               <button style={{display: 'contents'}} onClick={passwordGenerate}>
             <img style={{width: 30,height: 30, marginTop: 10, marginLeft: 10, marginRight: 10}} src={AutoPassword} />
             <small style={{display: 'flex', alignItems: 'center',color: 'black'}}>Autogenerate</small>

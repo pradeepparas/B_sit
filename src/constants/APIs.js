@@ -34,3 +34,6 @@ export const SFMISAPI = `${url}/services`;
 
 // Items APIs
 export const ItemsAPI = `${url}/items`;
+
+// Feedbacks
+export const FeedBackAPI = `${url}/feedbacks`;

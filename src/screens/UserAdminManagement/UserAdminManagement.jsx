@@ -481,6 +481,8 @@ export function UserManagement(props) {
 
     useEffect(() => {
       // setRoleList(props.role)
+      console.log(props.total, props.limit)
+      debugger
       if(props.userDetails){
         setDropDownDetails(props.userDetails)
         console.log(props.userDetails)
@@ -494,34 +496,20 @@ export function UserManagement(props) {
       }
     }, [props.userDocs, props.userDetails])
 
-   // Changing Date fields
-  //  const handleDateChange = (data, type) => {
-  //   console.log(data)
-  //   // 
-  //   if(type == 'start') {
-  //     setSearch({
-  //       ...search,
-  //       start_date: data.target.value
-  //     })
-  //   } else {
-  //     setSearch({
-  //       ...search,
-  //       end_date: data.target.value
-  //     })
-  //   }
-  // }
+  
 		const handleDateChange = (date, type) => {
       console.log(date)
-      // debugger
+      debugger
+      let a = moment(date).format("MM-DD-YYYY")
       if(type == 'start') {
         setSearch({
           ...search,
-          start_date: moment(date).format("DD-MM-YYYY")
+          start_date: moment(date).format("MM-DD-YYYY")
         })
       } else {
         setSearch({
           ...search,
-          end_date: moment(date).format("DD-MM-YYYY")
+          end_date: moment(date).format("MM-DD-YYYY")
         })
       }
     }
@@ -533,7 +521,7 @@ export function UserManagement(props) {
 
   // Used for Pagination
   const setPage = () => {
-		let total = Math.ceil(40 /10)
+		let total = Math.ceil(props.total /props.limit)
 		return (
 
         <Pagination
@@ -677,7 +665,7 @@ export function UserManagement(props) {
                     peekNextMonth showMonthDropdown showYearDropdown
                     dropdownMode="select"
                 //   value={state.contract_start_date?moment(state.contract_start_date).format("DD-MM-YYYY"): ''}
-                   placeholderText='dd/mm/yyyy' />
+                   placeholderText='mm/dd/yyyy' />
     		</div>
 
         <div className={classes.container1}>
@@ -691,7 +679,7 @@ export function UserManagement(props) {
                   peekNextMonth showMonthDropdown showYearDropdown
                   dropdownMode="select"
                   onChange={(e) => handleDateChange(e, 'end')}
-                  placeholderText='dd/mm/yyyy' />
+                  placeholderText='mm/dd/yyyy' />
     		</div>
         {/* </div> */}
       </div>

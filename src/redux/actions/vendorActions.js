@@ -103,7 +103,7 @@ export function manageVendorService(vendor, is_edit) {
           "mini_commission": vendor.minimum_commission,
           "percentage_commission": vendor.commission_in_percentage,
           "status": vendor.status,
-          "role": "602a45fe01252b2aa4fcd810"
+          "role": "602a45f701252b2aa4fcd80b"
         }
 
         console.log(data)

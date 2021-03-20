@@ -86,7 +86,7 @@ export function Dashboard(props) {
 
 <div className={styles.grid}>
 {<Card title={'Service Handled'} number={counts.service_handled? counts.service_handled: "20K"}   icon={train1} link="/station-management"  color="#128BE8" />}
-{<Card title={'In Process Services'} number={counts.total_in_progress_service? counts.total_in_progress_service: "12K"} icon={user_check} link="/station-management" color="#E800C1" />}
+{<Card title={'In Process Services'} number={counts.in_progress_service? counts.in_progress_service: "12K"} icon={user_check} link="/station-management" color="#E800C1" />}
 {<Card title={'Stock Inventory'} number="1.4K"  arrow={total_users_arrow} link="/dashboard"  icon={servicestack} color="#06A882" />}
 {/* {<Card title={'Total Users'}  number="1.8K"  arrow={total_users_arrow} link="/vendors"  icon={ metro_users} color="#1373BB" />} */}
 {<Card title={'Total Vendors'} number={counts.total_vendor? counts.total_vendor: "0"} arrow={total_vendors_arrow} icon={vendor_icon} link="/vendor-management" color="#6F46FF" />}

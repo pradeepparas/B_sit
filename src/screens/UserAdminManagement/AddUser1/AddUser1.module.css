@@ -296,26 +296,24 @@ border-color: #cac7c7;
 
   .inputfield {
     font-weight: bold;
-    /* border-color: #00000069; */
+    border-color: #00000069;
     font-family: Montserrat;
     /* border-radius: 5px; */
     width: -webkit-fill-available;
-    /* border-width: thin; */
+    border-width: thin;
     font-size: inherit;
     outline: none;
     height: 40px;
     padding-left: 7px;
     padding-right: 25px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    border: 1px solid #272D3B;
-    border-radius: 7px;
+    border-radius: 5px;
     opacity: 1;
 }
 .inputfield1 {
   font-weight: bold;
-  /* border-color: #00000069; */
+  
   font-family: Montserrat;
-  /* border-radius: 5px; */
   width:84%;
   /* border-width: thin; */
   font-size: inherit;
@@ -324,9 +322,10 @@ border-color: #cac7c7;
   padding-left: 7px;
   padding-right: 25px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
-  border: 1px solid #272D3B;
-  border-radius: 7px;
+  border-width: thin;
+  border-radius: 5px;
   opacity: 1;
+  border-color: #00000069;
 }
 
   .input_s {
@@ -670,4 +669,4 @@ border-color: #cac7c7;
   }
   
 
-  /* passwordIcon label*/
+  /* passwordIcon inputfield1 label*/

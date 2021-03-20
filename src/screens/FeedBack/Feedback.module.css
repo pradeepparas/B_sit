@@ -21,7 +21,16 @@
   opacity: 1;
 }
 
+.li_style {
+  display: flex;
+  margin-bottom: 7px;
+  opacity: 0.5;
+}
 
+.li_div {
+  font-weight: 600;
+  min-width: 150px;
+}
 
 .input_s {
     border: solid;
@@ -126,7 +135,6 @@
   text-align: left;
   letter-spacing: 0.28px;
   color: #12141A;
-  opacity: 0.5;
   font: normal normal medium 12px/14px Montserrat;
 }
 
@@ -145,13 +153,13 @@
 
 .details {
   display: flex;
-  padding-left: 15px;
+  padding-left: 23px;
   flex-direction: column;
   color: #213d77;
 }
 
 .single_row_div {
-  width: 350px;
+  width: 375px;
   justify-content: flex-start;
   display: flex;
   font: normal normal bold 13px/27px Montserrat;

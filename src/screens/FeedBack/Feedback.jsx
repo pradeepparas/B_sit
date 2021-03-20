@@ -22,9 +22,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Pagination from '@material-ui/lab/Pagination';
 
 // components
-// import { getStationData } from "../../../redux/actions/stationActions";
+import * as actions from "../../redux/actions/feedbackActions";
 import styles from './Feedback.module.css';
-// import * as actions from "../../../redux/actions/vendorActions";
+import { getFeedbackDataByParams } from '../../redux/actions/feedbackActions';
 // import { setIsLoading } from '../../../redux/actions/stationActions';
 // import * as API from '../../../constants/APIs';
 // import styled from 'styled-components';
@@ -253,7 +253,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function FeedBackAndSuggestions(props) {
-  const [openComment, setOpenComment] = useState(false);
+  const [openComment, setOpenComment] = useState({
+    open: false,
+    index: ''
+  });
   const [rows, setRows] = useState([])
   const url = useRouteMatch()
   const path = url.path.split('/')[1]
@@ -263,10 +266,7 @@ export function FeedBackAndSuggestions(props) {
     start: new Date().toISOString().slice(0, 10),
     end: new Date().toISOString().slice(0, 10),
   })
-  let text = `Customer feedback will come here, stating the complaints and suggestions or 
-  feedback made via User App Customer feedback will come here, stating the complaints 
-  and suggestions or feedback made via User App. Customer feedback will come here, `;
-  const [commentText, setCommentText] = useState(text);
+  
   const [arr_star, setArr_Star] = useState([1, 1, 1, 0, 0])
 
   const [modal, setModal] = useState({
@@ -284,7 +284,18 @@ export function FeedBackAndSuggestions(props) {
   });
   const classes = useStyles();
 
+  // Getting Feedback details
+  useEffect(() => {
+    if(props.docs){
+      setRows(props.docs)
+    }
+    debugger
+  }, [props.docs])
 
+
+  useEffect(() => {
+    props.getFeedbackDataByParams(1, 10)
+  }, [])
 // Handle Vendor Active and In-active function
 	const handleVendorStatus = (e, vendor) => {
 	// 	// set delete modal false
@@ -327,31 +338,6 @@ export function FeedBackAndSuggestions(props) {
 
 	}
 
-	// Drop-Down Details for category and Vendor Details
-	// useEffect(() => {
-	// 	if(props.categoryData){
-	// 		setCategoryDropDown(props.categoryData)
-	// 	}
-	// 	if(props.vendorDetails){
-	// 		setVendorDropDown(props.vendorDetails)
-	// 	}
-	// }, [props.categoryData, props.vendorDetails])
-
-	// Drop-Down Details for Delivery Station
-  // useEffect(() => {
-  //   // setRoleList(props.role)
-	// 	if(props.stationDetails){
-  //     setDropDownDetails(props.stationDetails)
-  //     // debugger
-  //   }
-
-  //   if(props.vendorDocs){
-  //     // console.log("",props.vendorDocs)
-  //     setRows(props.vendorDocs)
-  //     debugger
-  //   }
-  // }, [props.vendorDocs, props.stationDetails, props.vendorDetails])
-
     // Changing Date fields
 		const handleDateChange = (date, type) => {
       console.log(date)
@@ -388,23 +374,21 @@ export function FeedBackAndSuggestions(props) {
     )
   }
 
-  const openFullRead = () => {
-    setOpenComment(prev => !prev)
+  const openFullRead = (e, index, type) => {
     
-    let comment = commentText + `stating the complaints and suggestions or feedback made via User App Customer feedback
-    will come here, stating the complaints and suggestions or feedback made via User App.
-     Customer feedback will come here, stating the complaints and suggestions or feedback 
-    made via User App Customer feedback will come here, stating the complaints and suggestions
-    or feedback made via User App. Customer feedback will come here, stating the complaints
-    and suggestions or feedback made via User App Customer feedback will come here, stating
-    the complaints and suggestions or feedback made via User App`;
-
-    if(openComment){
-      comment = `Customer feedback will come here, stating the complaints and suggestions or 
-      feedback made via User App Customer feedback will come here, stating the complaints 
-      and suggestions or feedback made via User App. Customer feedback will come here, `
+    if(type == 'text'){
+      setOpenComment({
+      ...openComment,
+      [index]: true
+      })
+    } else {
+      setOpenComment({
+        ...openComment,
+        [index]: false
+      })
     }
-    setCommentText(comment)
+    
+    
   }
 
   const handleStar = (e, index) => {
@@ -458,161 +442,83 @@ export function FeedBackAndSuggestions(props) {
     		</div>
       </div>
 
-      <div className={styles.box}>
-        <div className={styles.box_title}>
-            <span className={styles.span_title}>Your order from Nitesh on 04 January 2021</span>
-            <span className={styles.rating_star}>
-            {arr_star.map((data, index) => 
-                  <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ data? star : fill_star} /></span>
-                  ) 
-              /*
-              <span onClick={handleStar}><img className={styles.image_css} src={star_true ? fill_star : star} /></span>
-              <span onClick={handleStar}><img className={styles.image_css} src={star_true ? fill_star : star} /></span>
-              <span onClick={handleStar}><img className={styles.image_css} src={star_true ? fill_star : star} /></span>
-              <span onClick={handleStar}><img className={styles.image_css} src={star_true ? fill_star : star} /></span>*/}
-            </span>
-        </div>
-        <div className={styles.comments}>
-        Customer feedback will come here, stating the complaints and suggestions or 
-        feedback made via User App Customer feedback will come here, stating the complaints 
-        and suggestions or feedback made via User App. Customer feedback will come here, 
-        {/*stating the complaints and suggestions or feedback made via User App Customer feedback
-        will come here, stating the complaints and suggestions or feedback made via User App.
-         Customer feedback will come here, stating the complaints and suggestions or feedback 
-        made via User App Customer feedback will come here, stating the complaints and suggestions
-        or feedback made via User App. Customer feedback will come here, stating the complaints
-        and suggestions or feedback made via User App Customer feedback will come here, stating
-        the complaints and suggestions or feedback made via User App */}
-        </div>
-        <div onClick={openFullRead} className={styles.read_button}>Read full comment</div>
-      </div>
 
-      <div className={styles.box1}>
+      {rows.map((row, index) => (<div className={styles.box1}>
         <div className={styles.box_title}>
-            <span className={styles.span_title}>Your order from Nitesh on 04 January 2021</span>
-            <span className={styles.rating_star}>
-            {arr_star.map((data, index) => 
-                  <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ data? star : fill_star} /></span>
-                  ) 
-              }
-            </span>
-        </div>
-        <div className={styles.comments}>
-        Customer feedback will come here, stating the complaints and suggestions or 
-        feedback made via User App Customer feedback will come here, stating the complaints 
-        and suggestions or feedback made via User App. Customer feedback will come here, 
-        {/*stating the complaints and suggestions or feedback made via User App Customer feedback
-        will come here, stating the complaints and suggestions or feedback made via User App.
-         Customer feedback will come here, stating the complaints and suggestions or feedback 
-        made via User App Customer feedback will come here, stating the complaints and suggestions
-        or feedback made via User App. Customer feedback will come here, stating the complaints
-        and suggestions or feedback made via User App Customer feedback will come here, stating
-        the complaints and suggestions or feedback made via User App */}
-        </div>
-        <div onClick={openFullRead} className={styles.read_button}>Read full comment</div>
-      </div>
-
-      <div className={styles.box1}>
-        <div className={styles.box_title}>
-            <span className={styles.span_title}>Your order from Nitesh on 04 January 2021</span>
-            <span className={styles.rating_star}>
-            {arr_star.map((data, index) => 
-                  <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ data? star : fill_star} /></span>
-                  ) 
-              }
-            </span>
-        </div>
-        <div className={styles.comments}>
-        Customer feedback will come here, stating the complaints and suggestions or 
-        feedback made via User App Customer feedback will come here, stating the complaints 
-        and suggestions or feedback made via User App. Customer feedback will come here, 
-        {/*stating the complaints and suggestions or feedback made via User App Customer feedback
-        will come here, stating the complaints and suggestions or feedback made via User App.
-         Customer feedback will come here, stating the complaints and suggestions or feedback 
-        made via User App Customer feedback will come here, stating the complaints and suggestions
-        or feedback made via User App. Customer feedback will come here, stating the complaints
-        and suggestions or feedback made via User App Customer feedback will come here, stating
-        the complaints and suggestions or feedback made via User App */}
-        </div>
-        <div onClick={openFullRead} className={styles.read_button}>Read full comment</div>
-      </div>
-
-      <div className={styles.box1}>
-        <div className={styles.box_title}>
-            <span className={styles.span_title}>Your order from Nitesh on 04 January 2021</span>
-            <span className={styles.rating_star}>
-            {arr_star.map((data, index) => 
-                  <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ data? star : fill_star} /></span>
-                  ) 
-              }
-            </span>
-        </div>
-        <div className={styles.comments}>
-        Customer feedback will come here, stating the complaints and suggestions or 
-        feedback made via User App Customer feedback will come here, stating the complaints 
-        and suggestions or feedback made via User App. Customer feedback will come here, 
-        {/*stating the complaints and suggestions or feedback made via User App Customer feedback
-        will come here, stating the complaints and suggestions or feedback made via User App.
-         Customer feedback will come here, stating the complaints and suggestions or feedback 
-        made via User App Customer feedback will come here, stating the complaints and suggestions
-        or feedback made via User App. Customer feedback will come here, stating the complaints
-        and suggestions or feedback made via User App Customer feedback will come here, stating
-        the complaints and suggestions or feedback made via User App */}
-        </div>
-        <div onClick={openFullRead} className={styles.read_button}>Read full comment</div>
-      </div>
-
-      <div className={styles.box1}>
-        <div className={styles.box_title}>
-            <span className={styles.span_title}>Your order from Nitesh on 04 January 2021</span>
-            <span className={styles.rating_star}>
+            <span className={styles.span_title}>Your order from {row.user?row.user.name: '-'} on {moment(row.order.createdAt).format("Do MMMM YYYY")}</span>
+            {/*<span className={styles.rating_star}>
               {arr_star.map((data, index) => 
                   <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ data? star : fill_star} /></span>
                   ) 
               }
-            </span>
+            </span>*/}
         </div>
         <div className={styles.comments}>
-        {commentText}
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+        <ol style={{listStyle: 'none'}}>
+        <div style={{float: 'right'}} className={styles.rating_star}>
+              {arr_star.map((data, index) => 
+                  <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ row.user_feedback.rating > index? star : fill_star} /></span>
+                  ) 
+              }
+            </div>
+          <li className={styles.li_style}><div className={styles.li_div}>User feedback </div>{row.user_feedback.feedback}</li>
+          <div style={{float: 'right'}} className={styles.rating_star}>
+              {arr_star.map((data, index) => 
+                  <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ row.service_feedback.rating > index? star : fill_star} /></span>
+                  ) 
+              }
+            </div>
+          <li className={styles.li_style}><div className={styles.li_div}>Service </div>{row.service_feedback.feedback}</li>
+          <div style={{float: 'right'}} className={styles.rating_star}>
+              {arr_star.map((data, index) => 
+                  <span id={index} onClick={(e) => handleStar(e, index)}><img className={styles.image_css} src={ row.delivery_boy_feedback.rating> index? star : fill_star} /></span>
+                  ) 
+              }
+            </div>
+          <li className={styles.li_style}><div className={styles.li_div}>Delivery Boy </div>{row.delivery_boy_feedback.feedback}</li>
+        </ol>
+        
         </div>
-        {openComment && <div className={styles.details}>
+        </div>
+        {openComment[index] && <div className={styles.details}>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Customer Name</span>
-                <span className={styles.single_row2_div}>Nitesh</span>
+                <span className={styles.single_row2_div}>{row.user.name}</span>
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Delivery Station</span>
-                <span className={styles.single_row2_div}>Bhopal</span>
+                <span className={styles.single_row2_div}>{row.station.station_name}</span>
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Delivery Time</span>
-                <span className={styles.single_row2_div}>24th September 02:10 PM</span>
+                <span className={styles.single_row2_div}>{moment(row.order.delivery_date).format("MMMM Do YYYY, h:mm:ss a")}</span>
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Train Name/ No.</span>
-                <span className={styles.single_row2_div}>Malwa Express 12091</span>
+                <span className={styles.single_row2_div}>{row.trainname_or_number?row.trainname_or_number: '-'}</span>
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Order ID</span>
-                <span className={styles.single_row2_div}>1021</span>
+                <span className={styles.single_row2_div}>{row.order.order_number}</span>
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Items</span>
-                <span className={styles.single_row2_div}>Snacks</span>
+                <span className={styles.single_row2_div}>{row.details.items.map(data => (` ${data.name},`))}</span>
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Amount</span>
-                <span className={styles.single_row2_div}>150</span>
+                <span className={styles.single_row2_div}>{row.order.total_amount}</span>
               </div>
         </div>}
         <div className={styles.read_button}>
-            <img onClick={openFullRead} style={{display: openComment? '': 'none'}} className={styles.close_image} src={close_arrow} />
+            <img onClick={(e) => openFullRead(e, index, 'image')} style={{display: openComment[index]? '': 'none'}} className={styles.close_image} src={close_arrow} />
             <span onClick={(e) => {
-              if(!openComment){
-                openFullRead(e)
+              if(!openComment[index]){
+                openFullRead(e, index, 'text')
               }
-              }} style={{opacity: openComment? '0.5': '1'}}>Read full comment</span></div>
-      </div>
+              }} style={{opacity: openComment[index]? '0.5': '1'}}>Read full comment</span></div>
+      </div>))}
     </div>
   );
 }
@@ -620,25 +526,19 @@ export function FeedBackAndSuggestions(props) {
 const mapStateToProps = (state) => {
 	// debugger
 	return {
-	//   vendorDocs: state.Vendors.docs,
-    // total: state.Vendors.total,
-    // limit: state.Vendors.limit,
-    // vendorDetails: state.Vendors.vendorDetails,
-	// 	categoryData: state.Vendors.categoryData,
-	// 	stationDetails: state.Stations.stationDetails,
+    
+    docs: state.Feedback.docs,
+    total: state.Feedback.total,
+    limit: state.Feedback.limit, 
 	}
 }
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-	// 	getStationData: () => {
-    //   dispatch(getStationData())
-    // },
-    // getVendorDataByParams: (pageNo, size, params) => {
-    //   dispatch(actions.getVendorDataByParams(pageNo, size, params))
-    // },
-	// 	getVendorDetails: (id) =>
-	// 		dispatch(actions.getVendorDetails(id)),
+	
+    getFeedbackDataByParams: (pageNo, size, params) => {
+        dispatch(actions.getFeedbackDataByParams(pageNo, size, params))
+    },
 	// 	setIsLoading: (loading) =>
 	//     dispatch(setIsLoading(loading))
 	}

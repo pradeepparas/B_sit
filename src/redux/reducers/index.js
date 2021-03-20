@@ -11,6 +11,7 @@ import userReducer from './userReducer'
 import auth from './auth';
 import vendorReducer from './vendorReducer';
 import SFMISReducer from './SFMISReducer';
+import feedbackReducer from './feedbackReducer';
 
 export {
   vendorReducer,
@@ -25,5 +26,6 @@ export {
   stationReducer,
   userReducer,
   auth,
-  SFMISReducer
+  SFMISReducer,
+  feedbackReducer
 };
