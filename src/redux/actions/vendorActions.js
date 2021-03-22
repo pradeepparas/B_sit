@@ -27,7 +27,7 @@ export function getVendorDataByParams(page, limit, value) {
             }
             dispatch(setIsLoading(false))
           }).catch(err => {
-            if(err.response.data.message == 'No Records Found'){
+            if(err.response.data.message === 'No Records Found'){
               dispatch(fetchVendorDataByParams([]))
             }
             // dispatch(setIsSubmitted(false))
@@ -171,7 +171,7 @@ export function getVendorManagementByParams(page, limit, params) {
             debugger
         }).catch(err => {
             // toast.error(err.response.data.message)
-            if(err.response.data.message == "No Record Found"){
+            if(err.response.data.message === "No Record Found"){
               dispatch(fetchVendorManagementByParams([]))
             }
             debugger

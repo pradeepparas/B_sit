@@ -706,7 +706,7 @@ export function AddVendorService(props) {
               
               {/* Empty label */}
               <label>Add </label>
-              <Button onClick={() => console.log('vendor')} className={classes.button1 + " " + classes.vendor_button} variant="contained">
+              <Button onClick={() => history.push('/vendor-management/add')} className={classes.button1 + " " + classes.vendor_button} variant="contained">
                 + Add Vendor
               </Button>
               </div>
@@ -748,7 +748,7 @@ export function AddVendorService(props) {
               
               {/* Empty label */}
               <label>Add </label>
-              <Button onClick={() => history.push('/add-service-category')} className={classes.button1 + " " + classes.category_button} variant="contained">
+              <Button onClick={() => history.push('/SFMIS-services/add/add-service-category')} className={classes.button1 + " " + classes.category_button} variant="contained">
                 + Add Service Category
               </Button>
               </div>

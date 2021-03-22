@@ -15,7 +15,7 @@ import {
 	Form,
 	FormGroup,
 } from "reactstrap";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 // Images
 import downArrow from '../../../StationManagement/downArrow.png';
@@ -50,6 +50,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 // components
 // import { getStationData } from "../../../redux/actions/stationActions";
 import styles from './ItemDetails.module.css';
+import * as actions from "../../../../redux/actions/SFMISActions";
 // import * as actions from "../../../redux/actions/vendorActions";
 // import { setIsLoading } from '../../../redux/actions/stationActions';
 // import * as API from '../../../constants/APIs';
@@ -255,19 +256,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function createData(vendor_name, item_name, description, price, delivery_charges, status) {
-  return { vendor_name, item_name, description, price, delivery_charges, status };
-}
+// function createData(vendor_name, item_name, description, price, delivery_charges, status) {
+//   return { vendor_name, item_name, description, price, delivery_charges, status };
+// }
 
-const rows = [
-  createData("John Doe", "Combiflame", "Demo Description", "110","0.0", "Approved"),
-  createData("Jack", "Crocin", "Demo Description", "200","0.0", "Disapproved"),
-  createData("John Doe", "Vicks", "Demo Description", "300","0.0", "New"),
-  createData("Jack", "Vicks", "Demo Description", "100","0.0", "New"),
-  createData("John Doe", "Combiflame", "Demo Description", "300","0.0", "Approved"),
-];
+// const rows = [
+//   createData("John Doe", "Combiflame", "Demo Description", "110","0.0", "Approved"),
+//   createData("Jack", "Crocin", "Demo Description", "200","0.0", "Disapproved"),
+//   createData("John Doe", "Vicks", "Demo Description", "300","0.0", "New"),
+//   createData("Jack", "Vicks", "Demo Description", "100","0.0", "New"),
+//   createData("John Doe", "Combiflame", "Demo Description", "300","0.0", "Approved"),
+// ];
 
 export function ItemDetails(props) {
+  const { item_id } = useParams();
   const history= useHistory();
   const [pageNo, setPageNo] = useState();
   const [date, setDate] = useState({
@@ -277,7 +279,7 @@ export function ItemDetails(props) {
   const [dropDownDetails, setDropDownDetails] = useState([]);
 	const [vendorDropDown, setVendorDropDown] = useState([]);
 	const [categoryDropDown, setCategoryDropDown] = useState([])
-  // const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState([]);
 	const [showModal, setShowModal] = useState(false);
 	const [arrayDetails, setArrayDetails] = useState([]);
   const [modal, setModal] = useState({
@@ -349,6 +351,17 @@ export function ItemDetails(props) {
 
 	}
 
+  useEffect(() => {
+    props.getItemsByParams(1, 10, item_id)
+  }, [])
+
+  useEffect(() => {
+    debugger
+    if(props.itemsDocs){
+      setRows(props.itemsDocs)
+    }
+  }, [props.itemsDocs])
+
 	// Drop-Down Details for category and Vendor Details
 	// useEffect(() => {
 	// 	if(props.categoryData){
@@ -395,10 +408,11 @@ export function ItemDetails(props) {
     setAge(event.target.value);
   };
 
-  const toggleModal =(e,data, i)=>{
+  const toggleModal =(e,data, row)=>{
   	setModal(true);
-    setArrayDetails(rows[i]);
-
+    setArrayDetails(row);
+    console.log(row)
+    debugger
     if(data == 'delete'){
       setModal({
         deleteModal: true
@@ -605,12 +619,12 @@ export function ItemDetails(props) {
                 0{index+1}.
               </TableCell>
               <TableCell align="center"><img style={{width: 35}} src={food_image} /></TableCell>
-              <TableCell align="center">{/*row.userNumber*/row.item_name}</TableCell>
+              <TableCell align="center">{/*row.userNumber*/row.name}</TableCell>
               <TableCell align="center">{/*row.userEmail*/row.description}</TableCell>
               <TableCell align="center">{/*row.service*/row.price}</TableCell>
-              <TableCell align="center">{/*row.stationName*/row.delivery_charges}</TableCell>
-							<TableCell style={{color: row.status == 'Approved'? '#5ac67e': row.status == 'New'? '#213d77': '#cf7474'}} align="center">{/*row.service*/row.status}</TableCell>
-              <TableCell align="center"><div onClick={(e) => toggleModal(e, 'details', index)}><img src={view} style={{width: 17}} /></div></TableCell>
+              <TableCell align="center">{/*row.stationName*/row.delivery_charge}</TableCell>
+							<TableCell style={{color: row.status == 'Approved'? '#5ac67e': row.item_status == 'NEW'? '#213d77': '#cf7474'}} align="center">{/*row.service*/row.item_status}</TableCell>
+              <TableCell align="center"><div onClick={(e) => toggleModal(e, 'details', row)}><img src={view} style={{width: 17}} /></div></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -696,7 +710,7 @@ export function ItemDetails(props) {
 						<div className={styles.box1}>
 								<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 								<div className={styles.modalDiv}  className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
-								<span className={styles.textModal}>Item Name</span><span style={{marginLeft: 70,marginRight: 25}}> - </span><span>{/*arrayDetails.userName*/arrayDetails.item_name}</span>
+								<span className={styles.textModal}>Item Name</span><span style={{marginLeft: 70,marginRight: 25}}> - </span><span>{/*arrayDetails.userName*/arrayDetails.name}</span>
 								</div>
 								<div className={styles.modalDiv} style={{display: 'flex', display: 'flex', flexDirection: 'row'}}>
 								<span className={styles.textModal}>Description</span><span style={{marginLeft: 67,marginRight: 25}}> - </span><span>{/*arrayDetails.userNumber*/arrayDetails.description}</span>
@@ -704,10 +718,10 @@ export function ItemDetails(props) {
 								<div  className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
 								<span className={styles.textModal}>Price</span><span style={{marginLeft: 108,marginRight: 25}}> - </span><span>{/*arrayDetails.userEmail*/arrayDetails.price}</span>
 								</div><div  className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
-								<span className={styles.textModal}>Delivery Charges</span><span style={{marginLeft: 32,marginRight: 25}}> - </span><span>{arrayDetails.delivery_charges}</span>
+								<span className={styles.textModal}>Delivery Charges</span><span style={{marginLeft: 32,marginRight: 25}}> - </span><span>{arrayDetails.delivery_charge}</span>
 								</div>
                                 <div className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
-								<span className={styles.textModal}>Display Name</span><span style={{marginLeft: 52,marginRight: 25}}> - </span><span>Remo's Cafe</span>
+								<span className={styles.textModal}>Display Name</span><span style={{marginLeft: 52,marginRight: 25}}> - </span><span>{arrayDetails.service_id.display_name}</span>
 								</div>
                                 <div className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
 								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 52,marginRight: 25}}> - </span><span>{arrayDetails.vendor_name}</span>
@@ -740,6 +754,8 @@ export function ItemDetails(props) {
 const mapStateToProps = (state) => {
 	// debugger
 	return {
+    itemsDocs: state.SFMIS.itemsDocs,
+    limit: state.SFMIS.itemsLimit
 	//   vendorDocs: state.Vendors.docs,
     // total: state.Vendors.total,
     // limit: state.Vendors.limit,
@@ -751,6 +767,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+    getItemsByParams: (page, limit, service_id, params) =>
+      dispatch(actions.getItemsByParams(page, limit, service_id, params)),
 	// 	getStationData: () => {
     //   dispatch(getStationData())
     // },

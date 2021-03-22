@@ -315,13 +315,18 @@ export function manageItems(items, is_edit) {
 }
 
 // Getting Items for details
-export function getItemsByParams(page, limit, service_id) {
+export function getItemsByParams(page, limit, service_id, params) {
     return async dispatch => {
         let a = await dispatch(setIsLoading(true));
 
         let station_id = localStorage.getItem('station_id');
         let url = `${API.ItemsAPI}/${page}/${limit}?service_id=${service_id}&station_id=${station_id}`;
-        debugger
+
+        if(params) {
+            url = `${API.ItemsAPI}/${page}/${limit}?service_id=${service_id}&station_id=${station_id}&search=${params.name}`
+        }
+
+        // debugger
         axios({
             url: url,
             headers: {
@@ -331,17 +336,19 @@ export function getItemsByParams(page, limit, service_id) {
             }
         }).then(response => {
             console.log(response)
-            debugger
+            // debugger
             if(response.data.success){
                 dispatch(setIsLoading(false));
                 console.log(response.data)
-                debugger
+                // debugger
                 dispatch(fetchItemsByParams(response.data.items.docs, response.data.items.total, response.data.items.limit))
             }
             debugger
         }).catch(err => {
-            console.log(err)
-            debugger
+            if(err.response.data.message === "No Record Found"){
+                dispatch(fetchItemsByParams([]))
+            }
+            
             dispatch(setIsLoading(false));
         })
     }

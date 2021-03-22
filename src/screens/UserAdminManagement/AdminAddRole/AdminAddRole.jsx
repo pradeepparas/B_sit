@@ -76,12 +76,12 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   textField: {
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 500px)"]: {
       width: '100%'
     }
   },
   textField1:{
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 500px)"]: {
       width: '100%',
       marginBottom: 5
     },
@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     ["@media (max-width:320px)"]: {},
   },
   button1: {
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 500px)"]: {
       width: '100%',
       marginBottom: 5
     },
@@ -265,19 +265,19 @@ const useStyles = makeStyles((theme) => ({
   //   overflowX: 'scroll',
   // },
   textField: {
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 500px)"]: {
       width: '100%'
     }
   },
   div1: {
     marginRight: 10,
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 500px)"]: {
       width: '91%',
       marginRight: 0,
     }
   },
   button3: {
-    ["@media (min-width: 280px) and (max-width: 1040px)"]: {
+    ["@media (min-width: 280px) and (max-width: 500px)"]: {
       width: '100%',
       marginBottom: 5
     },
@@ -350,12 +350,9 @@ export function AddUser(props) {
     // isEdit:false, isAdd:false,
   });
   const [search, setSearch] = useState({
-    station_name: "",
     name: "",
-    role: "",
-    start_date: "",
-    end_date: "",
-  })
+  });
+
   const [values, setValues] = useState({
     password: "",
     showPassword: false,
@@ -390,27 +387,10 @@ export function AddUser(props) {
     }
   }, [props.roleDocs])
 
-  // Changing Date fields
-  const handleDateChange = (data, type) => {
-    console.log(data)
-    // debugger
-    if (type == 'start') {
-      setSearch({
-        ...search,
-        start_date: data.target.value
-      })
-    } else {
-      setSearch({
-        ...search,
-        end_date: data.target.value
-      })
-    }
-  }
-
+  // Handle Page Change
   const handleChangePage = (event, page) => {
     setPageNo(page)
     props.getRoleDataByParams(page, props.limit, search)
-    
   }
 
   // Used for Pagination
@@ -431,7 +411,7 @@ export function AddUser(props) {
   const searchUsers = () => {
     console.log(search)
     debugger
-    props.getUserDataByParams(1, 10, search)
+    props.getRoleDataByParams(1, 10, search)
   }
 
 
@@ -584,12 +564,13 @@ export function AddUser(props) {
     setErros({ errors, [event.target.name]: "" })
   }
 
-  // const handleInputs = (event) => {
-  //   setSearch({
-  //     ...search,
-  //     [event.target.name]: [event.target.value]
-  //   })
-  // }
+  const handleFilters = (event) => {
+    setSearch({
+      ...search,
+      [event.target.name]: [event.target.value]
+    })
+  }
+
   // function for adding user or Setting IsEdit False
   const addRole = () => {
     props.setIsEditFalse(false)
@@ -678,12 +659,12 @@ export function AddUser(props) {
             <div className={styles.textfield}>
               <label className={styles.label} style={{ color: 'black' }}>Role Name</label>
               <input autocomplete="off" name="role_name" value={state.role_name} onChange={handleInputs} className={styles.inputfield} type="text" />             
-            </div><br />
+            </div>
             <div className={styles.error_message}>{errors.role_name}</div><br />
             <div className={styles.textfield}>
               <label className={styles.label} style={{ color: 'black' }}>Role Description</label>
               <input autocomplete="off" name="description" value={state.description} onChange={handleInputs} className={styles.inputfield} type="text" />
-            </div><br />
+            </div>
             <div className={styles.error_message}>{errors.description}</div>  
             
           </div>
@@ -722,7 +703,7 @@ export function AddUser(props) {
             id="outlined-adornment-weight"
             value={search.name}
             name="name"
-            onChange={handleInputs}
+            onChange={handleFilters}
             startAdornment={<SearchOutlinedIcon />}
             aria-describedby="outlined-weight-helper-text"
             inputProps={{

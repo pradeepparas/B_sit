@@ -111,10 +111,12 @@
     outline: none;
     height: 40px;
     padding-left: 7px;
+    border-color: #00000069;
+    border-width: thin;
     padding-right: 25px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    border: 1px solid #272D3B;
-    border-radius: 7px;
+    /* border: 1px solid #272D3B; */
+    border-radius: 4px;
     opacity: 1;
 }
 .box2 {
@@ -231,8 +233,8 @@
     display: flex;
     align-items: center;
     border: solid;
-    border-color: #272d3b;
-    border-width: 1px;
+    border-color: #00000069;
+    border-width: thin;
     border-radius: 5px;
     margin: auto 86px;
     justify-content: center;
@@ -393,4 +395,4 @@
   }
 }
 
-/* 720pximage_upload textfield box1 modalCategoryContainer box1 1040 filter saveButton gridtable box footer1  */
+/* 720pximage_upload textfield inputfield box1 modalCategoryContainer box1 1040 filter saveButton gridtable box footer1  */

@@ -15,7 +15,7 @@ import {
 	ModalFooter,
 } from "reactstrap";
 
-// components saveButton
+// components
 import styles from './AddUser1.module.css';
 
 // import logo from './logo.png';
@@ -360,7 +360,7 @@ export function AddUser(props) {
       if (!validateForm()) {
           return
       }
-
+      return;
       let isEdit = false;
 				if(user_id !== 'add'){
 					isEdit = true;
@@ -509,32 +509,38 @@ debugger
               <div className={styles.textfield}>
               <label className={styles.label} style={{color: 'black'}}>Name</label>
                 <input autocomplete="off" name="userName" value={state.userName} onChange={handleInputs} className={styles.inputfield} type="text" />
-                <br/><br/>
                 
-              </div><br/><br/>
+                
+              </div>
               <div className={styles.error_message}>{errors.userName}</div>
+              <br/><br/>
+              
               
               <div className={styles.textfield}>
                 <label className={styles.label} style={{color:'black'}}>Phone Number</label>
                 <input autocomplete="off" name="userNumber" value={state.userNumber} onChange={handleInputs} className={styles.inputfield} type="text" />
-                <br/><br/>
-              </div><br/>
+                
+              </div>
               <div className={styles.error_message}>{errors.userNumber}</div>
+              <br/>
+              
 
 
 							<div className={styles.textfield}>
 	              <label className={styles.label} style={{color: 'black'}}>Email</label>
 	              <input autocomplete="off" name="userEmail" value={state.userEmail} onChange={handleInputs} className={styles.inputfield} type="text" />
 	              
-	            </div><br/>
+	            </div>
               <div className={styles.error_message}>{errors.userEmail}</div>
-              <div     className={styles.textfield}>
+              <br/>
+              
+              <div className={styles.textfield}>
 	              <label className={styles.label} style={{color:'black'}}>Address</label>
 	              <input style={{height:"100px"}}  autocomplete="off" name="userAddress" value={state.userAddress} onChange={handleInputs} className={styles.inputfield} type="text" />
 	            
-	            </div><br/>
+	            </div>
               <div className={styles.error_message}>{errors.userAddress}</div>
-
+              <br/>
 
 						<div className={styles.textfield}>
 							<label className={styles.label} style={{color:'#272D3B'}}>Role</label>
@@ -544,10 +550,10 @@ debugger
                   <option key={data._id} value={data._id}>{data.role.replace('_', ' ')}</option>
                   )}
 						</select>
-						</div><br/>
+						</div>
             <div className={styles.error_message}>{errors.role}</div>
-
-
+            <br/>
+            
              {user_id=='add'&&<div className={styles.textfield2}>
               <label className={styles.label} style={{color:'black'}}>Password</label>
               <input style={{position: 'relative'}} autocomplete="off" name="password" value={state.password} onChange={handleInputs} className={styles.inputfield1} type={values.showPassword? "password" : "password"} />
@@ -556,7 +562,7 @@ debugger
             <small style={{display: 'flex', alignItems: 'center',color: 'black'}}>Autogenerate</small>
             </button>
             </div>}
-            {user_id=='add'&&<div style={{marginTop: -31}} className={styles.error_message}>{errors.userPassword}</div>}
+            {user_id=='add'&&<div className={styles.error_message}>{errors.password}</div>}
             <div style={{paddingTop:user_id?"40px":"0px"}} className={styles.bex}>
               <FormControlLabel
                 className={classes.label}

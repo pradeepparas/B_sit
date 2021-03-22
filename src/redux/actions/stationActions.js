@@ -5,6 +5,8 @@ import moment from 'moment';
 import { toast } from 'react-toastify';
 import { mapProps } from 'recompose';
 
+const station_id = localStorage.getItem('station_id');
+
 export function setIsSubmitted(success) {
   return {
     type: actionTypes.IS_SUBMITTED,
@@ -339,7 +341,7 @@ export function setIsLoading(loading) {
 
 export function getDashboardCount(type1) {
   return async dispatch => {
-    let link = `${API.DashBoardAPI}?type=${type1}`;
+    let link = `${API.DashBoardAPI}?type=${type1}&station_id=${station_id}`;
     debugger
     let a = await dispatch(setIsLoading(true))
     axios({

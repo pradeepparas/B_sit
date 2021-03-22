@@ -184,7 +184,6 @@ border-color: #cac7c7;
   display: block;
 }
 
-.dropdown_content a:hover {  }
 
 .dropdown_content div:hover { cursor: pointer; }
 
@@ -260,7 +259,7 @@ border-color: #cac7c7;
     padding-left: 10px;
     padding-right: 10px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    border: 1px solid #272D3B;
+    /* border: 1px solid #272D3B; */
     border-radius: 4px;
     opacity: 1;
   }
@@ -278,7 +277,7 @@ border-color: #cac7c7;
     padding-left: 10px;
     padding-right: 10px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    border: 1px solid #272D3B;
+    /* border: 1px solid #272D3B; */
     border-radius: 4px;
     opacity: 1;
   }
@@ -461,3 +460,23 @@ border-color: #cac7c7;
     margin-top: 0px;
   }
 }
+
+@media (min-width: 180px) and (max-width: 899px) {
+  .inputfield1 {
+    width: 100%;
+  }
+}
+
+@media (min-width: 180px) and (max-width: 670px) {
+  .saveButton {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+}
+
+/* inputfield */

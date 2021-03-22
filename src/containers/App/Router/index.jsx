@@ -56,7 +56,7 @@ const Router = () => (
         <Route exact={true} path="/otp" component={OTPAdmin} />
         <Route exact={true} path="/reset-password" component={ResetPasswordAdmin} />
         <Route exact={true} path="/SFMIS-services" render={(props) => <Drawer page={<ServicesManagement />} />}/>
-        <Route path="/add-service-category" exact={true} render={(props) => <Drawer page={<AddServiceCategory />} />}/>
+        <Route path="/SFMIS-services/:service_id/add-service-category" exact={true} render={(props) => <Drawer page={<AddServiceCategory />} />}/>
         <Route path="/SFMIS-services/add-service-item/:service_id" exact={true} render={(props) => <Drawer page={<AddServiceItem />} />}/>
 
         {/* Chandan Sir */}

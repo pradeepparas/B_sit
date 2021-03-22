@@ -327,7 +327,7 @@ export function ServicesManagement(props) {
   })
   const [serviceCategory, setServiceCategory] = useState([])
   const [changeStatus, setChangeStatus] = useState(false)
-  const [pageNo, setPageNo] = useState();
+  const [pageNo, setPageNo] = useState(1);
 
   const [rows, setRows] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -452,6 +452,9 @@ export function ServicesManagement(props) {
     setChangeStatus(row.status);
     setArrayDetails(row);
 
+    console.log(row)
+    debugger
+
     if (data == 'delete') {
       setModal({
         deleteModal: true
@@ -488,7 +491,16 @@ export function ServicesManagement(props) {
   //  used for pagination
   const handleChangePage = (event, page) => {
     setPageNo(page)
+    debugger
     // props.getUserDataByParams(page, props.limit)
+    if(props.page == page){
+      console.log("same page")
+      debugger
+      return;
+    } else {
+      props.getSFMISServicesByParams(page, props.limit, search, "STATION")
+    }
+    
   }
 
   // Change Service Category Status
@@ -690,7 +702,7 @@ export function ServicesManagement(props) {
         <div>
           <Row>
             <Col md="6" className={styles.left}>
-              <img src={background1} style={{ padding: '184px', float: 'none', width: '119%' }} />
+              <img src={`http://13.235.102.214:8000/uploads/SFMISService/${arrayDetails.service_icon}`} style={{ padding: '184px', float: 'none', width: '119%' }} />
 
 
 
@@ -741,7 +753,7 @@ export function ServicesManagement(props) {
               <div className={styles.textfield}>
             <FormControlLabel
               className={classes.label}
-              control={<GreenCheckbox checked={true}  name="checkedG" />}
+              control={<GreenCheckbox checked={arrayDetails.status}  name="checkedG" />}
               label={
                 <span
                   className={styles.checkBoxLabel}
@@ -755,7 +767,7 @@ export function ServicesManagement(props) {
             <div className={styles.textfield}>
             <FormControlLabel
               className={classes.label}
-              control={<GreenCheckbox checked={true}  name="checkedG" />}
+              control={<GreenCheckbox checked={arrayDetails.service_cancel}  name="checkedG" />}
               label={
                 <span
                   className={styles.checkBoxLabel}

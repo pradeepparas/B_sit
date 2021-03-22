@@ -181,7 +181,7 @@ export function getRole(){
       // setRole(response.data.role)
       dispatch(setIsLoading(false))
     }).catch(err => {
-      toast.error(err.response.data.message)
+      // toast.error(err.response.data.message)
       dispatch(setIsLoading(false))
       debugger
     })
@@ -239,7 +239,7 @@ export function getRoleDataByParams(page, limit, params){
     let station_id = localStorage.getItem('station_id');
     
     axios({
-      url: `${API.GetRoleAPI}/${page}/${limit}?station_id=${station_id}&search=`,
+      url: `${API.GetRoleAPI}/${page}/${limit}?station_id=${station_id}&search=${params.name}`,
       headers: {
         "accept": "application/json",
         "Content-Type": "application/json",
@@ -257,6 +257,10 @@ export function getRoleDataByParams(page, limit, params){
     }).catch(err => {
       debugger
       // toast.error(err.response.data.message)
+      if(err.response.data.message === "Unable to fetch record"){
+        dispatch(fetchRoleDataByParams([]))
+      }
+      
       dispatch(setIsLoading(false))
     })
   }

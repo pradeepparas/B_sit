@@ -386,6 +386,8 @@ export function VendorsService(props) {
   const toggleModal = (e, data, row) => {
     setChangeStatus(row.status);
     setArrayDetails(row);
+    console.log(row)
+    debugger
 
     if (data == 'delete') {
       setModal({
@@ -424,7 +426,7 @@ export function VendorsService(props) {
     //  used for pagination
     const handleChangePage = (event, page) => {
       setPageNo(page)
-      // props.getUserDataByParams(page, props.limit)
+      props.getSFMISServicesByParams(page, props.limit, search, "VENDOR")
 	  }
 
     // Used for Pagination
@@ -631,7 +633,7 @@ export function VendorsService(props) {
                   <a><div onClick={(e) => toggleModal(e, 'details', row)}>View Details</div></a>
                   <a><div onClick={(e) => toggleModal(e, 'status', row)}>Change Status</div></a>
                   <Link to={`vendors-service/${row._id}`}><a><div onClick={(e) => toggleModal(e, 'details', row)}>Edit Details</div></a></Link>
-                  <Link to={`vendors-service/item-details/${1}`}><a><div>Item Details</div></a></Link>
+                  <Link to={`vendors-service/item-details/${row._id}`}><a><div>Item Details</div></a></Link>
                   <a><div onClick={(e) => toggleModal(e, 'delete', row)}>Delete Service</div></a>
                 </div>
                 </div></TableCell>
@@ -780,9 +782,9 @@ export function VendorsService(props) {
             </div>
 						<div className={styles.modalOuterDiv} style={{display: 'flex'}}>
       
-            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <div style={{width: "50%",display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
               <div className={styles.image_box}>
-              <img src={vendor_image} />
+              <img src={`http://13.235.102.214:8000/uploads/SFMISService/${arrayDetails.service_icon}`} />
               </div>
             </div>
 

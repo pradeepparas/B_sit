@@ -74,7 +74,7 @@
     margin-top: 20px;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
-    width: 45%;
+    width: 560px;
 }
 .textfield {
     font-family: Montserrat;
@@ -82,6 +82,7 @@
     /* flex-direction: column; */
     /* margin: 11px 30px 11px 30px; */
     padding-left: 25px;
+    margin-bottom: 5px;
     padding-right: 10px;
     width: 100%;
   }
@@ -90,7 +91,8 @@
     padding-left: 10px; */
     color: #ef0b0bde;
     font: normal normal normal 10px/10px Montserrat;
-    text-align: center;
+    /* text-align: center; */
+    margin-left: 165px;
   }
   .checkbox100{
     height: 24px;
@@ -154,7 +156,7 @@
   .table {
     padding-top: 1px;
     background-color: white;
-    margin-top: -60px;
+    margin-top: -25px;
     box-shadow: 0px 4px 8px 0px #08080833;
     /* margin-left: 3px; */
     /* margin-right: 20px; */
@@ -170,11 +172,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 30%;
+    width: 290px;
   }
   .searchBarDiv {
     display: flex;
-    width: 800px;
+    /* width: 800px; */
     justify-content: space-between;
   }
   .dropbtn {
@@ -279,7 +281,7 @@
 .main1{
   display: flex;
   justify-content: space-between;
-  width: 31%;
+  width: 385px;
   margin-left: 160px;
 
   /* margin-left: 185px; */
@@ -329,6 +331,34 @@
   border: none;
   justify-content: center;
   align-items: center;
+}
+
+.emptyTable {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-align: center;
+  font: normal normal bold 18px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #715555;
+  opacity: 1;
+}
+
+@media(min-width: 775px) and (max-width: 899px){
+  .error_message {
+    margin-left: 215px;
+  }
+}
+
+@media(min-width: 429px) and (max-width: 774px){
+  .error_message {
+    margin-left: 30px;
+  }
+}
+
+@media(min-width: 280px) and (max-width: 428px){
+  .error_message {
+    margin-left: 10px;
+  }
 }
 
  /* saveButton */
@@ -408,7 +438,7 @@
       grid-template-rows: 1fr;
     }
     .main1{
-      width: 70%;
+      /* width: 70%; */
       margin-left: 155px;
     }
   }
@@ -454,7 +484,7 @@
     width: 100%;
   }
   }
-  @media (min-width: 280px) and (max-width: 1040px) {
+  @media (min-width: 280px) and (max-width: 500px) {
     .filterContent {
       display: flex;
       flex-direction: column;
@@ -548,7 +578,7 @@
     margin-left: 30px;
       }
     }
-    @media (min-width: 580px) and (max-width: 730px) {
+    @media (min-width: 580px) and (max-width: 734px) {
       .main1{
         width: 61%;
         margin-left: 26px;
@@ -578,7 +608,7 @@
     padding-left: 142px;
   }
 } */
-  /* @media (min-width: 280px) and (max-width: 1040px) {
+  /* @media (min-width: 280px) and (max-width:500pxx) {
     .filterContent {
       display: flex;
       flex-direction: column;
@@ -629,4 +659,4 @@
   } */
 
 
-  /* label grid table*/
+  /* label grid error main1 textfield 734 searchBardiv table*/

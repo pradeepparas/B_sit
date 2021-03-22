@@ -112,27 +112,36 @@ const useStyles = makeStyles((theme) => ({
 		},
 		marginRight: 30,
     width: 90,
-    height:30,
+    // height:30,
     borderRadius: 16,
     color: 'white',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'transparent',
     color: '#213D77',
     border:'1px solid #213D77',
     textTransform: 'capitalize',
     '&:hover': {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: 'transparent',
 
-    }
+    },
+    ["@media (min-width: 180px) and (max-width: 670px)"]: {
+        width: "100%",
+        margin: 0
+    },
   },
   saveButton1: {
     width: 90,
-height:30,
+// height:30,
     marginRight: 105,
     marginLeft:25,
     borderRadius: 16,
 color: 'white',
 backgroundColor: '#213D77',
 textTransform: 'capitalize',
+["@media (min-width: 180px) and (max-width: 670px)"]: {
+    width: "100%",
+    margin: 0,
+    marginBottom: 10
+},
 '&:hover': {
   backgroundColor: '#213D77',
   color: '#FFF'
@@ -348,15 +357,6 @@ export function AddVendor(props) {
         }
     }, [])
 
-    const passwordGenerate = () => {
-        var randomstring = Math.random().toString(36).slice(-8);
-        setState({
-            ...state,
-            adminPassword: randomstring
-        })
-        console.log(randomstring)
-        debugger
-    }
 
     const handleInputs = (event) => {
         debugger
@@ -392,23 +392,6 @@ export function AddVendor(props) {
     //   setErros({errors, [event.target.name]:""})
     // }
 
-    const handleChange = (date, type) => {
-        debugger
-        if (type == 'start') {
-            setState({
-                ...state,
-                contract_start_date: moment(date)
-                // contract_start_date: date
-            })
-        } else {
-            setState({
-                ...state,
-                exp_end_date: moment(date)
-                // exp_end_date: date
-            })
-            //props.match.params.
-        }
-    };
 
     const handleStatus = (e) => {
       setState({

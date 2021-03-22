@@ -600,9 +600,9 @@ export function AddService(props) {
               <div className={styles.textfield}>
               {/* Empty label */}
               {service_id== 'add' &&(<><label>Add </label>
-              <Button onClick={() => history.push('/add-service-category')} className={classes.button1 + " " + classes.category_button} variant="contained">
+              <Link to={`add/add-service-category`}><Button onClick={() => /*history.push('SFMIS-services/add/add-service-category')*/console.log("Hello")} className={classes.button1 + " " + classes.category_button} variant="contained">
                 + Add Service Category
-              </Button></>)}
+              </Button></Link></>)}
               </div>
 
               {/* Empty Div */}
@@ -642,7 +642,7 @@ export function AddService(props) {
               <label style={{color: '#535763'}}>Upload Service Icon</label>
               <div className={styles.image_upload}>
               <label className={state.fileName?classes.show_image_true: classes.show_image} for="file-input">
-                  <img src={state.fileName? state.fileName: image_icon} />
+                  <img style={{ height: state.fileName? '61px': ''}} src={state.fileName? state.fileName: image_icon} />
               </label>
               </div>
               <input id="file-input" type="file" style={{display: 'none'}} onChange={uploadFile} className={styles.upload_image} />

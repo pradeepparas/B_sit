@@ -721,7 +721,7 @@ export function UserManagement(props) {
               <TableCell align="center">{row.email? row.email:'-'}</TableCell>
               <TableCell align="center">{row.role_id?row.role_id.role/*.replace('_', ' ')*/: '-'}</TableCell>
               {/* <TableCell align="center">{row.station_id?row.station_id.station_name: '-'}</TableCell> */}
-              <TableCell align="center">{moment(row.created_at).format("DD-MM-YYYY")}</TableCell>
+              <TableCell align="center">{moment(row.createdAt).format("DD-MM-YYYY")}</TableCell>
               <TableCell style={{color: row.status? 'green': 'red'}} align="center">{row.status?"active": "In-active"}</TableCell>
               <TableCell align="center">
               <div className={styles.dropdown}>

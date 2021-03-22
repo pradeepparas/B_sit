@@ -399,12 +399,12 @@ export function UserManagement(props) {
       if(type == 'start') {
         setSearch({
           ...search,
-          start_date: moment(date).format("DD-MM-YYYY")
+          start_date: moment(date).format("MM-DD-YYYY")
         })
       } else {
         setSearch({
           ...search,
-          end_date: moment(date).format("DD-MM-YYYY")
+          end_date: moment(date).format("MM-DD-YYYY")
         })
       }
     }
@@ -440,6 +440,8 @@ export function UserManagement(props) {
 
   const toggleModal =(e,data, row)=>{
   	// setModal(true);
+    console.log(row)
+    debugger
 		setChangeStatus(row.status);
     setArrayDetails(row);
 
@@ -540,7 +542,7 @@ export function UserManagement(props) {
     const handleInputs = (event) => {
       setSearch({
         ...search,
-        [event.target.name]: [event.target.value]
+        [event.target.name]: event.target.value
       })
     }
 
@@ -591,7 +593,7 @@ export function UserManagement(props) {
 					<select className={styles.select1} name="vendor_name" /*value={search.station_id}*/ onChange={handleInputs}>
 						<option selected disabled>Vendor Name</option>
 						{dropDownDetails.length > 0 && dropDownDetails.map(data =>
-							<option key={data._id} value={data.vendor_id}>{data.name}</option>
+							<option key={data._id} value={data.name}>{data.name}</option>
 						 )}
 				</select>
 				</div>
@@ -611,7 +613,7 @@ export function UserManagement(props) {
                     peekNextMonth showMonthDropdown showYearDropdown
                     dropdownMode="select"
                 //   value={state.contract_start_date?moment(state.contract_start_date).format("DD-MM-YYYY"): ''}
-                   placeholderText='dd/mm/yyyy' />
+                   placeholderText='mm/dd/yyyy' />
     		</div>
 
         <div className={classes.container1}>
@@ -625,7 +627,7 @@ export function UserManagement(props) {
                   peekNextMonth showMonthDropdown showYearDropdown
                   dropdownMode="select"
                   onChange={(e) => handleDateChange(e, 'end')}
-                  placeholderText='dd/mm/yyyy' />
+                  placeholderText='mm/dd/yyyy' />
     		</div>
         
         
@@ -667,7 +669,7 @@ export function UserManagement(props) {
               <TableCell align="center">{row.email? row.email:'-'}</TableCell>
 
               {/* <TableCell align="center">{row.station_id?row.station_id.station_name: '-'}</TableCell> */}
-              <TableCell align="center">{moment(row.created_at).format("DD-MM-YYYY")}</TableCell>
+              <TableCell align="center">{moment(row.createdAt).format("DD-MM-YYYY")}</TableCell>
               <TableCell style={{color: row.status? 'green':'red'}} align="center">{row.status?"active": "In-active"}</TableCell>
               <TableCell align="center">
               <div className={styles.dropdown}>
@@ -753,11 +755,11 @@ export function UserManagement(props) {
 				 />
 				 <div style={{display: 'flex', justifyContent: 'flex-end'}}>
          {('Vendor', 'update') &&<Link to={`vendor-management/${arrayDetails._id}`}><button onClick={(e) =>editUser(e, arrayDetails._id, arrayDetails)} className={styles.modalButton}>
-				 <img className={styles.modalImage} style={{width: 21,height: 21, marginTop:-36, marginRight:-47}} src={edit} />
+				 <img className={styles.modalImage} style={{width: 21,height: 21, marginTop:-36}} src={edit} />
 				 <small style={{display: 'flex', alignItems: 'center'}}>Edit Details</small>
 				 </button></Link>}
          <button className={styles.modalButton} /*style={{display: 'contents'}}*/ /*onClick={passwordGenerate}*/>
-				 <img className={styles.modalImage} style={{width: 25,height: 30, marginTop: -36, marginRight:-47}} src={printing} />
+				 <img className={styles.modalImage} style={{width: 25,height: 30, marginTop: -36}} src={printing} />
 				 <small style={{display: 'flex', alignItems: 'center'}}>Download Details</small>
 				 </button>
 				 </div>
@@ -766,19 +768,19 @@ export function UserManagement(props) {
 							<div style={{fontSize: 14, marginLeft: 12}} className={styles.title}>View Details</div>
 								<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 								<div className={styles.modalDiv}  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 70,marginRight: 25}}> -  Rahul </span>{arrayDetails.vendor_name}
+								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 70,marginRight: 25}}> - </span>{arrayDetails.name}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Mobile Number</span><span style={{marginLeft: 59,marginRight: 25}}> - 9087879763 </span>{arrayDetails.mobile_number}
+								<span className={styles.textModal}>Mobile Number</span><span style={{marginLeft: 59,marginRight: 25}}> - </span>{arrayDetails.mobile}
 								</div>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Email</span><span style={{marginLeft: 122,marginRight:25}}> - rahuldey@gmai.com </span>{arrayDetails.email}
+								<span className={styles.textModal}>Email</span><span style={{marginLeft: 122,marginRight:25}}> - </span>{arrayDetails.email}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Warehouse Address</span><span style={{marginLeft: 33,marginRight: 25}}>  -Neeti colony Indore </span>{arrayDetails.warehouse_address}
+								<span className={styles.textModal}>Warehouse Address</span><span style={{marginLeft: 33,marginRight: 25}}>  - </span>{arrayDetails.warehouse_address}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Delivery Station</span><span style={{marginLeft: 59,marginRight: 25}}> - Bhopal</span>{arrayDetails.delivery_station}
+								<span className={styles.textModal}>Delivery Station</span><span style={{marginLeft: 59,marginRight: 25}}> - </span>{arrayDetails.delivery_station}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Is Active</span><span style={{marginLeft: 106,marginRight: 25}}> - Active</span>{arrayDetails.is_active}
+								<span className={styles.textModal}>Is Active</span><span style={{marginLeft: 106,marginRight: 25}}> - </span>{arrayDetails.status?"active": "In-active"}
 								</div>
 								</div>
 						</div>
@@ -786,11 +788,11 @@ export function UserManagement(props) {
 						<div style={{fontSize: 14, marginLeft: 12, }} className={styles.title}>Commission Details</div>
 							<div className={styles.modalBox} style={{height:'90%'}}   /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 							<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-							<span className={styles.textModal}>Minimum Commission(₹)</span><span style={{marginLeft: 40,marginRight: 25}}> - 200₹</span>{arrayDetails.minimum_commission}
+							<span className={styles.textModal}>Minimum Commission(₹)</span><span style={{marginLeft: 40,marginRight: 25}}> - </span>{arrayDetails.mini_commission}
 							</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-							<span className={styles.textModal}>Commission in Percent(%)</span><span style={{marginLeft: 37,marginRight: 25}}> -18% </span>{arrayDetails.commission_in_percent}
+							<span className={styles.textModal}>Commission in Percent(%)</span><span style={{marginLeft: 37,marginRight: 25}}> - </span>{arrayDetails.percentage_commission}
 							</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-							<span className={styles.textModal}>Maximum Commission(₹)</span><span style={{marginLeft: 39,marginRight: 25}}> - 450₹</span>{arrayDetails.maximum_commission}
+							<span className={styles.textModal}>Maximum Commission(₹)</span><span style={{marginLeft: 39,marginRight: 25}}> - </span>{arrayDetails.max_commission}
 							</div>
             
               <div>
@@ -808,17 +810,17 @@ export function UserManagement(props) {
 							<div style={{fontSize: 14, marginLeft: 12}} className={styles.title}>Bank Address</div>
 								<div className={styles.modalBox} /*stlye={{width: '100%', height: '100%',display: '' textAlign: 'start'}}*/>
 								<div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Account Holder Name</span><span style={{marginLeft: 38,marginRight: 25}}> - ayesha </span>{arrayDetails.account_holder_name}
+								<span className={styles.textModal}>Account Holder Name</span><span style={{marginLeft: 38,marginRight: 25}}> - </span>{arrayDetails.holder_name}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Account Number</span><span style={{marginLeft: 71,marginRight: 25}}> - 102365478965</span>{arrayDetails.account_number}
+								<span className={styles.textModal}>Account Number</span><span style={{marginLeft: 71,marginRight: 25}}> - </span>{arrayDetails.account_number}
 								</div><div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>IFSC Code</span><span style={{marginLeft: 116,marginRight: 25}}> - SBI0245632</span>{arrayDetails.ifsc_code}
+								<span className={styles.textModal}>IFSC Code</span><span style={{marginLeft: 116,marginRight: 25}}> - </span>{arrayDetails.ifsc_code}
 								</div>
                 <div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Bank Name</span><span style={{marginLeft: 106,marginRight: 25}}> - SBI</span>{arrayDetails.bank_name}
+								<span className={styles.textModal}>Bank Name</span><span style={{marginLeft: 106,marginRight: 25}}> - </span>{arrayDetails.bank_name}
 								</div>
                 <div  className={styles.modalDiv} style={{flexDirection: 'row'}}>
-								<span className={styles.textModal}>Branch Address</span><span style={{marginLeft: 80,marginRight: 25}}> - Indore </span>{arrayDetails.branch_address}
+								<span className={styles.textModal}>Branch Address</span><span style={{marginLeft: 80,marginRight: 25}}> - </span>{arrayDetails.branch_address}
 								</div>
 								</div>
 						</div>

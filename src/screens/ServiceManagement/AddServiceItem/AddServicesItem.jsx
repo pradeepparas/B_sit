@@ -211,7 +211,6 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   div1: {
-    marginRight: 100,
     ["@media (min-width: 280px) and (max-width: 1040px)"]: {
       width: '91%',
       marginRight: 0,
@@ -227,7 +226,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#213D77',
     textTransform: 'capitalize',
     height: 40,
-    marginRight: 611,
     '&:hover': {
       backgroundColor: '#213D77',
       color: '#FFF',
@@ -273,9 +271,9 @@ export function AddServicesItem(props) {
     delivery_charge: ""
   });
   const [search, setSearch] = useState({
+      name: ""
+  });
 
-
-  })
   const [values, setValues] = useState({
     password: "",
     showPassword: false,
@@ -303,10 +301,17 @@ export function AddServicesItem(props) {
 
   }
 
+  // Handle Filters
+  const handleFilters = (e) => {
+    setSearch({
+      ...search,
+      [e.target.name]: e.target.value
+    })
+  }
 
   const handleChangePage = (event, page) => {
     setPageNo(page)
-    props.getItemsByParams(page, props.limit, search)
+    props.getItemsByParams(page, props.limit, service_id)
   }
 
   const handleSubmit = () => {
@@ -537,6 +542,13 @@ export function AddServicesItem(props) {
 
    }
 
+  // Search filter function
+  const filterItems = () => {
+    console.log(search)
+    debugger
+    props.getItemsByParams(1, 10, service_id, search)
+  }
+
   return (
     <div className={styles.main}>
       <div className={styles.header}>
@@ -570,7 +582,7 @@ export function AddServicesItem(props) {
               </div>
 
               <div className={styles.textfield}>
-              <label style={{color: '#535763'}}>Upload Service Icon</label>
+              <label className={styles.imageLabel} style={{color: '#535763'}}>Upload Service Icon</label>
               <div className={styles.image_upload}>
               <label className={state.fileName?classes.show_image_true: classes.show_image} for="file-input">
                   <img src={state.fileName? state.fileName: image_icon} />
@@ -616,9 +628,6 @@ export function AddServicesItem(props) {
             </div>
         </div>
       </div>
-      <div>
-        <div className={styles.box2}>
-          <div className={styles.box3}>
             <div className={styles.table}>
               <div className={styles.filterContent}>
                 <div className={styles.searchBarDiv}>
@@ -628,8 +637,8 @@ export function AddServicesItem(props) {
                       className={classes.textField1}
                       id="outlined-adornment-weight"
                       value={search.name}
-                      name={"name"}
-                      onChange={handleInputs}
+                      name="name"
+                      onChange={handleFilters}
                       startAdornment={<SearchOutlinedIcon />}
                       aria-describedby="outlined-weight-helper-text"
                       inputProps={{
@@ -644,9 +653,9 @@ export function AddServicesItem(props) {
                 </div>
                 <div className={classes.div1}>
                   {/*Search Button*/}
-                  <Button onClick={(e) => console.log('hello')} className={classes.button3} variant="contained">
+                  <Button onClick={filterItems} className={classes.button3} variant="contained">
                     Search
-          </Button>
+                  </Button>
                 </div>
               </div>
 
@@ -696,9 +705,7 @@ export function AddServicesItem(props) {
                 </Table>
               </TableContainer>
               {rows.length == 0 && <div className={styles.emptyTable} style={{ display: 'flex', justifyContent: 'center'}}>No Data Found</div>}
-            </div>
-          </div>
-        </div>
+            
         {/* Modal for Add Update User */}
         <Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={false} toggle={toggleModalClose} centered={true}>
           <ModalBody modalClassName={styles.modalContainer}>
@@ -764,18 +771,12 @@ export function AddServicesItem(props) {
   						</Button>
           </ModalFooter>
         </Modal>}
-
-
-        {rows.length == 0 && <div className={styles.pageDiv}>
+      </div>
+      {rows.length > 0 && <div className={styles.pageDiv}>
           <div style={{ marginTop: 40 }}>
-            {rows.length == 0 && setPage()}
+            {rows.length > 0 && setPage()}
           </div>
         </div>}
-      </div>
-
-
-
-
     </div>
   );
 }
@@ -794,8 +795,8 @@ const mapDispatchToProps = (dispatch) => {
     manageItems: (data, isEdit) =>
       dispatch(actions.manageItems(data, isEdit)),
 
-    getItemsByParams: (page, limit, service_id) =>
-      dispatch(actions.getItemsByParams(page, limit, service_id)),
+    getItemsByParams: (page, limit, service_id, params) =>
+      dispatch(actions.getItemsByParams(page, limit, service_id, params)),
 
     setIsLoading: (value) =>
       dispatch(setIsLoading(value)),
@@ -803,3 +804,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(AddServicesItem);
+// div1
