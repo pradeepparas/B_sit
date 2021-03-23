@@ -324,6 +324,9 @@ export function getItemsByParams(page, limit, service_id, params) {
 
         if(params) {
             url = `${API.ItemsAPI}/${page}/${limit}?service_id=${service_id}&station_id=${station_id}&search=${params.name}`
+            if(params.type === '2'){
+                url = `${API.ItemsAPI}/${page}/${limit}?service_id=${service_id}&station_id=${station_id}&search=${params.name}&status=${params.status}`
+            }
         }
 
         // debugger

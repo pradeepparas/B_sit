@@ -52,8 +52,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import styles from './ItemDetails.module.css';
 import * as actions from "../../../../redux/actions/SFMISActions";
 // import * as actions from "../../../redux/actions/vendorActions";
-// import { setIsLoading } from '../../../redux/actions/stationActions';
-// import * as API from '../../../constants/APIs';
+import { setIsLoading } from '../../../../redux/actions/stationActions';
+import * as API from '../../../../constants/APIs';
 // import styled from 'styled-components';
 
 const GreenCheckbox = withStyles({
@@ -275,7 +275,8 @@ export function ItemDetails(props) {
   const [date, setDate] = useState({
     start: new Date().toISOString().slice(0, 10),
     end: new Date().toISOString().slice(0, 10),
-  })
+  });
+  const [check, setCheck] = useState(false)
   const [dropDownDetails, setDropDownDetails] = useState([]);
 	const [vendorDropDown, setVendorDropDown] = useState([]);
 	const [categoryDropDown, setCategoryDropDown] = useState([])
@@ -289,11 +290,8 @@ export function ItemDetails(props) {
   });
 	const [search, setSearch] = useState({
 		name: "",
-    vendor_id: "",
-    service_name: "",
-    station_id: "",
-    start_date: "",
-    end_date: "",
+    status: "",
+    type: "2"
   });
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -309,52 +307,12 @@ export function ItemDetails(props) {
     setShowModal(prev => !prev);
   };
 
-// Handle Vendor Active and In-active function
-	const handleVendorStatus = (e, vendor) => {
-	// 	// set delete modal false
-	// 	console.log(vendor)
-	// 	debugger
-	// 	// return
-	// 	let data = {
-  //     "status": !vendor.status,
-  //     "id": vendor._id
-  //   }
-  //   props.setIsLoading(true)
-
-  //   axios({
-  //     url: API.VendorBlockAPI,
-  //     method: "PUT",
-  //     headers: {
-  //       //    'Accept-Language': 'hi',
-  //       "accept": "application/json",
-  //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
-  //     },
-  //     data: data
-  //   }).then((response) => {
-  //     if(response.data.success){
-  //       debugger
-  //       // toast.success(response.data.message)
-  //       setModal({
-  //         deleteModal: false,
-  //         deletedModal: true
-  //       })
-  //       props.getVendorDataByParams(pageNo, props.limit, search)
-  //     } else {
-  //       debugger
-  //       toast.error(response.data.message)
-  //     }
-  //   }).catch(err => {
-  //     toast.error(err.response.data.message)
-  //     debugger
-  //     props.setIsLoading(false)
-  //   })
-
-	}
-
+  // Calling Items Details APIs By Params
   useEffect(() => {
-    props.getItemsByParams(1, 10, item_id)
+    props.getItemsByParams(1, 10, item_id, search)
   }, [])
 
+  // Get Items Details from Redux
   useEffect(() => {
     debugger
     if(props.itemsDocs){
@@ -362,42 +320,42 @@ export function ItemDetails(props) {
     }
   }, [props.itemsDocs])
 
-	// Drop-Down Details for category and Vendor Details
-	// useEffect(() => {
-	// 	if(props.categoryData){
-	// 		setCategoryDropDown(props.categoryData)
-	// 	}
-	// 	if(props.vendorDetails){
-	// 		setVendorDropDown(props.vendorDetails)
-	// 	}
-	// }, [props.categoryData, props.vendorDetails])
 
-	// Drop-Down Details for Delivery Station
-  // useEffect(() => {
-  //   // setRoleList(props.role)
-	// 	if(props.stationDetails){
-  //     setDropDownDetails(props.stationDetails)
-  //     // debugger
-  //   }
-
-  //   if(props.vendorDocs){
-  //     // console.log("",props.vendorDocs)
-  //     setRows(props.vendorDocs)
-  //     debugger
-  //   }
-  // }, [props.vendorDocs, props.stationDetails, props.vendorDetails])
-
-  // Getting Vendors List
-  // useEffect(() => {
-	// 	props.getStationData()
-  //   // props.getRole();
-  //   // props.getUserData();
-  //   props.getVendorDataByParams(1, 10);
-  //   // debugger
-  // }, [])
-
-  // Get Vendors Data List
-
+  // Handle Checkbox
+  const handleCheckbox = async(e) => {
+    let data = {
+      item_id: arrayDetails._id,
+      item_status: e.target.checked? "APPROVED": "DISAPPROVED"
+    }
+    let value = e.target.checked? true: false;
+    debugger
+    let a = await props.setIsLoading(true);
+    
+    axios({
+      url: `${API.ItemsAPI}/approve_reject`,
+      method: "PUT",
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      },
+      data: data
+    }).then(response => {
+      if(response.data.success){
+        toast.success(response.data.message);
+        setCheck(value);
+        props.getItemsByParams(1, 10, item_id, search)
+        props.setIsLoading(false)
+      }
+    }).catch(err => {
+      console.log(err.response)
+      debugger
+      
+      toast.error(err.response.data.message);
+      props.setIsLoading(false)
+    })
+    
+  }
 
   // Search Field Value
   const handleChange = (prop) => (event) => {
@@ -408,22 +366,41 @@ export function ItemDetails(props) {
     setAge(event.target.value);
   };
 
-  const toggleModal =(e,data, row)=>{
-  	setModal(true);
-    setArrayDetails(row);
-    console.log(row)
+  const toggleModal = async(e,data, row)=>{
     debugger
-    if(data == 'delete'){
-      setModal({
-        deleteModal: true
-      })
-    } else {
+    if(data === 'details'){
+      let a = await props.setIsLoading(true);
+      axios({
+        url: `${API.ItemsAPI}/${row._id}`,
+        headers: {
+          "accept": "application/json",
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ' + localStorage.getItem('token'), 
+        }
+      }).then(response => {
+        if(response.data.success){
+          debugger
+          setModal(true);
+          setCheck(response.data.items[0].item_status === "APPROVED"? true: false)
+          setArrayDetails(response.data.items[0]);
+          props.setIsLoading(false)
+          if(data == 'delete'){
+            setModal({
+              deleteModal: true
+            })
+          } else {
 
-      setModal({
-        details: true
+            setModal({
+              details: true
+            })
+    }
+        }
+      }).catch(err => {
+        setArrayDetails([]);
+        props.setIsLoading(false);
       })
     }
-  	// setState({...state, packageName:data.packageName, id: data._id, })
+
     }
     // close modal
     const toggleModalClose =()=>{
@@ -437,7 +414,8 @@ export function ItemDetails(props) {
     //  used for pagination
     const handleChangePage = (event, page) => {
       setPageNo(page)
-      // props.getUserDataByParams(page, props.limit)
+      // Items Id gives the particular Item details for Given Id
+      props.getItemsByParams(page, props.limit, item_id, search)
 	  }
 
     // Used for Pagination
@@ -453,39 +431,20 @@ export function ItemDetails(props) {
     )
   }
 
-		// Changing Date fields
-		const handleDateChange = (data, type) => {
-		 console.log(data)
-		 // debugger
-		 if(type == 'start') {
-			 setSearch({
-				 ...search,
-				 start_date: data.target.value
-			 })
-		 } else {
-			 setSearch({
-				 ...search,
-				 end_date: data.target.value
-			 })
-		 }
-	 }
-
 	 // Search filter function
-	 const filterVendors = () => {
+	 const filterItems = () => {
 		 console.log(search)
 		 debugger
-		 props.getVendorDataByParams(1, 10, search)
+		 props.getItemsByParams(pageNo, props.limit, item_id, search)
 	 }
 
 	// Handle Inputs for Seaching
 	const handleInputs = (event) => {
+    debugger
 		setSearch({
 			...search,
-			[event.target.name]: [event.target.value]
+			[event.target.name]: event.target.value
 		})
-		if(event.target.name == "station_id"){
-			props.getVendorDetails(event.target.value)
-		}
 	}
 
   return(
@@ -521,75 +480,22 @@ export function ItemDetails(props) {
 
          {/*Select*/}
 		<div className={styles.selectDiv1}>
-			<select className={styles.select1} name="station_id" /*value={search.station_id}*/ onChange={handleInputs}>
+			<select className={styles.select1} name="status" /*value={search.station_id}*/ onChange={handleInputs}>
 				<option selected disabled>Status</option>
-                <option value={"1"}>All</option>
-                <option value={"2"}>Approved</option>
-                <option value={"3"}>Disapproved</option>
-                <option value={"3"}>New</option>
+        {/* NEW', 'APPROVED', 'DISAPPROVED */}
+                <option value={"APPROVED"}>Approved</option>
+                <option value={"DISAPPROVED"}>Disapproved</option>
+                <option value={"NEW"}>New</option>
 				{/*dropDownDetails.length > 0 && dropDownDetails.map(data =>
 				<option key={data._id} value={data._id}>{data.station_name}</option>
                 )*/}
 			</select>
 		</div>
 
-        {/* <div className={styles.dateDiv}> */}
-        {/*<div className={classes.container1}>
-        <label style={{width: 70}} className={styles.dateLabel}>From Date</label>
-    			<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-            placeholder="From Date"
-    				// defaultValue={new Date()}
-						name="start_date"
-            value={search.start_date}
-            onChange={(e) => handleDateChange(e, 'start')}
-    				className={classes.date1}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    				// InputLabelProps={{
-            //   placeholder: 'From Date',
-    				// 	shrink: true,
-    				// }}
-    			/>
-    		</div>*/}
-
-        {/*<div className={classes.container1}>
-          <label style={{width: 45}} className={styles.dateLabel}>To Date</label>
-    			<TextField
-    				id="date"
-    				variant="outlined"
-    				type="date"
-    				size="small"
-    				// defaultValue={new Date()}
-						name="end_date"
-            value={search.end_date}
-            onChange={(e) => handleDateChange(e, 'end')}
-    				className={classes.date1}
-    				// InputLabelProps={{
-            //   label: 'To Date',
-    				// 	shrink: true,
-            //   classes: { input: classes.input1 },
-            //   focused: classes.focused1,
-    				// }}
-            InputProps={{
-              placeholder: "From Date",
-              // endAdornment: null,
-              classes: { input: classes.input1 },
-              focused: classes.focused1,
-            }}
-    			/>
-    		</div>*/}
         </div>
         <div className={classes.div1}>
           {/*Search Button*/}
-          <Button onClick={filterVendors} className={classes.button1} variant="contained">
+          <Button onClick={filterItems} className={classes.button1} variant="contained">
             Search
           </Button>
         </div>
@@ -623,7 +529,7 @@ export function ItemDetails(props) {
               <TableCell align="center">{/*row.userEmail*/row.description}</TableCell>
               <TableCell align="center">{/*row.service*/row.price}</TableCell>
               <TableCell align="center">{/*row.stationName*/row.delivery_charge}</TableCell>
-							<TableCell style={{color: row.status == 'Approved'? '#5ac67e': row.item_status == 'NEW'? '#213d77': '#cf7474'}} align="center">{/*row.service*/row.item_status}</TableCell>
+							<TableCell style={{color: row.item_status == 'APPROVED'? '#5ac67e': row.item_status == 'NEW'? '#213d77': '#cf7474'}} align="center">{/*row.service*/row.item_status}</TableCell>
               <TableCell align="center"><div onClick={(e) => toggleModal(e, 'details', row)}><img src={view} style={{width: 17}} /></div></TableCell>
             </TableRow>
           ))}
@@ -673,7 +579,7 @@ export function ItemDetails(props) {
               style={{width: 100}}
 							variant="contained"
 							className={classes.button1}
-							onClick={(e) => { handleVendorStatus(e , arrayDetails) }}
+              onClick={(e) => { console.log("data")/*handleVendorStatus(e , arrayDetails)*/ }}
 						>
 							YES
 						</Button>
@@ -716,20 +622,20 @@ export function ItemDetails(props) {
 								<span className={styles.textModal}>Description</span><span style={{marginLeft: 67,marginRight: 25}}> - </span><span>{/*arrayDetails.userNumber*/arrayDetails.description}</span>
 								</div>
 								<div  className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
-								<span className={styles.textModal}>Price</span><span style={{marginLeft: 108,marginRight: 25}}> - </span><span>{/*arrayDetails.userEmail*/arrayDetails.price}</span>
+								<span className={styles.textModal}>Price</span><span style={{marginLeft: 108,marginRight: 25}}> - </span><span>₹ {/*arrayDetails.userEmail*/arrayDetails.price}</span>
 								</div><div  className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
-								<span className={styles.textModal}>Delivery Charges</span><span style={{marginLeft: 32,marginRight: 25}}> - </span><span>{arrayDetails.delivery_charge}</span>
+								<span className={styles.textModal}>Delivery Charges</span><span style={{marginLeft: 32,marginRight: 25}}> - </span><span>₹ {arrayDetails.delivery_charge}</span>
 								</div>
                                 <div className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
-								<span className={styles.textModal}>Display Name</span><span style={{marginLeft: 52,marginRight: 25}}> - </span><span>{arrayDetails.service_id.display_name}</span>
+								<span className={styles.textModal}>Display Name</span><span style={{marginLeft: 52,marginRight: 25}}> - </span><span>{arrayDetails.service?arrayDetails.service.service_name: "-"}</span>
 								</div>
                                 <div className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row'}}>
-								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 52,marginRight: 25}}> - </span><span>{arrayDetails.vendor_name}</span>
+								<span className={styles.textModal}>Vendor Name</span><span style={{marginLeft: 52,marginRight: 25}}> - </span><span>{arrayDetails.vendor?arrayDetails.vendor.vendor_name: "-"}</span>
 								</div>
 
                                 <div className={styles.modalDiv} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <span style={{marginRight: 20}} className={styles.textModal} >Approve</span><label className={styles.switch}>
-                                <input type="checkbox" value={true} />
+                                <input type="checkbox" onChange={handleCheckbox} checked={check} />
                                 <span className={styles.slider + " " + styles.round}></span>
                                 </label>
                                 </div>
@@ -777,10 +683,9 @@ const mapDispatchToProps = (dispatch) => {
     // },
 	// 	getVendorDetails: (id) =>
 	// 		dispatch(actions.getVendorDetails(id)),
-	// 	setIsLoading: (loading) =>
-	//     dispatch(setIsLoading(loading))
+		setIsLoading: (loading) =>
+	    dispatch(setIsLoading(loading))
 	}
 }
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(ItemDetails);
-// 1192

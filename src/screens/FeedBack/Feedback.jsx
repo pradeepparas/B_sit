@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     height: 20
   },
   textField: {
-    ["@media (min-width: 280px) and (max-width: 1114px)"]: {
+    ["@media (min-width: 280px) and (max-width: 540px)"]: {
       width: '100%'
     }
   },
@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   textField1:{
-    ["@media (min-width: 280px) and (max-width: 1114px)"]: {
+    ["@media (min-width: 280px) and (max-width: 540px)"]: {
       width: '100%',
       marginBottom: 5
     },
@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
   },
 	div1: {
 		marginRight: 10,
-		["@media (min-width: 671px) and (max-width: 1114px)"]:{
+		["@media (min-width: 671px) and (max-width: 540px)"]:{
 			width: 500,
 			marginRight: 0,
 		},
@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
 	},
   button1: {
 		width: 100,
-    ["@media (min-width: 280px) and (max-width: 1114px)"]: {
+    ["@media (min-width: 280px) and (max-width: 540px)"]: {
       width: '100%',
       marginBottom: 5
     },
@@ -179,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   button2: {
-    ["@media (max-width: 400px)"]: {
+    ["@media (max-width: 540px)"]: {
       marginRight: 0,
       marginBottom: 10
     },
@@ -199,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   container1: {
-		["@media (min-width: 280px) and (max-width: 1114px)"]: {
+		["@media (min-width: 280px) and (max-width: 540px)"]: {
       width: '100%',
 			display: 'flex',
 			flexDirection: 'column',
@@ -345,12 +345,12 @@ export function FeedBackAndSuggestions(props) {
       if(type == 'start') {
         setSearch({
           ...search,
-          start_date: moment(date).format("DD-MM-YYYY")
+          start_date: moment(date).format("MM-DD-YYYY")
         })
       } else {
         setSearch({
           ...search,
-          end_date: moment(date).format("DD-MM-YYYY")
+          end_date: moment(date).format("MM-DD-YYYY")
         })
       }
     }
@@ -424,7 +424,7 @@ export function FeedBackAndSuggestions(props) {
                     peekNextMonth showMonthDropdown showYearDropdown
                     dropdownMode="select"
                 //   value={state.contract_start_date?moment(state.contract_start_date).format("DD-MM-YYYY"): ''}
-                   placeholderText='dd/mm/yyyy' />
+                   placeholderText='mm/dd/yyyy' />
     		</div>
 
         <div className={classes.container1}>
@@ -438,7 +438,7 @@ export function FeedBackAndSuggestions(props) {
                   peekNextMonth showMonthDropdown showYearDropdown
                   dropdownMode="select"
                   onChange={(e) => handleDateChange(e, 'end')}
-                  placeholderText='dd/mm/yyyy' />
+                  placeholderText='mm/dd/yyyy' />
     		</div>
       </div>
 

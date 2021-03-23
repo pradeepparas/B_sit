@@ -4,12 +4,12 @@ import * as actionTypes from "./actionTypes";
 import * as API from "../../constants/APIs";
 import { setIsLoading } from "./stationActions";
 
-const station_id = localStorage.getItem('station_id');
+// const station_id = localStorage.getItem('station_id');
 
 export function getFeedbackDataByParams(page, limit, params) {
     return async dispatch => {
         let a = await dispatch(setIsLoading(true))
-
+        let station_id = localStorage.getItem('station_id');
     axios({
         url: `${API.FeedBackAPI}/${page}/${limit}?receiver_id=${station_id}`,
         headers: {

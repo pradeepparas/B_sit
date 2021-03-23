@@ -192,3 +192,17 @@
 }
 
 /* dateLabel */
+
+@media (min-width: 280px) and (max-width: 540px) {
+  .date_containers {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .box1 {
+    width: 100%;
+  }
+}

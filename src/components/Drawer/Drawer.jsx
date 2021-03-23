@@ -243,6 +243,7 @@ export function MiniDrawer(props) {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       localStorage.removeItem('userId');
+      localStorage.removeItem('station_id');
       localStorage.removeItem('userDataLS');
       history.push("/")
     }
