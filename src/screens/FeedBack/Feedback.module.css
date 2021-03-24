@@ -169,7 +169,7 @@
 }
 
 .single_row1_div {
-  width: 165px;
+  min-width: 165px;
 }
 
 .single_row2_div {
@@ -189,6 +189,12 @@
 .close_image {
   width: 20px;
   margin-right: 6px;
+}
+
+.pageDiv {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 /* dateLabel */

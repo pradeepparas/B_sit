@@ -17,7 +17,7 @@ import {
 
 // components
 import styles from './AddUser1.module.css';
-
+// return
 // import logo from './logo.png';
 import flag from '../../StationManagement/flag.svg';
 import AutoPassword from './images/auto-password.svg';
@@ -360,7 +360,6 @@ export function AddUser(props) {
       if (!validateForm()) {
           return
       }
-      return;
       let isEdit = false;
 				if(user_id !== 'add'){
 					isEdit = true;

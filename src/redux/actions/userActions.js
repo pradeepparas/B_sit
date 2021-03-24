@@ -221,6 +221,10 @@ export function manageRole(role) {
         toast.success(response.data.message)
         dispatch(setIsLoading(false))
         debugger
+        let value = {
+          name: ""
+        }
+        dispatch(getRoleDataByParams(1, 10, value))
       } else {
         toast.error(response.data.message)
       }

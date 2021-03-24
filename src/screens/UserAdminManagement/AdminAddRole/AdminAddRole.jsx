@@ -387,6 +387,23 @@ export function AddUser(props) {
     }
   }, [props.roleDocs])
 
+  // 
+  useEffect(() => {
+    // setIsEdit(false)
+    setState({
+      role_name: "",
+      description: "",
+      role: "",
+      status: false,
+      stationName: "",
+      userEmail: "",
+      date: "",
+      address: "",
+      password: "",
+      userPassword: "",
+    })
+  }, [props.roleDocs])
+
   // Handle Page Change
   const handleChangePage = (event, page) => {
     setPageNo(page)

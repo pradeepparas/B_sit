@@ -325,8 +325,8 @@ export function ProfileSettings(props) {
 	           errors.firstName="first name is required or invalid name";
 	           isValid =false;
 	       }
-	      else if(state.lastName.toString().trim()==''|| !state.lastName.toString().match(/^[a-zA-Z]+$/)){
-	          errors.lastName="last name is required or invalid last name";
+	      else if(state.lastName && !state.lastName.toString().match(/^[a-zA-Z ]+$/)){
+	          errors.lastName="invalid last name";
 	          isValid =false;
 	      }
 				else if(state.emailAddress.toString().trim()=='' || !emailValid){

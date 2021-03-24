@@ -338,6 +338,28 @@ export function FeedBackAndSuggestions(props) {
 
 	}
 
+    // Handle Page Change
+      const handleChangePage = (event, page) => {
+        setPageNo(page)
+        // props.getRoleDataByParams(page, props.limit, search)
+        props.getFeedbackDataByParams(page, props.limit, search)
+      }
+
+      // Used for Pagination
+      const setPage = () => {
+        let total = Math.ceil(props.total / props.limit)
+        return (
+
+            <Pagination
+              onChange={handleChangePage}
+              count={total}
+              shape="rounded"
+              classes={{ ul: classes.ul1 }}
+              size='small'/>
+        )
+
+      }
+
     // Changing Date fields
 		const handleDateChange = (date, type) => {
       console.log(date)
@@ -354,25 +376,6 @@ export function FeedBackAndSuggestions(props) {
         })
       }
     }
-
-    //  used for pagination
-    const handleChangePage = (event, page) => {
-      setPageNo(page)
-      // props.getUserDataByParams(page, props.limit)
-	  }
-
-    // Used for Pagination
-    const setPage = () => {
-      let total = Math.ceil(rows.length / 10)
-      return (
-        <Pagination
-          onChange={handleChangePage}
-          count={total}
-          shape="rounded"
-          classes={{ ul: classes.ul1 }}
-          size='small'/>
-    )
-  }
 
   const openFullRead = (e, index, type) => {
     
@@ -504,7 +507,10 @@ export function FeedBackAndSuggestions(props) {
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Items</span>
-                <span className={styles.single_row2_div}>{row.details.items.map(data => (` ${data.name},`))}</span>
+                <span className={styles.single_row2_div}>{row.details.items.map((data,index) => {
+                  debugger
+                  return(row.details.items.length == (index+1) ? ` ${data.name}.`: ` ${data.name},`)
+                })}</span>
               </div>
               <div className={styles.single_row_div}>
                 <span className={styles.single_row1_div}>Amount</span>
@@ -521,6 +527,12 @@ export function FeedBackAndSuggestions(props) {
       </div>))}
 
       {rows.length == 0 && <div style={{fontSize: 25, color: '#213d77', marginTop: 60, fontFamily: 'Roboto',marginLeft: 25}}>No Record Found</div>}
+      
+      {rows.length > 0 &&<div className={styles.pageDiv}>
+      <div style={{marginTop: 40}}>
+      {rows.length > 0 && setPage()}
+      </div>
+      </div>}
     </div>
   );
 }
