@@ -212,7 +212,8 @@ export function getVendorManagement(){
       }
       dispatch(setIsLoading(false))
     }).catch(err => {
-      toast.error(err.response.data.message)
+      dispatch(fetchVendorManagement([]))
+      // toast.error(err.response.data.message)
       // dispatch(setIsSubmitted(false))
       dispatch(setIsLoading(false))
     })

@@ -519,6 +519,8 @@ export function FeedBackAndSuggestions(props) {
               }
               }} style={{opacity: openComment[index]? '0.5': '1'}}>Read full comment</span></div>
       </div>))}
+
+      {rows.length == 0 && <div style={{fontSize: 25, color: '#213d77', marginTop: 60, fontFamily: 'Roboto',marginLeft: 25}}>No Record Found</div>}
     </div>
   );
 }

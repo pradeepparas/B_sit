@@ -27,7 +27,11 @@ export function getFeedbackDataByParams(page, limit, params) {
     }).catch(err => {
         debugger
         dispatch(setIsLoading(false))
-        toast.error(err.response.data.message)
+        // toast.error(err.response.data.message);
+        if(err.response.data.message === "No Record Found"){
+            dispatch(fetchFeedbackDataByParams([]))
+        }
+        
     })
     }
     

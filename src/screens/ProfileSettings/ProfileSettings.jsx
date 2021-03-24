@@ -250,9 +250,19 @@ export function ProfileSettings(props) {
             debugger
               // setState(data)
 							const fullName = response.data.user.name.split(' ')
-							const lastName = fullName.pop()
-							const firstName = fullName.join(' ')
+              // let fullName1 = fullName.trim();
+              let lastName = "";
+              if(fullName[1]){
+                lastName = fullName[1];
+              }
+              let firstName = fullName[0];
+              // if(fullName1.indexOf(' ') >= 0) {
+              //   lastName = fullName1.split(' ').slice(-1).join(' ')  
+              //   firstName = fullName1.split(' ').slice(0, -1).join(' ');
+              // }
 
+
+              debugger
               setState({
                 ...state,
                 firstName: firstName,

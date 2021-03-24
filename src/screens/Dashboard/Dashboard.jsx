@@ -85,11 +85,11 @@ export function Dashboard(props) {
 {/* <button onClick={() => i18n.changeLanguage('hi')}>Hindi</button> */}
 
 <div className={styles.grid}>
-{<Card title={'Service Handled'} number={counts.service_handled? counts.service_handled: "20K"}   icon={train1} link="/station-management"  color="#128BE8" />}
-{<Card title={'In Process Services'} number={counts.in_progress_service? counts.in_progress_service: "12K"} icon={user_check} link="/station-management" color="#E800C1" />}
+{<Card title={'Service Handled'} number={counts.service_handled? counts.service_handled: "00"}   icon={train1} link="/station-management"  color="#128BE8" />}
+{<Card title={'In Process Services'} number={counts.in_progress_service? counts.in_progress_service: "00"} icon={user_check} link="/station-management" color="#E800C1" />}
 {<Card title={'Stock Inventory'} number="1.4K"  arrow={total_users_arrow} link="/dashboard"  icon={servicestack} color="#06A882" />}
 {/* {<Card title={'Total Users'}  number="1.8K"  arrow={total_users_arrow} link="/vendors"  icon={ metro_users} color="#1373BB" />} */}
-{<Card title={'Total Vendors'} number={counts.total_vendor? counts.total_vendor: "0"} arrow={total_vendors_arrow} icon={vendor_icon} link="/vendor-management" color="#6F46FF" />}
+{<Card title={'Total Vendors'} number={counts.total_vendor? counts.total_vendor: "00"} arrow={total_vendors_arrow} icon={vendor_icon} link="/vendor-management" color="#6F46FF" />}
   {<Card title={'Total Revenue'} number="246K"  arrow={total_revenue_arrow}  link="/revenue-graph" icon={rupee} color="#037E93" />}
   {<Card title={"Today's Revenue"} number="2500"  icon={rupee} color="#F83F55" />}
 </div>
