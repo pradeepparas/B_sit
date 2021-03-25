@@ -18,7 +18,9 @@ const SFMISReducer = (state = initialState, action) => {
         case actionTypes.FETCH_CATEGORY_SERVICES_BYPARAMS:
             return {
                 ...state,
-                docs: action.docs
+                docs: action.docs,
+                total: action.total,
+                limit: action.limit
             }
 
         case actionTypes.FETCH_CATEGORY_SERVICES:

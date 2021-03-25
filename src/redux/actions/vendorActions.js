@@ -58,7 +58,7 @@ export function getVendorDetails(stationId) {
       }
       dispatch(setIsLoading(false))
     }).catch(err => {
-      toast.error(err.response.data.message)
+      // toast.error(err.response.data.message)
       dispatch(setIsLoading(false))
       // dispatch(setIsSubmitted(false))
     }).then(() => dispatch(setIsLoading(false)))

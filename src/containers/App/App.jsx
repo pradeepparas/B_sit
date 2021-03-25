@@ -67,7 +67,7 @@ const App = () => {
         returnTo={`${window.location.origin}/easydev/online_marketing_dashboard`}
         onRedirectCallback={onRedirectCallbackAuth0}
       >
-        <BrowserRouter basename="/">
+        <HashRouter basename="/">
           <I18nextProvider i18n={i18n}>
             <LoadScript
               googleMapsApiKey="" /* Paste your Google Maps Api Key here */
@@ -79,7 +79,7 @@ const App = () => {
               </ScrollToTop>
             </LoadScript>
           </I18nextProvider>
-        </BrowserRouter>
+        </HashRouter>
       </Auth0Provider>
     </Provider>
   );

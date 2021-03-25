@@ -86,6 +86,7 @@ export function getCategoryServicesByParams(page, limit) {
             debugger
         }).catch(err => {
             console.log(err)
+            dispatch(fetchCategoryServicesByParams([]))
             dispatch(setIsLoading(false));
         })
     }
@@ -113,7 +114,7 @@ export function getCategoryServices() {
             }
             debugger
         }).catch(err => {
-            toast.error(err.response.data.message)
+            // toast.error(err.response.data.message)
             dispatch(setIsLoading(false));
         })
     }

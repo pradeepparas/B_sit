@@ -170,7 +170,7 @@ export function getRole(){
   return async dispatch => {
     let a = await dispatch(setIsLoading(true))
     axios({
-      url: API.GetRoleAPI,
+      url: `${API.GetRoleAPI}?type=admin`,
       headers: {
         "accept": "application/json",
         "Content-Type": "application/json",

@@ -575,7 +575,7 @@ export function AddServiceCategory(props) {
   };
   const setPage = () => {
 
-    let total = Math.ceil(90 / 10)
+    let total = Math.ceil(props.total / 10)
     return (
       <Pagination
         onChange={handleChangePage}
@@ -1001,9 +1001,9 @@ export function AddServiceCategory(props) {
 						</ModalFooter>
 					</Modal>}
 
-      {rows.length == 0 && <div className={styles.pageDiv}>
+      {rows.length > 0 && <div className={styles.pageDiv}>
         <div style={{ marginTop: 40 }}>
-          {rows.length == 0 && setPage()}
+          {rows.length > 0 && setPage()}
         </div>
       </div>}
 
@@ -1019,6 +1019,8 @@ const mapStateToProps = (state) => {
 
   return {
     categoryDocs: state.SFMIS.docs,
+    total: state.SFMIS.total,
+    limit: state.SFMIS.limit
     // isSubmitted: state.Stations.isSubmitted,
     // user: state.Users.userData,
     // isEdit: state.Users.isEdit,

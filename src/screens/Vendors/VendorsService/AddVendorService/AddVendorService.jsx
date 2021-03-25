@@ -532,15 +532,15 @@ export function AddVendorService(props) {
         isValid =false;
     }
 
-      else if(state.from_time ==''){
-          errors.from_time="time is required";
-          isValid =false;
-      }
+      // else if(state.from_time ==''){
+      //     errors.from_time="time is required";
+      //     isValid =false;
+      // }
 
-      else if(state.to_time ==''){
-          errors.to_time="to time is required";
-          isValid =false;
-      }
+      // else if(state.to_time ==''){
+      //     errors.to_time="to time is required";
+      //     isValid =false;
+      // }
 
       else if(state.preparation_duration==''){
           errors.preparation_duration = "duration is required";
@@ -879,7 +879,7 @@ export function AddVendorService(props) {
 			<Modal className={styles.modalContainer1} contentClassName={styles.customDeleteClass} isOpen={modal} toggle={toggleModalClose} centered={true}>
 					<ModalBody modalClassName={styles.modalContainer}>
           <img style={{width: 60}} src={flag} />
-					<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>{isAdd ? "Successfully Added Station": "Successfully Updated"} </strong>  </p>
+					<p style={{marginTop: 20}}><strong style={{fontSize: 20}}>{isAdd ? "Successfully Added Vendor Service": "Successfully Updated"} </strong>  </p>
 					</ModalBody>
 					<ModalFooter className={styles.footer}>
 						<Button

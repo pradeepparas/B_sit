@@ -363,15 +363,15 @@ export function AddService(props) {
             isValid =false;
         }
 
-      else if(state.from_time.toString().trim()==''){
-          errors.from_time="time is required";
-          isValid =false;
-      }
+      // else if(state.from_time.toString().trim()==''){
+      //     errors.from_time="time is required";
+      //     isValid =false;
+      // }
 
-      else if(state.to_time.toString().trim()==''){
-          errors.to_time="time is required";
-          isValid =false;
-      }
+      // else if(state.to_time.toString().trim()==''){
+      //     errors.to_time="time is required";
+      //     isValid =false;
+      // }
 
       else if(state.preparation_duration==''){
           errors.preparation_duration = "duration is required";
